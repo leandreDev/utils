@@ -21,7 +21,7 @@ export class ConfLoader {
 				if(val && val.code == 200 && val.response && val.response[0] ){
 					val = val.response[0] ;
 					fs.ensureDirSync("./confs")
-					fs.outputJSONSync("./confs/" + process.env.SRV_ID + ".json" , val   )
+					// fs.outputJSONSync("./confs/" + process.env.SRV_ID + ".json" , val   )
 				}else{
 					val = fs.readJSONSync("./confs/" + process.env.SRV_ID  + ".json") ;
 				}
