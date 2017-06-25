@@ -18,15 +18,17 @@ export class ConfLoader {
 		let contextInterpretor:CtxInterpretor = new CtxInterpretor(process.env) ;
 		return new Promise((resolve , reject)=>{
 			request.get(options).then((val)=>{
+				let data:any ;
 				if(val && val.code == 200 && val.response && val.response[0] ){
-					val = val.response[0] ;
+					data = val.response[0] ;
 					fs.ensureDirSync("./confs")
-					// fs.outputJSONSync("./confs/" + process.env.SRV_ID + ".json" , val   )
+					fs.writeJSONSync("./confs/" + process.env.SRV_ID + ".json" , data )
+					
 				}else{
-					val = fs.readJSONSync("./confs/" + process.env.SRV_ID  + ".json") ;
+					data = fs.readJSONSync("./confs/" + process.env.SRV_ID  + ".json") ;
 				}
-				let conf:any = contextInterpretor.updateEnv(val) ;
-				resolve(val) ;
+				let conf:any = contextInterpretor.updateEnv(data) ;
+				resolve(data) ;
 			}).catch(err=>{
 				try{
 					let val = fs.readJSONSync("./confs/" + process.env.SRV_ID  + ".json") ;

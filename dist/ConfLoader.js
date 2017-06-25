@@ -14,15 +14,17 @@ class ConfLoader {
         let contextInterpretor = new CtxInterpretor_1.CtxInterpretor(process.env);
         return new Promise((resolve, reject) => {
             request.get(options).then((val) => {
+                let data;
                 if (val && val.code == 200 && val.response && val.response[0]) {
-                    val = val.response[0];
+                    data = val.response[0];
                     fs.ensureDirSync("./confs");
+                    fs.writeJSONSync("./confs/" + process.env.SRV_ID + ".json", data);
                 }
                 else {
-                    val = fs.readJSONSync("./confs/" + process.env.SRV_ID + ".json");
+                    data = fs.readJSONSync("./confs/" + process.env.SRV_ID + ".json");
                 }
-                let conf = contextInterpretor.updateEnv(val);
-                resolve(val);
+                let conf = contextInterpretor.updateEnv(data);
+                resolve(data);
             }).catch(err => {
                 try {
                     let val = fs.readJSONSync("./confs/" + process.env.SRV_ID + ".json");
