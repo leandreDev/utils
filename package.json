@@ -1,0 +1,36 @@
+{
+  "name": "utils",
+  "version": "1.0.0",
+  "description": "utilitaire",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HF-dev/utils.git"
+  },
+  "author": "hf-dev",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HF-dev/utils/issues"
+  },
+  "homepage": "https://github.com/HF-dev/utils#readme",
+  "dependencies": {
+    "@types/assert": "0.0.31",
+    "assert": "^1.4.1",
+    "fs-extra": "^3.0.1",
+    "lodash": "^4.17.4",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1"
+  },
+  "devDependencies": {
+    "@types/assert": "0.0.31",
+    "@types/fs-extra": "^3.0.3",
+    "@types/lodash": "^4.14.66",
+    "@types/request": "0.0.44",
+    "@types/request-promise": "^4.1.35"
+  }
+}
