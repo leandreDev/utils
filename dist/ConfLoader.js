@@ -14,7 +14,7 @@ class ConfLoader {
         let contextInterpretor = new CtxInterpretor_1.CtxInterpretor(process.env);
         return new Promise((resolve, reject) => {
             request.get(options).then((val) => {
-                if (val.code == 200 && val.response && val.response[0]) {
+                if (val && val.code == 200 && val.response && val.response[0]) {
                     val = val.response[0];
                     fs.ensureDirSync("./confs");
                     fs.outputJSONSync("./confs/" + process.env.SRV_ID + ".json", val);
