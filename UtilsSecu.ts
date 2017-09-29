@@ -18,8 +18,8 @@ export class UtilsSecu{
 		  }
 	}
 
-	chekInternalMidelWare(req, res, next){
-
+	chekInternalMidelWare = (req, res, next)=>{
+		
 		let date = req.header('date') ;
 		let key = req.header('key')  ;
 		var requrl ;
@@ -45,7 +45,7 @@ export class UtilsSecu{
 		}
 		
 	}
-	protectInternalMidelWare(req, res, next){
+	protectInternalMidelWare = (req, res, next) => {
 
 		let date = req.header('date') ;
 		let key = req.header('key')  ;
