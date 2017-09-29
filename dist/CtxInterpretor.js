@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const _ = require("lodash");
 const assert = require("assert");
 class CtxInterpretor {
@@ -30,7 +31,7 @@ class CtxInterpretor {
     }
     ;
     updateEnv(obj) {
-        return _.each(obj, (val, key) => {
+        _.each(obj, (val, key) => {
             var arr;
             if (_.isString(val)) {
                 return obj[key] = this.setGlobalEnv(val);
@@ -52,6 +53,7 @@ class CtxInterpretor {
                 return this.updateEnv(val);
             }
         });
+        return obj;
     }
 }
 exports.CtxInterpretor = CtxInterpretor;

@@ -1,3 +1,4 @@
 import { CtxInterpretor } from "./CtxInterpretor";
 import { ConfLoader } from "./ConfLoader";
-export { CtxInterpretor, ConfLoader };
+import { UtilsSecu } from "./UtilsSecu";
+export { CtxInterpretor, ConfLoader, UtilsSecu };

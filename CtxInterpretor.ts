@@ -34,7 +34,7 @@ export class CtxInterpretor {
   };
 
   public updateEnv( obj:any):any{
-    return _.each(obj, (val, key) => {
+     _.each(obj, (val, key) => {
       var arr;
       if (_.isString(val)) {
         return obj[key] = this.setGlobalEnv(val);
@@ -53,5 +53,6 @@ export class CtxInterpretor {
         return this.updateEnv(val);
       }
     });
+    return obj ;
   }
 }
