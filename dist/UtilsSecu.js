@@ -15,7 +15,7 @@ class UtilsSecu {
                     host: req.get('host'),
                     pathname: req.originalUrl,
                 });
-                var newKey = crypto.createHmac('sha256', this.currentApp.secretKey)
+                var newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                     .update(date + requrl)
                     .digest('hex');
                 if (newKey == key) {
@@ -40,7 +40,7 @@ class UtilsSecu {
                     host: req.get('host'),
                     pathname: req.originalUrl,
                 });
-                var newKey = crypto.createHmac('sha256', this.currentApp.secretKey)
+                var newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                     .update(date + requrl)
                     .digest('hex');
                 if (newKey == key) {
@@ -60,7 +60,7 @@ class UtilsSecu {
         var date = Date.now();
         rq.headers = {
             'date': date,
-            'key': crypto.createHmac('sha256', this.currentApp.secretKey)
+            'key': crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                 .update(date + rq.url)
                 .digest('hex')
         };

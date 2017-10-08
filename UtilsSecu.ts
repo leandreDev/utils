@@ -12,7 +12,7 @@ export class UtilsSecu{
 		var date:number = Date.now() ;
 		 rq.headers =  {
 		    'date': date ,
-		    'key' : crypto.createHmac('sha256', this.currentApp.secretKey)
+		    'key' : crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                    .update(date + rq.url)
                    .digest('hex')
 		  }
@@ -29,7 +29,7 @@ export class UtilsSecu{
 		    host: req.get('host'),
 		    pathname: req.originalUrl,
 		});
-		var newKey:string = crypto.createHmac('sha256', this.currentApp.secretKey)
+		var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                    .update(date + requrl)
                    .digest('hex') ;
 
@@ -56,7 +56,7 @@ export class UtilsSecu{
 		    host: req.get('host'),
 		    pathname: req.originalUrl,
 		});
-		var newKey:string = crypto.createHmac('sha256', this.currentApp.secretKey)
+		var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                    .update(date + requrl)
                    .digest('hex') ;
                    
