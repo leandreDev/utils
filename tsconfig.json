@@ -14,5 +14,8 @@
   ],
   "compileOnSave": false,
   "buildOnSave": false,
-  "atom": { "rewriteTsconfig": false }
+  "atom": { "rewriteTsconfig": false } ,
+  "files": [
+    "./index.ts"
+  ]
 }
