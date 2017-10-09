@@ -9,6 +9,7 @@ const _ = require("lodash");
 const Util = require("util");
 class ServerBase {
     constructor() {
+        this.currentApp = {};
         this.init().then(() => {
             this.startHttpServer();
         }).catch((err) => {

@@ -15,6 +15,7 @@ export class ServerBase{
 	public server:http.Server ;
 
 	constructor(){
+		this.currentApp = {} ;
 		this.init().then(()=>{
 			this.startHttpServer() ;
 		}).catch((err)=>{
