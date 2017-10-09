@@ -6,4 +6,6 @@ const ConfLoader_1 = require("./ConfLoader");
 exports.ConfLoader = ConfLoader_1.ConfLoader;
 const UtilsSecu_1 = require("./UtilsSecu");
 exports.UtilsSecu = UtilsSecu_1.UtilsSecu;
+const ServerBase_1 = require("./ServerBase");
+exports.ServerBase = ServerBase_1.ServerBase;
 //# sourceMappingURL=index.js.map
