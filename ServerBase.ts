@@ -13,11 +13,14 @@ export class ServerBase{
 	public app:express ;
 	public secu:UtilsSecu ;
 	public server:http.Server ;
-	
+
 	constructor(){
 		this.init().then(()=>{
 			this.startHttpServer() ;
-		})
+		}).catch((err)=>{
+				console.log(err) ;
+			})
+
 	}
 
 	protected startHttpServer(){

@@ -12,12 +12,14 @@ export class ConfLoader {
 	static getConf():Promise<any>{
 		return new Promise((resolve , reject)=>{
 			let options:any = {} ;
-			let secu:UtilsSecu = new UtilsSecu({conf:{secretKey:process.env.SECRET}})
+			
 			assert(process.env.CONF_URL, "$env.CONF_URL is not spécified");
 			// assert(process.env.CLIENT_ID, "$env.CLIENT_ID is not spécified");
 			assert(process.env.SRV_ID, "$env.SRV_ID is not spécified");
+			assert(process.env.SECRET, "$env.SECRET is not spécified");
 			options.url = process.env.CONF_URL + process.env.SRV_ID  ;
 			options.json = true ;
+			let secu:UtilsSecu = new UtilsSecu({conf:{secretKey:process.env.SECRET}})
 			let contextInterpretor:CtxInterpretor = new CtxInterpretor(process.env) ;
 			secu.addHeadersKey(options) ;
 			request.get(options).then((val)=>{

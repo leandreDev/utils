@@ -11,6 +11,8 @@ class ServerBase {
     constructor() {
         this.init().then(() => {
             this.startHttpServer();
+        }).catch((err) => {
+            console.log(err);
         });
     }
     startHttpServer() {
@@ -46,6 +48,8 @@ class ServerBase {
                 this.app = express();
                 console.log("start app");
                 this.currentApp.express = this.app;
+                this.currentApp.toErrRes = this.toErrRes;
+                this.currentApp.toJsonRes = this.toJsonRes;
                 this.secu = new UtilsSecu_1.UtilsSecu(this.currentApp);
                 this.app.use(function (req, res, next) {
                     res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
@@ -96,6 +100,22 @@ class ServerBase {
             rep.stack = err.stack;
         }
         return rep;
+    }
+    ;
+    toJsonRes(objs, meta = null) {
+        if (!Util.isArray(objs)) {
+            objs = [objs];
+        }
+        ;
+        if (!meta) {
+            meta = {};
+        }
+        ;
+        return {
+            code: 200,
+            meta: meta,
+            response: objs
+        };
     }
     ;
     addCtx(req, res, next) {
