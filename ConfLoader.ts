@@ -30,6 +30,9 @@ export class ConfLoader {
 					fs.writeJSONSync("./confs/" + process.env.SRV_ID + ".json" , data )
 					
 				}else{
+					if(val && val.code != 200){
+						console.log(val) ;
+					}	
 					data = fs.readJSONSync("./confs/" + process.env.SRV_ID  + ".json") ;
 				}
 				let conf:any = contextInterpretor.updateEnv(data) ;
