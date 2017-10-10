@@ -48,6 +48,7 @@ class ServerBase {
                 .then(() => {
                 this.app = express();
                 console.log("start app");
+                this.currentApp.secu = this.secu;
                 this.currentApp.express = this.app;
                 this.currentApp.toErrRes = this.toErrRes;
                 this.currentApp.toJsonRes = this.toJsonRes;
