@@ -92,7 +92,7 @@ export class ServerBase{
 		})
 	}
 
-	public reloadConf(req, res) {
+	public reloadConf = (req, res) => {
 		 ConfLoader.getConf()
 		 .then((conf)=>{
 	    	this.currentApp.conf = conf ;
@@ -102,7 +102,7 @@ export class ServerBase{
 		})
 	}
 
-	public  toErrRes (err: any): any  {
+	public  toErrRes = (err: any): any => {
 		if(Util.isString(err)){
 			err = {message:err }
 		}
@@ -118,7 +118,7 @@ export class ServerBase{
         return rep ;
     };
 
-    public  toJsonRes (objs: any, meta: any = null): any  {
+    public  toJsonRes  = (objs: any, meta: any = null): any => {
 	    if (!Util.isArray(objs)) {
 	        objs = [objs];
 	    };
@@ -134,7 +134,7 @@ export class ServerBase{
 	    };
 	};
 
-	public addCtx(req, res , next) {
+	public addCtx = (req, res , next) =>{
 		if(!req.ctx){
 				req.ctx = {} ;
 			}
@@ -146,7 +146,7 @@ export class ServerBase{
 
 
 
-	 public checkJWT(req, res, next) {
+	 public checkJWT = (req, res, next) => {
 
 		let token = req.header('JWT') 
 
@@ -166,7 +166,7 @@ export class ServerBase{
 		}
 	}
 
-	public hasRight(req, res, next)  {
+	public hasRight = (req, res, next)  => {
 		req.ctx.roles = [] ;
 		var confSecu:any[]
 		if(req.internalCallValid){
