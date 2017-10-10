@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const crypto = require("crypto");
 const url = require("url");
+const assert = require("assert");
 class UtilsSecu {
     constructor(currentApp) {
         this.currentApp = currentApp;
@@ -55,6 +56,7 @@ class UtilsSecu {
                 next("no key");
             }
         };
+        assert(currentApp.conf.secretKey, "secretKey is not spécified");
     }
     addHeadersKey(rq) {
         var date = Date.now();

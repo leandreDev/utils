@@ -6,6 +6,7 @@ import * as jose from 'node-jose' ;
 import * as _  from 'lodash' ;
 import * as Util  from 'util' ;
 import * as http from 'http' ;
+import * as assert from 'assert' ;
 
 export class ServerBase{
 
@@ -35,6 +36,7 @@ export class ServerBase{
 			if(this.currentApp.conf.debug){
 				console.log(this.currentApp) ;
 			}
+			assert(this.currentApp.conf['licence_well-known'], "licence_well-known is not spécified");
 			return this.currentApp ;
 		}).then(()=>{
 			let opt ={
@@ -152,7 +154,7 @@ export class ServerBase{
 
 		if(token ){
 			
-			jose.JWS.createVerify(this.currentApp.keyStore).verify(token)
+			jose.JWS.createVerify(this.currentApp.licence_keyStore).verify(token)
 			.then(function(result) {
 				req.ctx.user = JSON.parse(result.payload.toString()) ;
 

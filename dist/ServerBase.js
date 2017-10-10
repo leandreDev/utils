@@ -7,6 +7,7 @@ const UtilsSecu_1 = require("./UtilsSecu");
 const jose = require("node-jose");
 const _ = require("lodash");
 const Util = require("util");
+const assert = require("assert");
 class ServerBase {
     constructor() {
         this.reloadConf = (req, res) => {
@@ -58,7 +59,7 @@ class ServerBase {
         this.checkJWT = (req, res, next) => {
             let token = req.header('JWT');
             if (token) {
-                jose.JWS.createVerify(this.currentApp.keyStore).verify(token)
+                jose.JWS.createVerify(this.currentApp.licence_keyStore).verify(token)
                     .then(function (result) {
                     req.ctx.user = JSON.parse(result.payload.toString());
                     next();
@@ -126,6 +127,7 @@ class ServerBase {
             if (this.currentApp.conf.debug) {
                 console.log(this.currentApp);
             }
+            assert(this.currentApp.conf['licence_well-known'], "licence_well-known is not spécified");
             return this.currentApp;
         }).then(() => {
             let opt = {

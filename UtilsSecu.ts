@@ -1,11 +1,12 @@
 
 import * as crypto from  'crypto';
 import * as url from 'url' ;
+import * as assert from 'assert' ;
 
 export class UtilsSecu{
 
 	constructor(private currentApp:any){
-
+		 assert(currentApp.conf.secretKey, "secretKey is not spécified");
 	}
 	
 	 addHeadersKey (rq:any){
