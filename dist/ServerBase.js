@@ -66,7 +66,7 @@ class ServerBase {
                     console.log(req.method + "," + req.url);
                     next();
                 })
-                    .use([this.addCtx, this.secu.chekInternalMidelWare, this.checkJWT, this.hasRight])
+                    .use(this.addCtx, this.secu.chekInternalMidelWare, this.checkJWT, this.hasRight)
                     .get('/', (req, res) => {
                     res.send({ online: true });
                 })
