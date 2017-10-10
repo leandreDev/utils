@@ -82,7 +82,7 @@ export class ServerBase{
 					    res.send({online:true})
 					})
 					.get('/reloadConf', this.reloadConf)
-					.use(function(err, req, res, next) {
+					.use((err, req, res, next) => {
 					    let obj = this.toErrRes(err) ;
 					    console.log(obj) ;
 					      res.send(obj);
