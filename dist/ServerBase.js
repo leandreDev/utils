@@ -78,8 +78,8 @@ class ServerBase {
             }
             else if (req.ctx.user) {
                 req.ctx.roles = req.ctx.user.role;
-                if (this.currentApp.conf && this.currentApp.conf.configurations && this.currentApp.conf.configurations[req.appId]) {
-                    confSecu = this.currentApp.conf.configurations[req.appId].httAccess["_$" + req.method.toLowerCase()];
+                if (this.currentApp.conf && this.currentApp.conf.configurations && this.currentApp.conf.configurations[req.ctx.user.appId]) {
+                    confSecu = this.currentApp.conf.configurations[req.ctx.user.appId].httAccess["_$" + req.method.toLowerCase()];
                 }
             }
             req.ctx.roles.push("*");
