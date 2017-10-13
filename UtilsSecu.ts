@@ -38,7 +38,9 @@ export class UtilsSecu{
         	req.internalCallValid = true ;
         	next() ;
         }else{
-        	next("key dont match uri : " + requrl) ;
+        	req.internalCallValid = false ;
+        	console.log("key dont match uri : " + requrl) ;
+        	next() ;
         }
        
 		}else{
