@@ -184,7 +184,7 @@ export class ServerBase{
 		if((! confSecu) &&  this.currentApp.conf && this.currentApp.conf.publicAccess ){
 			confSecu = this.currentApp.conf.publicAccess["_$" + req.method.toLowerCase()] ;
 		}
-		if(req.internalCallValid){
+		if(req.internalCallValid || req.method.toLowerCase() == "options"){
 			next()
 		}else{
 			let path:string =req.originalUrl ;

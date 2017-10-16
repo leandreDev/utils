@@ -14,7 +14,7 @@ export class UtilsSecu{
 		 rq.headers =  {
 		    'date': date ,
 		    'key' : crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-                   .update(date + rq.url)
+                   .update(date + rq.url.toLowerCase())
                    .digest('hex')
 		  }
 	}
