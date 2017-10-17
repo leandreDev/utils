@@ -21,8 +21,8 @@ export class UtilsSecu{
 
 	chekInternalMidelWare = (req, res, next)=>{
 		
-		let date = req.header('date') ;
-		let key = req.header('key')  ;
+		var date = req.header('date') ;
+		var key = req.header('key')  ;
 		var requrl ;
 		if(key){
 			requrl = url.format({
@@ -50,8 +50,8 @@ export class UtilsSecu{
 	}
 	protectInternalMidelWare = (req, res, next) => {
 
-		let date = req.header('date') ;
-		let key = req.header('key')  ;
+		var date = req.header('date') ;
+		var key = req.header('key')  ;
 		var requrl ;
 		if(key){
 			requrl = url.format({
@@ -67,6 +67,7 @@ export class UtilsSecu{
         	req.internalCallValid = true ;
         	next() ;
         }else{
+        	
         	next("key dont match uri : " + requrl) ;
         }
        

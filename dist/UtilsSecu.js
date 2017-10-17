@@ -7,8 +7,8 @@ class UtilsSecu {
     constructor(currentApp) {
         this.currentApp = currentApp;
         this.chekInternalMidelWare = (req, res, next) => {
-            let date = req.header('date');
-            let key = req.header('key');
+            var date = req.header('date');
+            var key = req.header('key');
             var requrl;
             if (key) {
                 requrl = url.format({
@@ -34,8 +34,8 @@ class UtilsSecu {
             }
         };
         this.protectInternalMidelWare = (req, res, next) => {
-            let date = req.header('date');
-            let key = req.header('key');
+            var date = req.header('date');
+            var key = req.header('key');
             var requrl;
             if (key) {
                 requrl = url.format({
