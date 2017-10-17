@@ -7,7 +7,7 @@ class UtilsSecu {
     constructor(currentApp) {
         this.currentApp = currentApp;
         this.chekInternalMidelWare = (req, res, next) => {
-            var date = req.header('date');
+            var date = req.header('keyDate');
             var key = req.header('key');
             var requrl;
             if (key) {
@@ -34,7 +34,7 @@ class UtilsSecu {
             }
         };
         this.protectInternalMidelWare = (req, res, next) => {
-            var date = req.header('date');
+            var date = req.header('keyDate');
             var key = req.header('key');
             var requrl;
             if (key) {
@@ -64,7 +64,7 @@ class UtilsSecu {
     addHeadersKey(rq) {
         var date = Date.now();
         rq.headers = {
-            'date': date,
+            'keyDate': date,
             'key': crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                 .update(date + rq.url.toLowerCase())
                 .digest('hex')

@@ -12,7 +12,7 @@ export class UtilsSecu{
 	 addHeadersKey (rq:any){
 		var date:number = Date.now() ;
 		 rq.headers =  {
-		    'date': date ,
+		    'keyDate': date ,
 		    'key' : crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                    .update(date + rq.url.toLowerCase())
                    .digest('hex')
@@ -21,7 +21,7 @@ export class UtilsSecu{
 
 	chekInternalMidelWare = (req, res, next)=>{
 		
-		var date = req.header('date') ;
+		var date = req.header('keyDate') ;
 		var key = req.header('key')  ;
 		var requrl ;
 		if(key){
@@ -50,7 +50,7 @@ export class UtilsSecu{
 	}
 	protectInternalMidelWare = (req, res, next) => {
 
-		var date = req.header('date') ;
+		var date = req.header('keyDate') ;
 		var key = req.header('key')  ;
 		var requrl ;
 		if(key){
@@ -58,19 +58,19 @@ export class UtilsSecu{
 		    protocol: req.protocol,
 		    host: req.get('host'),
 		    pathname: req.originalUrl,
-		});
-		var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
+			});
+			var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                    .update(date + requrl)
                    .digest('hex') ;
                    
-        if(newKey == key){
-        	req.internalCallValid = true ;
-        	
-        	next() ;
-        }else{
-        	console.log("key dont match uri : " + requrl , date , key , newKey) ;
-        	next("key dont match uri : " + requrl) ;
-        }
+	        if(newKey == key){
+	        	req.internalCallValid = true ;
+
+	        	next() ;
+	        }else{
+	        	console.log("key dont match uri : " + requrl , date , key , newKey) ;
+	        	next("key dont match uri : " + requrl) ;
+	        }
 		}else{
 			next("no key") ;
 		}
