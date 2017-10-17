@@ -39,7 +39,7 @@ export class UtilsSecu{
         	next() ;
         }else{
         	req.internalCallValid = false ;
-        	console.log("key dont match uri : " + requrl) ;
+        	console.log("key dont match uri : " + requrl , date , key , newKey) ;
         	next() ;
         }
        
@@ -65,12 +65,12 @@ export class UtilsSecu{
                    
         if(newKey == key){
         	req.internalCallValid = true ;
+        	
         	next() ;
         }else{
-        	
+        	console.log("key dont match uri : " + requrl , date , key , newKey) ;
         	next("key dont match uri : " + requrl) ;
         }
-       
 		}else{
 			next("no key") ;
 		}
