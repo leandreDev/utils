@@ -22,7 +22,7 @@ class UtilsSecu {
                     requrl = this.currentApp.conf.urlBase;
                 }
                 var newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-                    .update(date + requrl)
+                    .update(date + requrl.toLowerCase())
                     .digest('hex');
                 if (newKey == key) {
                     req.internalCallValid = true;
@@ -55,7 +55,7 @@ class UtilsSecu {
                     requrl = this.currentApp.conf.urlBase;
                 }
                 var newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-                    .update(date + requrl)
+                    .update(date + requrl.toLowerCase())
                     .digest('hex');
                 if (newKey == key) {
                     req.internalCallValid = true;

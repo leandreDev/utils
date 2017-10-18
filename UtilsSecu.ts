@@ -37,7 +37,7 @@ export class UtilsSecu{
 			}
 			
 			var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-	                   .update(date + requrl)
+	                   .update(date + requrl.toLowerCase())
 	                   .digest('hex') ;
 
 	        if(newKey == key){
@@ -72,7 +72,7 @@ export class UtilsSecu{
 			}
 			
 			var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-                   .update(date + requrl)
+                   .update(date + requrl.toLowerCase())
                    .digest('hex') ;
                    
 	        if(newKey == key){
