@@ -61,12 +61,13 @@ export class ServerBase{
 					this.app = express();
 					
 					console.log("start app") ;
-					this.currentApp.secu = this.secu ;
+					
 					
 					this.currentApp.express = this.app  ;
 					this.currentApp.toErrRes = this.toErrRes ;
 					this.currentApp.toJsonRes = this.toJsonRes ;
 					this.secu = new UtilsSecu(this.currentApp) ;
+					this.currentApp.secu = this.secu ;
 					this.app.use( function(req, res , next){
 				        res.header("Access-Control-Allow-Methods" , "GET, POST, OPTIONS, PUT, PATCH, DELETE") ;
 				        res.header("Access-Control-Allow-Origin", "*") ;
