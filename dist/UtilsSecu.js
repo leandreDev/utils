@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const crypto = require("crypto");
-const url = require("url");
 const assert = require("assert");
 class UtilsSecu {
     constructor(currentApp) {
@@ -11,11 +10,17 @@ class UtilsSecu {
             var key = req.header('key');
             var requrl;
             if (key) {
-                requrl = url.format({
-                    protocol: req.protocol,
-                    host: req.get('host'),
-                    pathname: req.originalUrl,
-                });
+                // 	requrl = url.format({
+                //     protocol: req.protocol,
+                //     host: req.get('host'),
+                //     pathname: req.originalUrl,
+                // });
+                if (req.originalUrl && req.originalUrl.length > 1) {
+                    requrl = this.currentApp.conf.urlBase + req.originalUrl.substr(1);
+                }
+                else {
+                    requrl = this.currentApp.conf.urlBase;
+                }
                 var newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                     .update(date + requrl)
                     .digest('hex');
@@ -38,11 +43,17 @@ class UtilsSecu {
             var key = req.header('key');
             var requrl;
             if (key) {
-                requrl = url.format({
-                    protocol: req.protocol,
-                    host: req.get('host'),
-                    pathname: req.originalUrl,
-                });
+                // requrl = url.format({
+                //    protocol: req.protocol,
+                //    host: req.get('host'),
+                //    pathname: req.originalUrl,
+                // });
+                if (req.originalUrl && req.originalUrl.length > 1) {
+                    requrl = this.currentApp.conf.urlBase + req.originalUrl.substr(1);
+                }
+                else {
+                    requrl = this.currentApp.conf.urlBase;
+                }
                 var newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                     .update(date + requrl)
                     .digest('hex');
