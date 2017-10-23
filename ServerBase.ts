@@ -102,9 +102,13 @@ export class ServerBase{
 			["Expires", "0"]
 
 		];
-		
+	
+
+	protected 	reloadConfPromise():Promise<any>{
+		return ConfLoader.getConf() ;
+	}
 	public reloadConf (req, res)  {
-		 ConfLoader.getConf()
+		 this.reloadConfPromise()
 		 .then((conf)=>{
 	    	this.currentApp.conf = conf ;
 			res.send({code:200}) ;

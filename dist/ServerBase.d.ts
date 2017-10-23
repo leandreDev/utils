@@ -11,6 +11,7 @@ export declare class ServerBase {
     protected startHttpServer(): void;
     protected init(): Promise<any>;
     headers: string[][];
+    protected reloadConfPromise(): Promise<any>;
     reloadConf(req: any, res: any): void;
     toErrRes(err: any): any;
     toJsonRes(objs: any, meta?: any): any;

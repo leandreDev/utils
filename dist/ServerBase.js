@@ -85,8 +85,11 @@ class ServerBase {
             });
         });
     }
+    reloadConfPromise() {
+        return ConfLoader_1.ConfLoader.getConf();
+    }
     reloadConf(req, res) {
-        ConfLoader_1.ConfLoader.getConf()
+        this.reloadConfPromise()
             .then((conf) => {
             this.currentApp.conf = conf;
             res.send({ code: 200 });
