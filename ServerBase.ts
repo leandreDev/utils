@@ -18,6 +18,10 @@ export class ServerBase{
 	constructor(){
 		this.currentApp = {} ;
 		this.init().then(()=>{
+			this.app.use((err, req, res, next) => {
+			    let obj = this.toErrRes(err) ;
+			    res.send(obj);
+			});
 			this.startHttpServer() ;
 		}).catch((err)=>{
 				console.log(err) ;
@@ -69,12 +73,10 @@ export class ServerBase{
 					this.secu = new UtilsSecu(this.currentApp) ;
 					this.currentApp.secu = this.secu ;
 					this.app.use( function(req, res , next){
-				        res.header("Access-Control-Allow-Methods" , "GET, POST, OPTIONS, PUT, PATCH, DELETE") ;
-				        res.header("Access-Control-Allow-Origin", "*") ;
-				        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, idtoken, JWT, date , key") ;
-				        res.header("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-				        res.header("Pragma", "no-cache"); // HTTP 1.0.
-				        res.header("Expires", "0"); // Proxies.
+						this.headers.forEach((data)=>{
+							res.header(data[0] , data[1]) ;
+						})	
+				       
 					  next() ;
 					})
 					.use((req, res, next) => {
@@ -86,16 +88,22 @@ export class ServerBase{
 					    res.send({online:true})
 					})
 					.get('/reloadConf', this.reloadConf)
-					.use((err, req, res, next) => {
-					    let obj = this.toErrRes(err) ;
-					    console.log(obj) ;
-					      res.send(obj);
-					  });
+					
 				})
 		})
 	}
 
-	public reloadConf = (req, res) => {
+	public headers:string[][] = [
+			["Access-Control-Allow-Methods" , "GET, POST, OPTIONS, PUT, PATCH, DELETE"],
+			["Access-Control-Allow-Origin", "*"],
+			["Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, idtoken, JWT, keyDate , key"],
+			["Cache-Control", "no-cache, no-store, must-revalidate"],
+			["Pragma", "no-cache"],
+			["Expires", "0"]
+
+		];
+		
+	public reloadConf (req, res)  {
 		 ConfLoader.getConf()
 		 .then((conf)=>{
 	    	this.currentApp.conf = conf ;
@@ -105,7 +113,7 @@ export class ServerBase{
 		})
 	}
 
-	public  toErrRes = (err: any): any => {
+	public  toErrRes (err: any): any{
 		if(Util.isString(err)){
 			err = {message:err }
 		}
@@ -121,7 +129,7 @@ export class ServerBase{
         return rep ;
     };
 
-    public  toJsonRes  = (objs: any, meta: any = null): any => {
+    public  toJsonRes (objs: any, meta: any = null): any  {
 	    if (!Util.isArray(objs)) {
 	        objs = [objs];
 	    };
@@ -137,75 +145,82 @@ export class ServerBase{
 	    };
 	};
 
-	public addCtx = (req, res , next) =>{
-		if(!req.ctx){
+	public get addCtx(){
+		return (req, res , next) =>{
+			if(!req.ctx){
 				req.ctx = {} ;
 			}
-			// console.log("ctx added");
-		next() ;
-	}
-
-
-
-
-
-	 public checkJWT = (req, res, next) => {
-
-		let token = req.header('JWT') 
-
-		if(token ){
-			
-			jose.JWS.createVerify(this.currentApp.licence_keyStore).verify(token)
-			.then(function(result) {
-				req.ctx.user = JSON.parse(result.payload.toString()) ;
-
-				next() ;
-	        }).catch(function(err){
-	        	next(err) ;
-	        })
-		}else{
-			
 			next() ;
 		}
 	}
+	
 
-	public hasRight = (req, res, next)  => {
-		req.ctx.roles = [] ;
-		var confSecu:any[]
-		if(req.internalCallValid){
-			
-		}else if(req.ctx.user){
 
-			req.ctx.roles = req.ctx.user.role
-			if(this.currentApp.conf &&  this.currentApp.conf.configurations && this.currentApp.conf.configurations[req.ctx.user.appId]){
-				confSecu = this.currentApp.conf.configurations[req.ctx.user.appId].httAccess["_$" + req.method.toLowerCase()] ;
-			}
-		}
-		req.ctx.roles.push("*") ;
-		if((! confSecu) &&  this.currentApp.conf && this.currentApp.conf.publicAccess ){
-			confSecu = this.currentApp.conf.publicAccess["_$" + req.method.toLowerCase()] ;
-		}
-		if(req.internalCallValid || req.method.toLowerCase() == "options"){
-			next()
-		}else{
-			let path:string =req.originalUrl ;
-			if(confSecu){
+
+	public get checkJWT(){
+		return (req, res, next) => {
+
+			let token = req.header('JWT') 
+
+			if(token ){
 				
-				let access = confSecu.find(( val )=>{
-					return path.indexOf(val.route) == 0 ;
-				})
-				
-				if(access && _.intersection(access.role , req.ctx.roles).length > 0){
+				jose.JWS.createVerify(this.currentApp.licence_keyStore).verify(token)
+				.then(function(result) {
+					req.ctx.user = JSON.parse(result.payload.toString()) ;
+
 					next() ;
-				}else{	
-					console.log("unautorized " , access , path , req.ctx.roles )
-					next("unautorized" ) ;
-				}
+		        }).catch(function(err){
+		        	next(err) ;
+		        })
 			}else{
-				console.log("unautorized, no conf match" , confSecu , path , req.ctx.roles )
-					next("unautorized" ) ;
+				
+				next() ;
 			}
-			
+		}
+	}
+
+
+
+	public get hasRight(){
+
+		return (req, res, next)  => {
+			req.ctx.roles = [] ;
+			var confSecu:any[]
+			if(req.internalCallValid){
+				
+			}else if(req.ctx.user){
+
+				req.ctx.roles = req.ctx.user.role
+				if(this.currentApp.conf &&  this.currentApp.conf.configurations && this.currentApp.conf.configurations[req.ctx.user.appId]){
+					confSecu = this.currentApp.conf.configurations[req.ctx.user.appId].httAccess["_$" + req.method.toLowerCase()] ;
+				}
+			}
+			req.ctx.roles.push("*") ;
+			if((! confSecu) &&  this.currentApp.conf && this.currentApp.conf.publicAccess ){
+				confSecu = this.currentApp.conf.publicAccess["_$" + req.method.toLowerCase()] ;
+			}
+			if(req.internalCallValid || req.method.toLowerCase() == "options"){
+				next()
+			}else{
+				let path:string =req.originalUrl ;
+				if(confSecu){
+					
+					let access = confSecu.find(( val )=>{
+						return path.indexOf(val.route) == 0 ;
+					})
+					
+					if(access && _.intersection(access.role , req.ctx.roles).length > 0){
+						next() ;
+					}else{	
+						console.log("unautorized " , access , path , req.ctx.roles )
+						next("unautorized" ) ;
+					}
+				}else{
+					console.log("unautorized, no conf match" , confSecu , path , req.ctx.roles )
+						next("unautorized" ) ;
+				}
+				
+			}
 		}
 	}
 

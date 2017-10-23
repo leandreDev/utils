@@ -17,32 +17,44 @@ class ConfLoader {
             options.json = true;
             let secu = new UtilsSecu_1.UtilsSecu({ conf: { secretKey: process.env.SECRET } });
             let contextInterpretor = new CtxInterpretor_1.CtxInterpretor(process.env);
-            secu.addHeadersKey(options);
-            request.get(options).then((val) => {
-                let data;
-                if (val && val.code == 200 && val.response && val.response[0]) {
-                    data = val.response[0];
-                    fs.ensureDirSync("./confs");
-                    fs.writeJSONSync("./confs/" + process.env.SRV_ID + ".json", data);
-                }
-                else {
-                    if (val && val.code != 200) {
-                        console.log(val);
-                    }
-                    data = fs.readJSONSync("./confs/" + process.env.SRV_ID + ".json");
-                }
-                let conf = contextInterpretor.updateEnv(data);
-                resolve(data);
-            }).catch(err => {
+            if (process.env.CONF_URL == "none") {
                 try {
                     let val = fs.readJSONSync("./confs/" + process.env.SRV_ID + ".json");
                     let conf = contextInterpretor.updateEnv(val);
                     resolve(val);
                 }
-                catch (err2) {
+                catch (err) {
                     reject(err);
                 }
-            });
+            }
+            else {
+                secu.addHeadersKey(options);
+                request.get(options).then((val) => {
+                    let data;
+                    if (val && val.code == 200 && val.response && val.response[0]) {
+                        data = val.response[0];
+                        fs.ensureDirSync("./confs");
+                        fs.writeJSONSync("./confs/" + process.env.SRV_ID + ".json", data);
+                    }
+                    else {
+                        if (val && val.code != 200) {
+                            console.log(val);
+                        }
+                        data = fs.readJSONSync("./confs/" + process.env.SRV_ID + ".json");
+                    }
+                    let conf = contextInterpretor.updateEnv(data);
+                    resolve(data);
+                }).catch(err => {
+                    try {
+                        let val = fs.readJSONSync("./confs/" + process.env.SRV_ID + ".json");
+                        let conf = contextInterpretor.updateEnv(val);
+                        resolve(val);
+                    }
+                    catch (err2) {
+                        reject(err);
+                    }
+                });
+            }
         });
     }
 }

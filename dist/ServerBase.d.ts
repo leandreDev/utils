@@ -10,10 +10,11 @@ export declare class ServerBase {
     constructor();
     protected startHttpServer(): void;
     protected init(): Promise<any>;
-    reloadConf: (req: any, res: any) => void;
-    toErrRes: (err: any) => any;
-    toJsonRes: (objs: any, meta?: any) => any;
-    addCtx: (req: any, res: any, next: any) => void;
-    checkJWT: (req: any, res: any, next: any) => void;
-    hasRight: (req: any, res: any, next: any) => void;
+    headers: string[][];
+    reloadConf(req: any, res: any): void;
+    toErrRes(err: any): any;
+    toJsonRes(objs: any, meta?: any): any;
+    readonly addCtx: (req: any, res: any, next: any) => void;
+    readonly checkJWT: (req: any, res: any, next: any) => void;
+    readonly hasRight: (req: any, res: any, next: any) => void;
 }

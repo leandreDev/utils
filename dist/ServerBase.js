@@ -10,107 +10,20 @@ const Util = require("util");
 const assert = require("assert");
 class ServerBase {
     constructor() {
-        this.reloadConf = (req, res) => {
-            ConfLoader_1.ConfLoader.getConf()
-                .then((conf) => {
-                this.currentApp.conf = conf;
-                res.send({ code: 200 });
-            }).catch((err) => {
-                res.send(this.toErrRes(err));
-            });
-        };
-        this.toErrRes = (err) => {
-            if (Util.isString(err)) {
-                err = { message: err };
-            }
-            let rep = {
-                code: 500,
-                message: err.message,
-                name: err.name,
-                stack: undefined
-            };
-            if (this.currentApp.conf.debug) {
-                rep.stack = err.stack;
-            }
-            return rep;
-        };
-        this.toJsonRes = (objs, meta = null) => {
-            if (!Util.isArray(objs)) {
-                objs = [objs];
-            }
-            ;
-            if (!meta) {
-                meta = {};
-            }
-            ;
-            return {
-                code: 200,
-                meta: meta,
-                response: objs
-            };
-        };
-        this.addCtx = (req, res, next) => {
-            if (!req.ctx) {
-                req.ctx = {};
-            }
-            // console.log("ctx added");
-            next();
-        };
-        this.checkJWT = (req, res, next) => {
-            let token = req.header('JWT');
-            if (token) {
-                jose.JWS.createVerify(this.currentApp.licence_keyStore).verify(token)
-                    .then(function (result) {
-                    req.ctx.user = JSON.parse(result.payload.toString());
-                    next();
-                }).catch(function (err) {
-                    next(err);
-                });
-            }
-            else {
-                next();
-            }
-        };
-        this.hasRight = (req, res, next) => {
-            req.ctx.roles = [];
-            var confSecu;
-            if (req.internalCallValid) {
-            }
-            else if (req.ctx.user) {
-                req.ctx.roles = req.ctx.user.role;
-                if (this.currentApp.conf && this.currentApp.conf.configurations && this.currentApp.conf.configurations[req.ctx.user.appId]) {
-                    confSecu = this.currentApp.conf.configurations[req.ctx.user.appId].httAccess["_$" + req.method.toLowerCase()];
-                }
-            }
-            req.ctx.roles.push("*");
-            if ((!confSecu) && this.currentApp.conf && this.currentApp.conf.publicAccess) {
-                confSecu = this.currentApp.conf.publicAccess["_$" + req.method.toLowerCase()];
-            }
-            if (req.internalCallValid || req.method.toLowerCase() == "options") {
-                next();
-            }
-            else {
-                let path = req.originalUrl;
-                if (confSecu) {
-                    let access = confSecu.find((val) => {
-                        return path.indexOf(val.route) == 0;
-                    });
-                    if (access && _.intersection(access.role, req.ctx.roles).length > 0) {
-                        next();
-                    }
-                    else {
-                        console.log("unautorized ", access, path, req.ctx.roles);
-                        next("unautorized");
-                    }
-                }
-                else {
-                    console.log("unautorized, no conf match", confSecu, path, req.ctx.roles);
-                    next("unautorized");
-                }
-            }
-        };
+        this.headers = [
+            ["Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE"],
+            ["Access-Control-Allow-Origin", "*"],
+            ["Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, idtoken, JWT, keyDate , key"],
+            ["Cache-Control", "no-cache, no-store, must-revalidate"],
+            ["Pragma", "no-cache"],
+            ["Expires", "0"]
+        ];
         this.currentApp = {};
         this.init().then(() => {
+            this.app.use((err, req, res, next) => {
+                let obj = this.toErrRes(err);
+                res.send(obj);
+            });
             this.startHttpServer();
         }).catch((err) => {
             console.log(err);
@@ -155,12 +68,9 @@ class ServerBase {
                 this.secu = new UtilsSecu_1.UtilsSecu(this.currentApp);
                 this.currentApp.secu = this.secu;
                 this.app.use(function (req, res, next) {
-                    res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
-                    res.header("Access-Control-Allow-Origin", "*");
-                    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, idtoken, JWT, date , key");
-                    res.header("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-                    res.header("Pragma", "no-cache"); // HTTP 1.0.
-                    res.header("Expires", "0"); // Proxies.
+                    this.headers.forEach((data) => {
+                        res.header(data[0], data[1]);
+                    });
                     next();
                 })
                     .use((req, res, next) => {
@@ -171,14 +81,115 @@ class ServerBase {
                     .get('/', (req, res) => {
                     res.send({ online: true });
                 })
-                    .get('/reloadConf', this.reloadConf)
-                    .use((err, req, res, next) => {
-                    let obj = this.toErrRes(err);
-                    console.log(obj);
-                    res.send(obj);
-                });
+                    .get('/reloadConf', this.reloadConf);
             });
         });
+    }
+    reloadConf(req, res) {
+        ConfLoader_1.ConfLoader.getConf()
+            .then((conf) => {
+            this.currentApp.conf = conf;
+            res.send({ code: 200 });
+        }).catch((err) => {
+            res.send(this.toErrRes(err));
+        });
+    }
+    toErrRes(err) {
+        if (Util.isString(err)) {
+            err = { message: err };
+        }
+        let rep = {
+            code: 500,
+            message: err.message,
+            name: err.name,
+            stack: undefined
+        };
+        if (this.currentApp.conf.debug) {
+            rep.stack = err.stack;
+        }
+        return rep;
+    }
+    ;
+    toJsonRes(objs, meta = null) {
+        if (!Util.isArray(objs)) {
+            objs = [objs];
+        }
+        ;
+        if (!meta) {
+            meta = {};
+        }
+        ;
+        return {
+            code: 200,
+            meta: meta,
+            response: objs
+        };
+    }
+    ;
+    get addCtx() {
+        return (req, res, next) => {
+            if (!req.ctx) {
+                req.ctx = {};
+            }
+            next();
+        };
+    }
+    get checkJWT() {
+        return (req, res, next) => {
+            let token = req.header('JWT');
+            if (token) {
+                jose.JWS.createVerify(this.currentApp.licence_keyStore).verify(token)
+                    .then(function (result) {
+                    req.ctx.user = JSON.parse(result.payload.toString());
+                    next();
+                }).catch(function (err) {
+                    next(err);
+                });
+            }
+            else {
+                next();
+            }
+        };
+    }
+    get hasRight() {
+        return (req, res, next) => {
+            req.ctx.roles = [];
+            var confSecu;
+            if (req.internalCallValid) {
+            }
+            else if (req.ctx.user) {
+                req.ctx.roles = req.ctx.user.role;
+                if (this.currentApp.conf && this.currentApp.conf.configurations && this.currentApp.conf.configurations[req.ctx.user.appId]) {
+                    confSecu = this.currentApp.conf.configurations[req.ctx.user.appId].httAccess["_$" + req.method.toLowerCase()];
+                }
+            }
+            req.ctx.roles.push("*");
+            if ((!confSecu) && this.currentApp.conf && this.currentApp.conf.publicAccess) {
+                confSecu = this.currentApp.conf.publicAccess["_$" + req.method.toLowerCase()];
+            }
+            if (req.internalCallValid || req.method.toLowerCase() == "options") {
+                next();
+            }
+            else {
+                let path = req.originalUrl;
+                if (confSecu) {
+                    let access = confSecu.find((val) => {
+                        return path.indexOf(val.route) == 0;
+                    });
+                    if (access && _.intersection(access.role, req.ctx.roles).length > 0) {
+                        next();
+                    }
+                    else {
+                        console.log("unautorized ", access, path, req.ctx.roles);
+                        next("unautorized");
+                    }
+                }
+                else {
+                    console.log("unautorized, no conf match", confSecu, path, req.ctx.roles);
+                    next("unautorized");
+                }
+            }
+        };
     }
 }
 exports.ServerBase = ServerBase;

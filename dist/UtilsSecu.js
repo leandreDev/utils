@@ -5,16 +5,23 @@ const assert = require("assert");
 class UtilsSecu {
     constructor(currentApp) {
         this.currentApp = currentApp;
-        this.chekInternalMidelWare = (req, res, next) => {
+        assert(currentApp.conf.secretKey, "secretKey is not spécified");
+    }
+    addHeadersKey(rq) {
+        var date = Date.now();
+        rq.headers = {
+            'keyDate': date,
+            'key': crypto.createHmac('sha256', this.currentApp.conf.secretKey)
+                .update(date + rq.url.toLowerCase())
+                .digest('hex')
+        };
+    }
+    get chekInternalMidelWare() {
+        return (req, res, next) => {
             var date = req.header('keyDate');
             var key = req.header('key');
             var requrl;
             if (key) {
-                // 	requrl = url.format({
-                //     protocol: req.protocol,
-                //     host: req.get('host'),
-                //     pathname: req.originalUrl,
-                // });
                 if (req.originalUrl && req.originalUrl.length > 1) {
                     requrl = this.currentApp.conf.urlBase + req.originalUrl.substr(1);
                 }
@@ -25,7 +32,7 @@ class UtilsSecu {
                     .update(date + requrl.toLowerCase())
                     .digest('hex');
                 if (newKey == key) {
-                    req.internalCallValid = true;
+                    req.ctx.internalCallValid = true;
                     next();
                 }
                 else {
@@ -38,16 +45,13 @@ class UtilsSecu {
                 next();
             }
         };
-        this.protectInternalMidelWare = (req, res, next) => {
+    }
+    get protectInternalMidelWare() {
+        return (req, res, next) => {
             var date = req.header('keyDate');
             var key = req.header('key');
             var requrl;
             if (key) {
-                // requrl = url.format({
-                //    protocol: req.protocol,
-                //    host: req.get('host'),
-                //    pathname: req.originalUrl,
-                // });
                 if (req.originalUrl && req.originalUrl.length > 1) {
                     requrl = this.currentApp.conf.urlBase + req.originalUrl.substr(1);
                 }
@@ -58,7 +62,7 @@ class UtilsSecu {
                     .update(date + requrl.toLowerCase())
                     .digest('hex');
                 if (newKey == key) {
-                    req.internalCallValid = true;
+                    req.ctx.internalCallValid = true;
                     next();
                 }
                 else {
@@ -69,16 +73,6 @@ class UtilsSecu {
             else {
                 next("no key");
             }
-        };
-        assert(currentApp.conf.secretKey, "secretKey is not spécified");
-    }
-    addHeadersKey(rq) {
-        var date = Date.now();
-        rq.headers = {
-            'keyDate': date,
-            'key': crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-                .update(date + rq.url.toLowerCase())
-                .digest('hex')
         };
     }
 }
