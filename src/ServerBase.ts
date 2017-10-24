@@ -11,7 +11,7 @@ import * as assert from 'assert' ;
 export class ServerBase{
 
 	public currentApp:any ;
-	public app:express ;
+	public app:any ;
 	public secu:UtilsSecu ;
 	public server:http.Server ;
 
