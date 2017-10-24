@@ -7,7 +7,6 @@ const UtilsSecu_1 = require("./UtilsSecu");
 const jose = require("node-jose");
 const _ = require("lodash");
 const Util = require("util");
-const assert = require("assert");
 class ServerBase {
     constructor() {
         this.headers = [
@@ -35,55 +34,63 @@ class ServerBase {
         });
     }
     init() {
-        return ConfLoader_1.ConfLoader.getConf().then((conf) => {
+        let prom = ConfLoader_1.ConfLoader.getConf().then((conf) => {
             this.currentApp.conf = conf;
             if (this.currentApp.conf.debug) {
                 console.log(this.currentApp);
             }
-            assert(this.currentApp.conf['licence_well-known'], "licence_well-known is not spécified");
+            this.app = express();
+            console.log("start app");
+            this.currentApp.express = this.app;
+            this.currentApp.toErrRes = this.toErrRes;
+            this.currentApp.toJsonRes = this.toJsonRes;
+            this.secu = new UtilsSecu_1.UtilsSecu(this.currentApp);
+            this.currentApp.secu = this.secu;
+            this.app.use(function (req, res, next) {
+                this.headers.forEach((data) => {
+                    res.header(data[0], data[1]);
+                });
+                next();
+            })
+                .use((req, res, next) => {
+                console.log(req.method + "," + req.url);
+                next();
+            })
+                .use(this.addCtx, this.secu.chekInternalMidelWare);
             return this.currentApp;
         }).then(() => {
-            let opt = {
-                url: this.currentApp.conf['licence_well-known'],
-                json: true
-            };
-            return request.get(opt).then((conf) => {
-                let opt2 = {
-                    url: conf.jwks_uri,
+            if (this.currentApp.conf['licence_well-known'] && this.currentApp.conf['licence_well-known'] != "") {
+                let opt = {
+                    url: this.currentApp.conf['licence_well-known'],
                     json: true
                 };
-                return request.get(opt2);
-            });
-        }).then((objKey) => {
-            return jose.JWK.asKeyStore(objKey).then((keyStore) => {
-                this.currentApp.licence_keyStore = keyStore;
-                return this.currentApp;
-            })
-                .then(() => {
-                this.app = express();
-                console.log("start app");
-                this.currentApp.express = this.app;
-                this.currentApp.toErrRes = this.toErrRes;
-                this.currentApp.toJsonRes = this.toJsonRes;
-                this.secu = new UtilsSecu_1.UtilsSecu(this.currentApp);
-                this.currentApp.secu = this.secu;
-                this.app.use(function (req, res, next) {
-                    this.headers.forEach((data) => {
-                        res.header(data[0], data[1]);
+                return request.get(opt).then((conf) => {
+                    let opt2 = {
+                        url: conf.jwks_uri,
+                        json: true
+                    };
+                    return request.get(opt2);
+                }).then((objKey) => {
+                    return jose.JWK.asKeyStore(objKey).then((keyStore) => {
+                        this.currentApp.licence_keyStore = keyStore;
+                        return this.currentApp;
+                    })
+                        .then(() => {
+                        this.app.use(this.checkJWT);
                     });
-                    next();
-                })
-                    .use((req, res, next) => {
-                    console.log(req.method + "," + req.url);
-                    next();
-                })
-                    .use(this.addCtx, this.secu.chekInternalMidelWare, this.checkJWT, this.hasRight)
-                    .get('/', (req, res) => {
-                    res.send({ online: true });
-                })
-                    .get('/reloadConf', this.reloadConf);
-            });
+                });
+            }
+            else {
+                return this.currentApp;
+            }
+        }).then(data => {
+            this.app.use(this.hasRight)
+                .get('/', (req, res) => {
+                res.send({ online: true });
+            })
+                .get('/reloadConf', this.reloadConf);
         });
+        return prom;
     }
     reloadConfPromise() {
         return ConfLoader_1.ConfLoader.getConf();

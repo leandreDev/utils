@@ -7,7 +7,7 @@
     "moduleResolution": "node",
     "outDir": "dist",
     "sourceMap": true,
-    "target": "es2015"
+    "target": "es2017"
   },
   "exclude": [
     "node_modules"
@@ -16,6 +16,6 @@
   "buildOnSave": false,
   "atom": { "rewriteTsconfig": false } ,
   "files": [
-    "./index.ts"
+    "./src/index.ts"
   ]
 }
