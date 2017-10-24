@@ -194,7 +194,7 @@ export class ServerBase{
 		return (req, res, next)  => {
 			req.ctx.roles = [] ;
 			var confSecu:any[]
-			if(req.internalCallValid){
+			if(req.ctx.internalCallValid){
 				
 			}else if(req.ctx.user){
 
@@ -207,7 +207,7 @@ export class ServerBase{
 			if((! confSecu) &&  this.currentApp.conf && this.currentApp.conf.publicAccess ){
 				confSecu = this.currentApp.conf.publicAccess["_$" + req.method.toLowerCase()] ;
 			}
-			if(req.internalCallValid || req.method.toLowerCase() == "options"){
+			if(req.ctx.internalCallValid || req.method.toLowerCase() == "options"){
 				next()
 			}else{
 				let path:string =req.originalUrl ;

@@ -41,7 +41,7 @@ export class UtilsSecu{
 		        	req.ctx.internalCallValid = true ;
 		        	next() ;
 		        }else{
-		        	req.internalCallValid = false ;
+		        	req.ctx.internalCallValid = false ;
 		        	console.log("key dont match uri : " + requrl , date , key , newKey) ;
 		        	next() ;
 		        }
