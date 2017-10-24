@@ -67,28 +67,30 @@ export class ServerBase{
 					json:true 
 				}
 				return request.get(opt).catch(err=>{
-						let val = fs.readJSONSync("./confs/dep/" + this.currentApp.conf['licence_well-known'] +".json" ) ;
+						let val = fs.readJSONSync("./confs/dep/" + this.currentApp.conf['licence_well-known'].replace(/\//gi, "_") +".json" ) ;
 						return val
 					}).then((conf)=>{
+						fs.ensureDirSync("./confs/dep/")
+						fs.writeJSONSync("./confs/dep/" + this.currentApp.conf['licence_well-known'].replace(/\//gi, "_")  + ".json" , conf )
 						let opt2 ={
 						
 						url:conf.jwks_uri ,
 						json:true 
 						}
 						return request.get(opt2).catch(err=>{
-							let val = fs.readJSONSync("./confs/dep/" + conf.jwks_uri +".json" ) ;
+							let val = fs.readJSONSync("./confs/dep/" + conf.jwks_uri.replace(/\//gi, "_")  +".json" ) ;
 							return val
+						}).then((objKey)=>{
+							fs.ensureDirSync("./confs/dep/")
+							fs.writeJSONSync("./confs/dep/" + conf.jwks_uri.replace(/\//gi, "_")  + ".json" , objKey )
+							return jose.JWK.asKeyStore(objKey).then((keyStore)=>{
+									this.currentApp.licence_keyStore = keyStore ;
+									return this.currentApp ;
+								})
+								.then(()=>{
+									this.app.use(this.checkJWT )
+								})
 						})
-					}).then((objKey)=>{
-						fs.ensureDirSync("./confs/dep/")
-						fs.writeJSONSync("./confs/dep/" + this.currentApp.conf['licence_well-known']  + ".json" , objKey )
-						return jose.JWK.asKeyStore(objKey).then((keyStore)=>{
-								this.currentApp.licence_keyStore = keyStore ;
-								return this.currentApp ;
-							})
-							.then(()=>{
-								this.app.use(this.checkJWT )
-							})
 					})
 			}else{
 				return this.currentApp ;
