@@ -46,7 +46,7 @@ class ServerBase {
             this.currentApp.toJsonRes = this.toJsonRes;
             this.secu = new UtilsSecu_1.UtilsSecu(this.currentApp);
             this.currentApp.secu = this.secu;
-            this.app.use(function (req, res, next) {
+            this.app.use((req, res, next) => {
                 this.headers.forEach((data) => {
                     res.header(data[0], data[1]);
                 });
