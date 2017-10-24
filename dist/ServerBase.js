@@ -7,6 +7,7 @@ const UtilsSecu_1 = require("./UtilsSecu");
 const jose = require("node-jose");
 const _ = require("lodash");
 const Util = require("util");
+const fs = require("fs-extra");
 class ServerBase {
     constructor() {
         this.headers = [
@@ -70,7 +71,12 @@ class ServerBase {
                         json: true
                     };
                     return request.get(opt2);
+                }).catch(err => {
+                    let val = fs.readJSONSync("./confs/dep/" + this.currentApp.conf['licence_well-known'] + ".json");
+                    return val;
                 }).then((objKey) => {
+                    fs.ensureDirSync("./confs/dep/");
+                    fs.writeJSONSync("./confs/dep/" + this.currentApp.conf['licence_well-known'] + ".json", objKey);
                     return jose.JWK.asKeyStore(objKey).then((keyStore) => {
                         this.currentApp.licence_keyStore = keyStore;
                         return this.currentApp;

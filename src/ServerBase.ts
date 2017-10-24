@@ -7,7 +7,7 @@ import * as _  from 'lodash' ;
 import * as Util  from 'util' ;
 import * as http from 'http' ;
 import * as assert from 'assert' ;
-
+import * as fs  from 'fs-extra' ;
 export class ServerBase{
 
 	public currentApp:any ;
@@ -73,7 +73,12 @@ export class ServerBase{
 						json:true 
 						}
 						return request.get(opt2)
+					}).catch(err=>{
+						let val = fs.readJSONSync("./confs/dep/" + this.currentApp.conf['licence_well-known'] +".json" ) ;
+						return val
 					}).then((objKey)=>{
+						fs.ensureDirSync("./confs/dep/")
+						fs.writeJSONSync("./confs/dep/" + this.currentApp.conf['licence_well-known']  + ".json" , objKey )
 						return jose.JWK.asKeyStore(objKey).then((keyStore)=>{
 								this.currentApp.licence_keyStore = keyStore ;
 								return this.currentApp ;
