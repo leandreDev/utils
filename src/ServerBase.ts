@@ -153,7 +153,7 @@ export class ServerBase{
 	    };
 	};
 
-	public get addCtx(){
+	public get addCtx(): express.RequestHandler | express.ErrorRequestHandler{
 		return (req, res , next) =>{
 			if(!req.ctx){
 				req.ctx = {} ;
@@ -165,7 +165,7 @@ export class ServerBase{
 
 
 
-	public get checkJWT(){
+	public get checkJWT(): express.RequestHandler | express.ErrorRequestHandler {
 		return (req, res, next) => {
 
 			let token = req.header('JWT') 
@@ -189,7 +189,7 @@ export class ServerBase{
 
 
 
-	public get hasRight(){
+	public get hasRight(): express.RequestHandler | express.ErrorRequestHandler {
 
 		return (req, res, next)  => {
 			req.ctx.roles = [] ;

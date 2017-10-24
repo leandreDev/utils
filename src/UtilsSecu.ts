@@ -2,6 +2,7 @@
 import * as crypto from  'crypto';
 import * as url from 'url' ;
 import * as assert from 'assert' ;
+import * as express from "express" ;
 
 export class UtilsSecu{
 
@@ -19,7 +20,7 @@ export class UtilsSecu{
 		  }
 	}
 
-	public get chekInternalMidelWare():Function{
+	public get chekInternalMidelWare(): express.RequestHandler | express.ErrorRequestHandler {
 		return (req, res, next)=>{
 			var date = req.header('keyDate') ;
 			var key = req.header('key')  ;
@@ -52,7 +53,7 @@ export class UtilsSecu{
 		}
 	} 
 
-	public get protectInternalMidelWare():Function{
+	public get protectInternalMidelWare():express.RequestHandler | express.ErrorRequestHandler{
 		return (req, res, next) => {
 			var date = req.header('keyDate') ;
 			var key = req.header('key')  ;
