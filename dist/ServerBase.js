@@ -65,15 +65,18 @@ class ServerBase {
                     url: this.currentApp.conf['licence_well-known'],
                     json: true
                 };
-                return request.get(opt).then((conf) => {
+                return request.get(opt).catch(err => {
+                    let val = fs.readJSONSync("./confs/dep/" + this.currentApp.conf['licence_well-known'] + ".json");
+                    return val;
+                }).then((conf) => {
                     let opt2 = {
                         url: conf.jwks_uri,
                         json: true
                     };
-                    return request.get(opt2);
-                }).catch(err => {
-                    let val = fs.readJSONSync("./confs/dep/" + this.currentApp.conf['licence_well-known'] + ".json");
-                    return val;
+                    return request.get(opt2).catch(err => {
+                        let val = fs.readJSONSync("./confs/dep/" + conf.jwks_uri + ".json");
+                        return val;
+                    });
                 }).then((objKey) => {
                     fs.ensureDirSync("./confs/dep/");
                     fs.writeJSONSync("./confs/dep/" + this.currentApp.conf['licence_well-known'] + ".json", objKey);
