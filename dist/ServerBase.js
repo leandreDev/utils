@@ -35,7 +35,7 @@ class ServerBase {
         });
     }
     init() {
-        let prom = ConfLoader_1.ConfLoader.getConf().then((conf) => {
+        let prom = this.reloadConfPromise().then((conf) => {
             this.currentApp.conf = conf;
             if (this.currentApp.conf.debug) {
                 console.log(this.currentApp);
@@ -106,14 +106,16 @@ class ServerBase {
     reloadConfPromise() {
         return ConfLoader_1.ConfLoader.getConf();
     }
-    reloadConf(req, res) {
-        this.reloadConfPromise()
-            .then((conf) => {
-            this.currentApp.conf = conf;
-            res.send({ code: 200 });
-        }).catch((err) => {
-            res.send(this.toErrRes(err));
-        });
+    get reloadConf() {
+        return (req, res) => {
+            this.reloadConfPromise()
+                .then((conf) => {
+                this.currentApp.conf = conf;
+                res.send({ code: 200 });
+            }).catch((err) => {
+                res.send(this.toErrRes(err));
+            });
+        };
     }
     toErrRes(err) {
         if (Util.isString(err)) {

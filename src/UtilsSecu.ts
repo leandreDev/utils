@@ -11,6 +11,7 @@ export class UtilsSecu{
 	}
 	
 	public addHeadersKey (rq:any){
+		
 		var date:number = Date.now() ;
 		 rq.headers =  {
 		    'keyDate': date ,

@@ -12,7 +12,7 @@ export declare class ServerBase {
     protected init(): Promise<any>;
     headers: string[][];
     protected reloadConfPromise(): Promise<any>;
-    reloadConf(req: any, res: any): void;
+    readonly reloadConf: (req: any, res: any) => void;
     toErrRes(err: any): any;
     toJsonRes(objs: any, meta?: any): any;
     readonly addCtx: express.RequestHandler | express.ErrorRequestHandler;
