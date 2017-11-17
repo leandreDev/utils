@@ -157,7 +157,7 @@ export class ServerBase{
 	}
 
 	public get toErrRes () {
-		return (err: any) => {
+		return (err: any):any => {
 			if(Util.isString(err)){
 				err = {message:err }
 			}
@@ -167,7 +167,7 @@ export class ServerBase{
 	            name: err.name,
 	            stack: undefined
 	        };
-	        console.log("updated !!!!")
+	        
 	        if(this.currentApp.conf.debug){
 	          rep.stack = err.stack ;
 	        }
