@@ -28,6 +28,25 @@ class ServerBase {
         }).catch((err) => {
             console.log(err);
         });
+        process.on('message', this.parentProcessHandler);
+    }
+    get parentProcessHandler() {
+        return (msg) => {
+            console.log("parentMessage ", msg);
+            switch (msg) {
+                case "reloadConf":
+                    this.reloadConfPromise()
+                        .then((conf) => {
+                        this.currentApp.conf = conf;
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+                    break;
+            }
+        };
+    }
+    sendToparentProcess(msg) {
+        process.send(msg);
     }
     startHttpServer() {
         this.server = this.app.listen(this.currentApp.conf.port, () => {
