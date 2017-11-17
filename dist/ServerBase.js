@@ -128,6 +128,7 @@ class ServerBase {
                 name: err.name,
                 stack: undefined
             };
+            console.log("updated !!!!");
             if (this.currentApp.conf.debug) {
                 rep.stack = err.stack;
             }
