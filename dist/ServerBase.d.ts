@@ -9,7 +9,7 @@ export declare class ServerBase {
     server: http.Server;
     constructor();
     protected readonly parentProcessHandler: (msg: any) => void;
-    protected sendToparentProcess(msg: any): void;
+    protected sendToParentProcess(msg: any): void;
     protected startHttpServer(): void;
     protected init(): Promise<any>;
     headers: string[][];

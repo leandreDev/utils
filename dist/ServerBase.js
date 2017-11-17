@@ -45,7 +45,7 @@ class ServerBase {
             }
         };
     }
-    sendToparentProcess(msg) {
+    sendToParentProcess(msg) {
         process.send(msg);
     }
     startHttpServer() {

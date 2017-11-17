@@ -47,7 +47,7 @@ export class ServerBase{
 		}
 	}
 
-	protected  sendToparentProcess(msg){
+	protected  sendToParentProcess(msg){
 		process.send(msg)
 	}
 
