@@ -133,36 +133,40 @@ export class ServerBase{
 		}
 	}
 
-	public  toErrRes (err: any): any{
-		if(Util.isString(err)){
-			err = {message:err }
-		}
-        let rep = {
-            code: 500,
-            message: err.message,
-            name: err.name,
-            stack: undefined
-        };
-        if(this.currentApp.conf.debug){
-          rep.stack = err.stack ;
-        }
-        return rep ;
+	public get toErrRes () {
+		return (err: any) => {
+			if(Util.isString(err)){
+				err = {message:err }
+			}
+	        let rep = {
+	            code: 500,
+	            message: err.message,
+	            name: err.name,
+	            stack: undefined
+	        };
+	        if(this.currentApp.conf.debug){
+	          rep.stack = err.stack ;
+	        }
+	        return rep ;
+	    }
     };
 
-    public  toJsonRes (objs: any, meta: any = null): any  {
-	    if (!Util.isArray(objs)) {
-	        objs = [objs];
-	    };
+    public  get toJsonRes (){
+    	return (objs: any, meta: any = null): any  =>{
+		    if (!Util.isArray(objs)) {
+		        objs = [objs];
+		    };
 
-	    if (!meta) {
-	        meta = {};
-	    };
+		    if (!meta) {
+		        meta = {};
+		    };
 
-	    return {
-	        code: 200,
-	        meta: meta,
-	        response: objs
-	    };
+		    return {
+		        code: 200,
+		        meta: meta,
+		        response: objs
+		    };
+		}
 	};
 
 	public get addCtx(): express.RequestHandler | express.ErrorRequestHandler{

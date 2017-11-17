@@ -117,35 +117,39 @@ class ServerBase {
             });
         };
     }
-    toErrRes(err) {
-        if (Util.isString(err)) {
-            err = { message: err };
-        }
-        let rep = {
-            code: 500,
-            message: err.message,
-            name: err.name,
-            stack: undefined
+    get toErrRes() {
+        return (err) => {
+            if (Util.isString(err)) {
+                err = { message: err };
+            }
+            let rep = {
+                code: 500,
+                message: err.message,
+                name: err.name,
+                stack: undefined
+            };
+            if (this.currentApp.conf.debug) {
+                rep.stack = err.stack;
+            }
+            return rep;
         };
-        if (this.currentApp.conf.debug) {
-            rep.stack = err.stack;
-        }
-        return rep;
     }
     ;
-    toJsonRes(objs, meta = null) {
-        if (!Util.isArray(objs)) {
-            objs = [objs];
-        }
-        ;
-        if (!meta) {
-            meta = {};
-        }
-        ;
-        return {
-            code: 200,
-            meta: meta,
-            response: objs
+    get toJsonRes() {
+        return (objs, meta = null) => {
+            if (!Util.isArray(objs)) {
+                objs = [objs];
+            }
+            ;
+            if (!meta) {
+                meta = {};
+            }
+            ;
+            return {
+                code: 200,
+                meta: meta,
+                response: objs
+            };
         };
     }
     ;
