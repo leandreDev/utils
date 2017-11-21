@@ -57,12 +57,12 @@ export class CtxInterpretor {
         }
         envEnd = stringKey.indexOf("$$", envStart)  ;
         if(envEnd == -1){
-          envEnd = stringKey.length -1 ;
+          envEnd = stringKey.length  ;
         }else if(envEnd+2 < stringKey.length -1){
           postEnv = stringKey.substr(envEnd+2);
         }
-        
-        envVar = stringKey.substring(envStart+5 , envEnd+1) ;
+
+        envVar = stringKey.substring(envStart+5 , envEnd) ;
 
         stringKey = preEnv + this.setEnv(envVar) + postEnv ;
         console.log(stringKey) ;
