@@ -58,8 +58,10 @@ export class CtxInterpretor {
           postEnv = stringKey.substr(envEnd+2);
         }
         envVar = stringKey.substring(envStart+5 , envEnd) ;
+
         stringKey = preEnv + this.setEnv(envVar) + postEnv ;
-        envStart = stringKey.indexOf("$ENV." , envStart) ;
+        console.log(stringKey) ;
+        envStart = stringKey.indexOf("$ENV." , envStart+1) ;
       }
       return stringKey ;
       // arr = stringKey.split("$ENV.");
