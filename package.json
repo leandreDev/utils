@@ -6,7 +6,8 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc"
+    "start": "tsc",
+    "testing": "node dist/test.js"
   },
   "repository": {
     "type": "git",

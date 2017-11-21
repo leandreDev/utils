@@ -8,11 +8,13 @@ class CtxInterpretor {
         this.context = context;
     }
     setEnv(varKey) {
+        console.log(varKey);
         if (varKey.indexOf(".") == -1) {
             if (this.context.hasOwnProperty(varKey)) {
                 return this.context[varKey];
             }
             else {
+                console.log(this.context.hasOwnProperty(varKey));
                 return "$ENV." + varKey + "$$";
             }
         }
@@ -20,7 +22,7 @@ class CtxInterpretor {
             let argVar = varKey.split(".");
             let targetContext = this.context;
             argVar.forEach((val) => {
-                if (targetContext && targetContext.hasOwnProperty(varKey)) {
+                if (targetContext && targetContext.hasOwnProperty(val)) {
                     targetContext = targetContext[val];
                 }
                 else {
@@ -58,7 +60,7 @@ class CtxInterpretor {
                 else if (envEnd + 2 < stringKey.length - 1) {
                     postEnv = stringKey.substr(envEnd + 2);
                 }
-                envVar = stringKey.substring(envStart + 5, envEnd);
+                envVar = stringKey.substring(envStart + 5, envEnd + 1);
                 stringKey = preEnv + this.setEnv(envVar) + postEnv;
                 console.log(stringKey);
                 envStart = stringKey.indexOf("$ENV.", envStart + 1);
