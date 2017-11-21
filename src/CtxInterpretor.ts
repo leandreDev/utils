@@ -12,11 +12,29 @@ export class CtxInterpretor {
 
 
   private setEnv(varKey) {
-    if (this.context.hasOwnProperty(varKey)) {
-      return this.context[varKey];
-    } else {
-      return varKey;
+    if(varKey.indexOf(".") == -1){
+      if (this.context.hasOwnProperty(varKey)) {
+        return this.context[varKey];
+      } else {
+        return "$ENV." + varKey + "$$";
+      }
+    }else{
+      let argVar:string[] = varKey.split(".") ;
+      let targetContext = this.context ;
+      argVar.forEach((val)=>{
+        if (targetContext && targetContext.hasOwnProperty(varKey)) {
+          targetContext = targetContext[val] ;
+        }else{
+          targetContext = null ;
+        }
+      })
+      if(targetContext != null ){
+        return targetContext ;
+      }else{
+        return "$ENV." + varKey + "$$" ;
+      }
     }
+    
   };
 
   private setGlobalEnv(stringKey) {
@@ -24,11 +42,18 @@ export class CtxInterpretor {
     arr = stringKey.split("$ENV.");
     result = "";
     _.each(arr, (val) => {
-      var data;
-      data = val.split("$$");
-      _.each(data, (value) => {
-         result += this.setEnv(value);
-      });
+      let indexOf = val.indexOf("$$") ;
+      if(indexOf == -1){
+        result += this.setEnv(val);
+      }else{
+        let value = val.substr(0 ,indexOf) ;
+        result += this.setEnv(value) + val.substr(indexOf) ;
+      }
+      // var data;
+      // data = val.split("$$");
+      // _.each(data, (value ) => {
+      //    result += this.setEnv(value);
+      // });
     });
     return result;
   };
