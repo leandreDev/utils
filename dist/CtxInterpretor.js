@@ -38,24 +38,44 @@ class CtxInterpretor {
     ;
     setGlobalEnv(stringKey) {
         var arr, result;
-        arr = stringKey.split("$ENV.");
-        result = "";
-        _.each(arr, (val) => {
-            let indexOf = val.indexOf("$$");
-            if (indexOf == -1) {
-                result += this.setEnv(val);
+        if (stringKey.indexOf("$ENV.") == -1) {
+            return stringKey;
+        }
+        else {
+            var envStart = stringKey.indexOf("$ENV.");
+            var envEnd;
+            while (envStart > -1) {
+                let preEnv = "";
+                let postEnv = "";
+                let envVar = "";
+                if (envStart > 0) {
+                    preEnv = stringKey.substr(0, envStart);
+                }
+                envEnd = stringKey.indexOf("$$", envStart);
+                if (envEnd == -1) {
+                    envEnd = stringKey.length - 1;
+                }
+                else if (envEnd + 2 < stringKey.length - 1) {
+                    postEnv = stringKey.substr(envEnd + 2);
+                }
+                envVar = stringKey.substring(envStart + 5, envEnd);
+                stringKey = preEnv + this.setEnv(envVar) + postEnv;
+                envStart = stringKey.indexOf("$ENV.", envStart);
             }
-            else {
-                let value = val.substr(0, indexOf);
-                result += this.setEnv(value) + val.substr(indexOf);
-            }
-            // var data;
-            // data = val.split("$$");
-            // _.each(data, (value ) => {
-            //    result += this.setEnv(value);
+            return stringKey;
+            // arr = stringKey.split("$ENV.");
+            // result = "";
+            // _.each(arr, (val) => {
+            //   let indexOf = val.indexOf("$$") ;
+            //   if(indexOf == -1){
+            //     result += this.setEnv(val);
+            //   }else{
+            //     let value = val.substr(0 ,indexOf) ;
+            //     result += this.setEnv(value) + val.substr(indexOf) ;
+            //   }
             // });
-        });
-        return result;
+            // return result;
+        }
     }
     ;
     updateEnv(obj) {
