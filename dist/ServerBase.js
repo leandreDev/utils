@@ -128,6 +128,9 @@ class ServerBase {
     get reloadConf() {
         return (req, res) => {
             this.reloadConfPromise()
+                .then((conf) => {
+                this.currentApp.conf = conf;
+            })
                 .then(() => {
                 if (this.currentApp.conf['licence_well-known'] && this.currentApp.conf['licence_well-known'] != "") {
                     let opt = {
@@ -162,7 +165,7 @@ class ServerBase {
                 }
             })
                 .then((conf) => {
-                this.currentApp.conf = conf;
+                // 	this.currentApp.conf = conf ;
                 res.send({ code: 200 });
             }).catch((err) => {
                 res.send(this.toErrRes(err));
@@ -243,7 +246,7 @@ class ServerBase {
                 }
             }
             req.ctx.roles.push("*");
-            console.log("confSecu", confSecu);
+            console.log("confSecu", confSecu, this.currentApp.conf);
             if ((!confSecu) && this.currentApp.conf && this.currentApp.conf.publicAccess) {
                 console.log("find public access " + "_$" + req.method.toLowerCase());
                 confSecu = this.currentApp.conf.publicAccess["_$" + req.method.toLowerCase()];
