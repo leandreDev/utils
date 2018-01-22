@@ -222,8 +222,20 @@ class ServerBase {
             if (token) {
                 jose.JWS.createVerify(this.currentApp.licence_keyStore).verify(token)
                     .then(function (result) {
-                    req.ctx.user = JSON.parse(result.payload.toString());
-                    next();
+                    var payload = JSON.parse(result.payload.toString());
+                    let myDate = (Date.now()) / 1000;
+                    if (payload.exp < myDate) {
+                        console.log("token has expired", req.ctx.user);
+                        next("token has expired");
+                    }
+                    else if (payload.nbf > myDate) {
+                        console.log("nbf token is not valid", req.ctx.user);
+                        next("nbf token is not valid");
+                    }
+                    else {
+                        req.ctx.user = payload;
+                        next();
+                    }
                 }).catch(function (err) {
                     next(err);
                 });

@@ -26,26 +26,31 @@ export class UtilsSecu{
 			var date = req.header('keyDate') ;
 			var key = req.header('key')  ;
 			var requrl ;
+			var currentDate:number = Date.now() ;
 			if(key){
-				
-				if(req.originalUrl && req.originalUrl.length > 1){
-					requrl = this.currentApp.conf.urlBase + req.originalUrl.substr(1) ;
+				if(currentDate > date+ 30000){
+		        	console.log("keyDate is obsolete : " + currentDate + ">"  + date + "+ 30000" ) ;
+		        	next("keyDate is obsolete") ;
 				}else{
-					requrl = this.currentApp.conf.urlBase  ;
-				}
-				
-				var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-		                   .update(date + requrl.toLowerCase())
-		                   .digest('hex') ;
+					if(req.originalUrl && req.originalUrl.length > 1){
+						requrl = this.currentApp.conf.urlBase + req.originalUrl.substr(1) ;
+					}else{
+						requrl = this.currentApp.conf.urlBase  ;
+					}
+					
+					var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
+			                   .update(date + requrl.toLowerCase())
+			                   .digest('hex') ;
 
-		        if(newKey == key){
-		        	req.ctx.internalCallValid = true ;
-		        	next() ;
-		        }else{
-		        	req.ctx.internalCallValid = false ;
-		        	console.log("key dont match uri : " + requrl , date , key , newKey) ;
-		        	next() ;
-		        }
+			        if(newKey == key){
+			        	req.ctx.internalCallValid = true ;
+			        	next() ;
+			        }else{
+			        	req.ctx.internalCallValid = false ;
+			        	console.log("key dont match uri : " + requrl , date , key , newKey) ;
+			        	next() ;
+			        }
+		    	}
 		       
 			}else{
 				next() ;
@@ -59,25 +64,31 @@ export class UtilsSecu{
 			var date = req.header('keyDate') ;
 			var key = req.header('key')  ;
 			var requrl ;
+			var currentDate:number = Date.now() ;
 			if(key){
-				if(req.originalUrl && req.originalUrl.length > 1){
-					requrl = this.currentApp.conf.urlBase + req.originalUrl.substr(1) ;
+				if(currentDate > date + 30000){
+		        	console.log("keyDate is obsolete : " + currentDate + ">"  + date + "+ 30000" ) ;
+		        	next("keyDate is obsolete") ;
 				}else{
-					requrl = this.currentApp.conf.urlBase  ;
-				}
-				
-				var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-	                   .update(date + requrl.toLowerCase())
-	                   .digest('hex') ;
-	                   
-		        if(newKey == key){
-		        	req.ctx.internalCallValid = true ;
+					if(req.originalUrl && req.originalUrl.length > 1){
+						requrl = this.currentApp.conf.urlBase + req.originalUrl.substr(1) ;
+					}else{
+						requrl = this.currentApp.conf.urlBase  ;
+					}
+					
+					var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
+		                   .update(date + requrl.toLowerCase())
+		                   .digest('hex') ;
+		                   
+			        if(newKey == key){
+			        	req.ctx.internalCallValid = true ;
 
-		        	next() ;
-		        }else{
-		        	console.log("key dont match uri : " + requrl , date , key , newKey) ;
-		        	next("key dont match uri : " + requrl) ;
-		        }
+			        	next() ;
+			        }else{
+			        	console.log("key dont match uri : " + requrl , date , key , newKey) ;
+			        	next("key dont match uri : " + requrl) ;
+			        }
+			    }
 			}else{
 				next("no key") ;
 			}

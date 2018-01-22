@@ -149,7 +149,6 @@ export class ServerBase{
 			 this.reloadConfPromise()
 			 .then((conf)=>{
 		    	this.currentApp.conf = conf ;
-				
 			})
 			 .then(()=>{
 				if(this.currentApp.conf['licence_well-known'] && this.currentApp.conf['licence_well-known'] != ""){
@@ -164,9 +163,8 @@ export class ServerBase{
 							fs.ensureDirSync("./confs/dep/")
 							fs.writeJSONSync("./confs/dep/" + this.currentApp.conf['licence_well-known'].replace(/\//gi, "_")  + ".json" , conf )
 							let opt2 ={
-							
-							url:conf.jwks_uri ,
-							json:true 
+								url:conf.jwks_uri ,
+								json:true 
 							}
 							return request.get(opt2).catch(err=>{
 								let val = fs.readJSONSync("./confs/dep/" + conf.jwks_uri.replace(/\//gi, "_")  +".json" ) ;
@@ -253,9 +251,19 @@ export class ServerBase{
 				
 				jose.JWS.createVerify(this.currentApp.licence_keyStore).verify(token)
 				.then(function(result) {
-					req.ctx.user = JSON.parse(result.payload.toString()) ;
+					var payload:any = JSON.parse(result.payload.toString()) ;
+					let myDate:number = (Date.now() )/1000;
+					if(payload.exp < myDate){
+						console.log("token has expired" , req.ctx.user)
+						next("token has expired" ) ;
+					}else if(payload.nbf > myDate){
+						console.log("nbf token is not valid" , req.ctx.user)
+						next("nbf token is not valid" ) ;
+					}else{
+						req.ctx.user = payload ;
+						next() ;
+					}
 
-					next() ;
 		        }).catch(function(err){
 		        	next(err) ;
 		        })
