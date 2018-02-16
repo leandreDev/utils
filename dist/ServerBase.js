@@ -225,8 +225,8 @@ class ServerBase {
                     var payload = JSON.parse(result.payload.toString());
                     let myDate = (Date.now()) / 1000;
                     if (payload.exp < myDate) {
-                        console.log("token has expired", req.ctx.user);
-                        next("token has expired");
+                        console.log("token is expired", req.ctx.user);
+                        next("token is expired");
                     }
                     else if (payload.nbf > myDate) {
                         console.log("nbf token is not valid", req.ctx.user);

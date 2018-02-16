@@ -1,7 +1,10 @@
 export declare class CtxInterpretor {
-    private context;
+    context: any;
+    startPatern: string;
+    endPatern: string;
+    splitPatern: string;
     constructor(context: any);
     private setEnv(varKey);
     private setGlobalEnv(stringKey);
-    updateEnv(obj: any): any;
+    updateEnv(obj: any, clone?: boolean): any;
 }

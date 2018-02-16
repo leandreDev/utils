@@ -3,7 +3,10 @@ import * as assert from 'assert' ;
 
 export class CtxInterpretor {
 
-  private context:any ;
+  public context:any ;
+  public startPatern:string ="$ENV." ;
+  public endPatern:string ="$$" ;
+  public splitPatern:string ="." ;
 
   constructor(context:any){
     assert(context, "context is not spécified");
@@ -19,10 +22,10 @@ export class CtxInterpretor {
         return this.context[varKey];
       } else {
         console.log(this.context.hasOwnProperty(varKey)) ;
-        return "$ENV." + varKey + "$$";
+        return this.startPatern + varKey + this.endPatern ;
       }
     }else{
-      let argVar:string[] = varKey.split(".") ;
+      let argVar:string[] = varKey.split(this.splitPatern) ;
       let targetContext = this.context ;
       argVar.forEach((val)=>{
 
@@ -35,7 +38,7 @@ export class CtxInterpretor {
       if(targetContext != null ){
         return targetContext ;
       }else{
-        return "$ENV." + varKey + "$$" ;
+        return this.startPatern + varKey + this.endPatern  ;
       }
     }
     
@@ -43,11 +46,13 @@ export class CtxInterpretor {
 
   private setGlobalEnv(stringKey) {
     var arr, result;
-    if(stringKey.indexOf("$ENV.") == -1){
+    if(stringKey.indexOf(this.startPatern) == -1){
       return stringKey ;
     }else{
-      var envStart:number = stringKey.indexOf("$ENV.")
-      var envEnd:number 
+      var envStart:number = stringKey.indexOf(this.startPatern)
+      var envEnd:number ;
+      var startPaternLength:number = this.startPatern.length ;
+      var endPaternLength:number = this.endPatern.length ;
       while( envStart > -1){
         let preEnv:string ="";
         let postEnv:string = "" ;
@@ -55,18 +60,18 @@ export class CtxInterpretor {
         if(envStart > 0){
           preEnv = stringKey.substr(0 ,envStart)
         }
-        envEnd = stringKey.indexOf("$$", envStart)  ;
+        envEnd = stringKey.indexOf(this.endPatern , envStart)  ;
         if(envEnd == -1){
           envEnd = stringKey.length  ;
-        }else if(envEnd+2 < stringKey.length -1){
-          postEnv = stringKey.substr(envEnd+2);
+        }else if(envEnd+endPaternLength < stringKey.length -1){
+          postEnv = stringKey.substr(envEnd+endPaternLength);
         }
 
-        envVar = stringKey.substring(envStart+5 , envEnd) ;
+        envVar = stringKey.substring(envStart+startPaternLength , envEnd) ;
 
         stringKey = preEnv + this.setEnv(envVar) + postEnv ;
         console.log(stringKey) ;
-        envStart = stringKey.indexOf("$ENV." , envStart+1) ;
+        envStart = stringKey.indexOf(this.startPatern , envStart+1) ;
       }
       return stringKey ;
       // arr = stringKey.split("$ENV.");
@@ -85,24 +90,27 @@ export class CtxInterpretor {
     
   };
 
-  public updateEnv( obj:any):any{
+  public updateEnv( obj:any , clone:boolean=false):any{
+    if(clone){
+      obj = Object.assign({} , obj) ;
+    }
+    
      _.each(obj, (val, key) => {
       var arr;
       if (_.isString(val)) {
-        return obj[key] = this.setGlobalEnv(val);
+         obj[key] = this.setGlobalEnv(val);
       } else if (_.isArray(val)) {
         arr = [];
         _.each(val, (obj) => {
           if (_.isString(obj)) {
-            return arr.push(this.setGlobalEnv(obj));
+             arr.push(this.setGlobalEnv(obj));
           } else {
-            this.updateEnv(obj);
-            return arr.push(obj);
+            arr.push(this.updateEnv(obj , clone));
           }
         });
-        return obj[key] = arr;
+        obj[key] = arr;
       } else if (_.isObject(val)) {
-        return this.updateEnv(val);
+        obj[key] = this.updateEnv(val , clone);
       }
     });
     return obj ;
