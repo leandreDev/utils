@@ -6,5 +6,6 @@ export declare class CtxInterpretor {
     constructor(context: any);
     private setEnv(varKey);
     private setGlobalEnv(stringKey);
+    updateArrEnv(obj: any[], clone?: boolean): any;
     updateEnv(obj: any, clone?: boolean): any;
 }

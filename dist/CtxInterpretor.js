@@ -91,6 +91,24 @@ class CtxInterpretor {
         }
     }
     ;
+    updateArrEnv(obj, clone = false) {
+        let newArr = [];
+        obj.map((data) => {
+            if (_.isString(data)) {
+                newArr.push(this.setGlobalEnv(data));
+            }
+            else if (_.isObject(data)) {
+                newArr.push(this.updateEnv(data, clone));
+            }
+            else if (_.isArray(data)) {
+                newArr.push(this.updateArrEnv(data, clone));
+            }
+            else {
+                newArr.push(data);
+            }
+        });
+        return newArr;
+    }
     updateEnv(obj, clone = false) {
         if (clone) {
             obj = Object.assign({}, obj);
@@ -101,16 +119,7 @@ class CtxInterpretor {
                 obj[key] = this.setGlobalEnv(val);
             }
             else if (_.isArray(val)) {
-                arr = [];
-                _.each(val, (obj) => {
-                    if (_.isString(obj)) {
-                        arr.push(this.setGlobalEnv(obj));
-                    }
-                    else {
-                        arr.push(this.updateEnv(obj, clone));
-                    }
-                });
-                obj[key] = arr;
+                obj[key] = this.updateArrEnv(val, clone);
             }
             else if (_.isObject(val)) {
                 obj[key] = this.updateEnv(val, clone);
