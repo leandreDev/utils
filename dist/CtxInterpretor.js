@@ -66,9 +66,14 @@ class CtxInterpretor {
                     postEnv = stringKey.substr(envEnd + endPaternLength);
                 }
                 envVar = stringKey.substring(envStart + startPaternLength, envEnd);
-                stringKey = preEnv + this.setEnv(envVar) + postEnv;
-                console.log(stringKey);
-                envStart = stringKey.indexOf(this.startPatern, envStart + 1);
+                if (preEnv == "" && postEnv == "") {
+                    stringKey = this.setEnv(envVar);
+                    envStart = -1;
+                }
+                else {
+                    stringKey = preEnv + this.setEnv(envVar) + postEnv;
+                    envStart = stringKey.indexOf(this.startPatern, envStart + 1);
+                }
             }
             return stringKey;
             // arr = stringKey.split("$ENV.");
