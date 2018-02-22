@@ -39,7 +39,7 @@ class ConfLoader {
                     }
                     else {
                         if (val && val.code != 200) {
-                            console.log("online confloader error read JSON", val);
+                            console.log("online confloader error read JSON", val, options.url, options.headers, process.env.SECRET);
                         }
                         data = fs.readJSONSync("./confs/" + process.env.SRV_ID + ".json");
                     }
