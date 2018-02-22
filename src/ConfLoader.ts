@@ -27,6 +27,7 @@ export class ConfLoader {
 					let conf:any = contextInterpretor.updateEnv(val) ;
 					resolve(val) ;
 				}catch(err){
+					console.log("offline confloader error read JSON" , err) ;
 					reject(err) ;
 				}
 			}else{
@@ -41,7 +42,7 @@ export class ConfLoader {
 						
 					}else{
 						if(val && val.code != 200){
-							console.log(val) ;
+							console.log("online confloader error read JSON" , val) ;
 						}	
 						data = fs.readJSONSync("./confs/" + process.env.SRV_ID  + ".json") ;
 					}
@@ -49,10 +50,12 @@ export class ConfLoader {
 					resolve(data) ;
 				}).catch(err=>{
 					try{
+						console.log("confloader error on JSON " , err) ;
 						let val = fs.readJSONSync("./confs/" + process.env.SRV_ID  + ".json") ;
 						let conf:any = contextInterpretor.updateEnv(val) ;
 						resolve(val) ;
 					}catch(err2){
+						console.log("confloader fatal error " , err2) ;
 						reject(err) ;
 					}
 					
