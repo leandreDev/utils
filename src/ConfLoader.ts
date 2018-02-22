@@ -10,6 +10,7 @@ export class ConfLoader {
 
 
 	static getConf():Promise<any>{
+
 		return new Promise((resolve , reject)=>{
 			let options:any = {} ;
 			
@@ -19,7 +20,7 @@ export class ConfLoader {
 			assert(process.env.SECRET, "$env.SECRET is not spécified");
 			options.url = process.env.CONF_URL + process.env.SRV_ID  ;
 			options.json = true ;
-			let secu:UtilsSecu = new UtilsSecu({conf:{secretKey:process.env.SECRET}})
+			let secu:UtilsSecu = new UtilsSecu({conf:{secretKey:process.env.SECRET , debug:false}}) ;
 			let contextInterpretor:CtxInterpretor = new CtxInterpretor(process.env) ;
 			if(process.env.CONF_URL == "none"){
 				try{
@@ -43,7 +44,7 @@ export class ConfLoader {
 					}else{
 						if(val && val.code != 200){
 
-							console.log("online confloader error read JSON" , val , options.url , options.headers , process.env.SECRET ) ;
+							console.log("online confloader error read JSON" , val , options.url ) ;
 						}	
 						data = fs.readJSONSync("./confs/" + process.env.SRV_ID  + ".json") ;
 					}

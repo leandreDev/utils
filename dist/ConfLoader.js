@@ -15,7 +15,7 @@ class ConfLoader {
             assert(process.env.SECRET, "$env.SECRET is not spécified");
             options.url = process.env.CONF_URL + process.env.SRV_ID;
             options.json = true;
-            let secu = new UtilsSecu_1.UtilsSecu({ conf: { secretKey: process.env.SECRET } });
+            let secu = new UtilsSecu_1.UtilsSecu({ conf: { secretKey: process.env.SECRET, debug: false } });
             let contextInterpretor = new CtxInterpretor_1.CtxInterpretor(process.env);
             if (process.env.CONF_URL == "none") {
                 try {
@@ -39,7 +39,7 @@ class ConfLoader {
                     }
                     else {
                         if (val && val.code != 200) {
-                            console.log("online confloader error read JSON", val, options.url, options.headers, process.env.SECRET);
+                            console.log("online confloader error read JSON", val, options.url);
                         }
                         data = fs.readJSONSync("./confs/" + process.env.SRV_ID + ".json");
                     }
