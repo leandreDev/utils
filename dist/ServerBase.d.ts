@@ -15,7 +15,7 @@ export declare class ServerBase {
     headers: string[][];
     protected reloadConfPromise(): Promise<any>;
     readonly reloadConf: (req: any, res: any) => void;
-    readonly toErrRes: (err: any) => any;
+    readonly toErrRes: (err: any, code?: number) => any;
     readonly toJsonRes: (objs: any, meta?: any) => any;
     readonly addCtx: express.RequestHandler | express.ErrorRequestHandler;
     readonly checkJWT: express.RequestHandler | express.ErrorRequestHandler;

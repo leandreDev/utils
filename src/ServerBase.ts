@@ -194,12 +194,12 @@ export class ServerBase{
 	}
 
 	public get toErrRes () {
-		return (err: any):any => {
+		return (err: any, code:number=500):any => {
 			if(Util.isString(err)){
 				err = {message:err }
 			}
 	        let rep = {
-	            code: 500,
+	            code: code,
 	            message: err.message,
 	            name: err.name,
 	            stack: undefined
