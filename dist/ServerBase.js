@@ -258,12 +258,12 @@ class ServerBase {
                 }
             }
             req.ctx.roles.push("*");
-            console.log("confSecu", confSecu, this.currentApp.conf);
+            // console.log("confSecu" , confSecu , this.currentApp.conf ,  )
             if ((!confSecu) && this.currentApp.conf && this.currentApp.conf.publicAccess) {
                 console.log("find public access " + "_$" + req.method.toLowerCase());
                 confSecu = this.currentApp.conf.publicAccess["_$" + req.method.toLowerCase()];
             }
-            console.log("confSecu", confSecu);
+            // console.log("confSecu" , confSecu )
             if (req.ctx.internalCallValid || req.method.toLowerCase() == "options") {
                 next();
             }
