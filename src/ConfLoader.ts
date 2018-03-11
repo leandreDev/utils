@@ -32,9 +32,35 @@ export class ConfLoader {
 					reject(err) ;
 				}
 			}else{
-				
-				secu.addHeadersKey(options) ;
-				request.get(options).then((val)=>{
+				// 
+				let tempConf ;
+				if(fs.existsSync("./confs/" + process.env.SRV_ID  + ".json")){
+					tempConf = fs.readJSONSync("./confs/" + process.env.SRV_ID  + ".json") ;
+					if(tempConf.loadConfAfter){
+						ConfLoader.loadConf().catch((err)=>{
+							console.log(err) ;
+						}) ;
+						resolve(tempConf) ;
+					}else{
+						ConfLoader.loadConf().then(resolve).catch(reject) ;
+					}
+				}else{
+					ConfLoader.loadConf().then(resolve).catch(reject) ;
+				}
+			}
+			
+		})
+		
+	}
+
+	static loadConf():Promise<any>{
+		let options:any = {} ;
+		options.url = process.env.CONF_URL + process.env.SRV_ID  ;
+		options.json = true ;
+		let secu:UtilsSecu = new UtilsSecu({conf:{secretKey:process.env.SECRET , debug:false}}) ;
+		let contextInterpretor:CtxInterpretor = new CtxInterpretor(process.env) ;
+		secu.addHeadersKey(options) ;
+		return Promise.resolve(request.get(options).then((val)=>{
 					let data:any ;
 					if(val && val.code == 200 && val.response && val.response[0] ){
 						data = val.response[0] ;
@@ -49,24 +75,19 @@ export class ConfLoader {
 						data = fs.readJSONSync("./confs/" + process.env.SRV_ID  + ".json") ;
 					}
 					let conf:any = contextInterpretor.updateEnv(data) ;
-					resolve(data) ;
+					 return data ;
 				}).catch(err=>{
 					try{
 						console.log("confloader error on JSON " , err) ;
 						let val = fs.readJSONSync("./confs/" + process.env.SRV_ID  + ".json") ;
 						let conf:any = contextInterpretor.updateEnv(val) ;
-						resolve(val) ;
+						return val ;
 					}catch(err2){
 						console.log("confloader fatal error " , err2) ;
-						reject(err) ;
+						throw err  ;
 					}
-					
-					
 				})
-			}
-			
-		})
-		
+		)
 	}
 
 }

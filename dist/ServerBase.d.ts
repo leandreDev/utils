@@ -13,6 +13,8 @@ export declare class ServerBase {
     protected startHttpServer(): void;
     protected init(): Promise<any>;
     headers: string[][];
+    protected loadConfPromise(): Promise<any>;
+    protected loadDepConfPromise(): Promise<any>;
     protected reloadConfPromise(): Promise<any>;
     readonly reloadConf: (req: any, res: any) => void;
     readonly toErrRes: (err: any, code?: number) => any;
