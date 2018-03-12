@@ -43,7 +43,6 @@ export class ServerBase{
 						console.log(err) ;
 					})
 					break;
-				
 			}
 		}
 	}
@@ -82,7 +81,7 @@ export class ServerBase{
 			    console.log(req.method + "," +  req.url) ;
 			    next() ;
 			})
-			.use(this.addCtx , this.secu.chekInternalMidelWare) 
+			.use(this.addCtx , this.secu.chekInternalMidelWare , this.checkJWT) 
 			return this.currentApp ;
 		}).then(()=>{
 			return this.loadDepConfPromise() ;
@@ -232,7 +231,7 @@ export class ServerBase{
 
 			let token = req.header('JWT') 
 
-			if(token ){
+			if(token && this.currentApp.licence_keyStore ){
 				
 				jose.JWS.createVerify(this.currentApp.licence_keyStore).verify(token)
 				.then(function(result) {

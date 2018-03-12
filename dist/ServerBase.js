@@ -77,7 +77,7 @@ class ServerBase {
                 console.log(req.method + "," + req.url);
                 next();
             })
-                .use(this.addCtx, this.secu.chekInternalMidelWare);
+                .use(this.addCtx, this.secu.chekInternalMidelWare, this.checkJWT);
             return this.currentApp;
         }).then(() => {
             return this.loadDepConfPromise();
@@ -208,7 +208,7 @@ class ServerBase {
     get checkJWT() {
         return (req, res, next) => {
             let token = req.header('JWT');
-            if (token) {
+            if (token && this.currentApp.licence_keyStore) {
                 jose.JWS.createVerify(this.currentApp.licence_keyStore).verify(token)
                     .then(function (result) {
                     var payload = JSON.parse(result.payload.toString());
