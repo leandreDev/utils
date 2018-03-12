@@ -126,9 +126,9 @@ class ServerBase {
                         return data;
                     }
                 }).catch(err => {
-                    let val = fs.readJSONSync("./confs/dep/" + conf.jwks_uri.replace(/\//gi, "_") + ".json");
-                    console.log("bkg jwk", val);
-                    return val;
+                    var valJwk = fs.readJSONSync("./confs/dep/" + conf.jwks_uri.replace(/\//gi, "_") + ".json");
+                    console.log("bkg jwk", valJwk);
+                    return valJwk;
                 }).then((objKey) => {
                     fs.ensureDirSync("./confs/dep/");
                     fs.writeJSONSync("./confs/dep/" + conf.jwks_uri.replace(/\//gi, "_") + ".json", objKey);
