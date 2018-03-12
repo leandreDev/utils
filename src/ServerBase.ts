@@ -120,7 +120,9 @@ export class ServerBase{
 			return Promise.resolve(request.get(opt))
 			.then((data)=>{
 				if(data.code == 500){
-					throw new Error("licence_well-known" + data.message) ;
+					throw new Error("licence_well-known " + data.message) ;
+				}else{
+					return data
 				}
 			}).catch(err=>{
 					let val = fs.readJSONSync("./confs/dep/" + this.currentApp.conf['licence_well-known'].replace(/\//gi, "_") +".json" ) ;
@@ -136,6 +138,8 @@ export class ServerBase{
 					.then((data)=>{
 						if(data.code == 500){
 							throw new Error("jwk " + data.message) ;
+						}else{
+							return data ;
 						}
 					}).catch(err=>{
 						let val = fs.readJSONSync("./confs/dep/" + conf.jwks_uri.replace(/\//gi, "_")  +".json" ) ;
