@@ -117,7 +117,12 @@ export class ServerBase{
 				url:this.currentApp.conf['licence_well-known'],
 				json:true 
 			}
-			return Promise.resolve(request.get(opt)).catch(err=>{
+			return Promise.resolve(request.get(opt))
+			.then((data)=>{
+				if(data.code == 500){
+					throw new Error("licence_well-known" + data.message) ;
+				}
+			}).catch(err=>{
 					let val = fs.readJSONSync("./confs/dep/" + this.currentApp.conf['licence_well-known'].replace(/\//gi, "_") +".json" ) ;
 					return val
 				}).then((conf)=>{
@@ -127,8 +132,14 @@ export class ServerBase{
 						url:conf.jwks_uri ,
 						json:true 
 					}
-					return request.get(opt2).catch(err=>{
+					return request.get(opt2)
+					.then((data)=>{
+						if(data.code == 500){
+							throw new Error("jwk " + data.message) ;
+						}
+					}).catch(err=>{
 						let val = fs.readJSONSync("./confs/dep/" + conf.jwks_uri.replace(/\//gi, "_")  +".json" ) ;
+						console.log("bkg jwk" , val) ;
 						return val
 					}).then((objKey)=>{
 						fs.ensureDirSync("./confs/dep/")
