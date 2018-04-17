@@ -97,11 +97,11 @@ class CtxInterpretor {
             if (_.isString(data)) {
                 newArr.push(this.setGlobalEnv(data));
             }
-            else if (_.isObject(data)) {
-                newArr.push(this.updateEnv(data, clone));
-            }
             else if (_.isArray(data)) {
                 newArr.push(this.updateArrEnv(data, clone));
+            }
+            else if (_.isObject(data)) {
+                newArr.push(this.updateEnv(data, clone));
             }
             else {
                 newArr.push(data);

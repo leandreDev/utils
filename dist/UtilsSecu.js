@@ -9,12 +9,13 @@ class UtilsSecu {
     }
     addHeadersKey(rq) {
         var date = Date.now();
-        rq.headers = {
-            'keyDate': date,
-            'key': crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-                .update(date + rq.url.toLowerCase())
-                .digest('hex')
-        };
+        if (!rq.headers) {
+            rq.headers = {};
+        }
+        rq.headers.keyDate = date;
+        rq.headers.key = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
+            .update(date + rq.url.toLowerCase())
+            .digest('hex');
     }
     get chekInternalMidelWare() {
         return (req, res, next) => {

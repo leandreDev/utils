@@ -1,7 +1,7 @@
 import {CtxInterpretor} from    "./CtxInterpretor" ;
 
-var test:CtxInterpretor = new CtxInterpretor({body:{toto:"bla", titi:"$ENV.opt$$"}, opt:"erttyy" , num:32 });
-
+var test:CtxInterpretor = new CtxInterpretor({emailTarget:{toto:"bla", name:"dsdsds"}, opt:"erttyy" , num:32 });
+test.startPatern = "$ctx."
 var poi:any = { 
 		"aa":"$ENV.opt$$" , 
 		"zz":"$ENV.body.toto$$uuuu" , 
@@ -17,6 +17,32 @@ var poi:any = {
 		"ooo3": "dsqdsq$ENV.num$$dsqdsq",
 		"ooo4": "dsqdsq$ENV.num",
 	}
-test.updateEnv(poi);
+var tester:any = {
+	"from": {
+		"email": "toto@toto.com"
+	},
+	"reply_to": {
+		"email": "toto@toto.com"
+	},
+	"personalizations": [{
+		"to": [{
+			"email": "hfdevpro@gmail.com",
+			"name": "henry favre"
+		}],
+		"substitutions": {
+			"@@nomParcours": "toto",
+			"@@mailClient": "$ctx.emailTarget.name",
+			"@@prenom": "tutu",
+			"@@prenomClient": "toto",
+			"@@nomClient": "le hero",
+			"@@lienPfDaesign": "http://lienPfDaesign",
+			"@@dureeParcours": "30 min",
+			"@@objectifPedagogique": "obectif 1 2 3"
+		}
+	}],
+	"template_id": "4cb2755a-ac05-4034-890a-f5c784dd1e98"
+};
 
-console.log(poi) ;
+test.updateEnv(tester);
+
+console.log(JSON.stringify(tester)) ;

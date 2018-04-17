@@ -13,12 +13,14 @@ export class UtilsSecu{
 	public addHeadersKey (rq:any){
 		
 		var date:number = Date.now() ;
-		 rq.headers =  {
-		    'keyDate': date ,
-		    'key' : crypto.createHmac('sha256', this.currentApp.conf.secretKey)
+		if(!rq.headers ){
+			rq.headers = {}
+		}
+		rq.headers.keyDate = date ;
+		rq.headers.key = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                    .update(date + rq.url.toLowerCase())
                    .digest('hex')
-		  }
+
 	}
 
 	public get chekInternalMidelWare(): express.RequestHandler | express.ErrorRequestHandler {
