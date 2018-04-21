@@ -1,6 +1,6 @@
 import {CtxInterpretor} from    "./CtxInterpretor" ;
 
-var test:CtxInterpretor = new CtxInterpretor({emailTarget:{toto:"bla", name:"dsdsds"}, opt:"erttyy" , num:32 });
+var test:CtxInterpretor = new CtxInterpretor({emailTarget:{toto:"bla", name:"dsdsds"}, opt:"erttyy" , num:32 , u:[{'t':"rere"}, "tutu"] });
 test.startPatern = "$ctx."
 var poi:any = { 
 		"aa":"$ENV.opt$$" , 
@@ -37,7 +37,7 @@ var tester:any = {
 			"@@nomClient": "le hero",
 			"@@lienPfDaesign": "http://lienPfDaesign",
 			"@@dureeParcours": "30 min",
-			"@@objectifPedagogique": "obectif 1 2 3"
+			"@@objectifPedagogique": "$ctx.u.0.t"
 		}
 	}],
 	"template_id": "4cb2755a-ac05-4034-890a-f5c784dd1e98"

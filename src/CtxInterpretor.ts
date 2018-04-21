@@ -28,11 +28,16 @@ export class CtxInterpretor {
       let argVar:string[] = varKey.split(this.splitPatern) ;
       let targetContext = this.context ;
       argVar.forEach((val)=>{
-        if (targetContext && targetContext.hasOwnProperty(val)) {
-          targetContext = targetContext[val] ;
-        }else{
-          targetContext = null ;
+        if(targetContext){
+          if(_.isArray(targetContext) && parseInt(val)!= NaN){
+            targetContext = targetContext[parseInt(val)] ;
+          }else if ( targetContext.hasOwnProperty(val)) {
+            targetContext = targetContext[val] ;
+          }else{
+            targetContext = null ;
+          }
         }
+        
       })
       if(targetContext != null ){
         return targetContext ;

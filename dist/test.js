@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const CtxInterpretor_1 = require("./CtxInterpretor");
-var test = new CtxInterpretor_1.CtxInterpretor({ emailTarget: { toto: "bla", name: "dsdsds" }, opt: "erttyy", num: 32 });
+var test = new CtxInterpretor_1.CtxInterpretor({ emailTarget: { toto: "bla", name: "dsdsds" }, opt: "erttyy", num: 32, u: [{ 't': "rere" }, "tutu"] });
 test.startPatern = "$ctx.";
 var poi = {
     "aa": "$ENV.opt$$",
@@ -38,7 +38,7 @@ var tester = {
                 "@@nomClient": "le hero",
                 "@@lienPfDaesign": "http://lienPfDaesign",
                 "@@dureeParcours": "30 min",
-                "@@objectifPedagogique": "obectif 1 2 3"
+                "@@objectifPedagogique": "$ctx.u.0.t"
             }
         }],
     "template_id": "4cb2755a-ac05-4034-890a-f5c784dd1e98"
