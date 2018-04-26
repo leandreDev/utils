@@ -17,8 +17,9 @@ export class UtilsSecu{
 			rq.headers = {}
 		}
 		rq.headers.keyDate = date ;
+		rq.url = rq.url.toLowerCase().replace(/\/\//gi , '/').replace(/http:\//, "http://").replace(/https:\//, "https://")
 		rq.headers.key = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-                   .update(date + rq.url.toLowerCase())
+                   .update(date + rq.url)
                    .digest('hex')
 
 	}
