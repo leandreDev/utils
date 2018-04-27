@@ -294,7 +294,8 @@ export class ServerBase{
 					if(access && _.intersection(access.role , req.ctx.roles).length > 0){
 						next() ;
 					}else{	
-						console.log("unautorized " , access , path , req.ctx.roles )
+						
+						console.log("unautorized " , confSecu , access , path , req.ctx.roles )
 						next("unautorized" ) ;
 					}
 				}else{

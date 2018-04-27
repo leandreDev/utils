@@ -266,7 +266,7 @@ class ServerBase {
                         next();
                     }
                     else {
-                        console.log("unautorized ", access, path, req.ctx.roles);
+                        console.log("unautorized ", confSecu, access, path, req.ctx.roles);
                         next("unautorized");
                     }
                 }
