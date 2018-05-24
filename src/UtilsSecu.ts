@@ -17,16 +17,17 @@ export class UtilsSecu{
 			rq.headers = {}
 		}
 		rq.headers.keyDate = date ;
-		// rq.url = rq.url.toLowerCase().replace(/\/\//gi , '/').replace(/http:\//, "http://").replace(/https:\//, "https://")
+		var url = rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
+		
 		rq.headers.key = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-                   .update(date + rq.url.toLowerCase())
+                   .update(date + url)
                    .digest('hex')
 
 	}
 
 	public get chekInternalMidelWare(): express.RequestHandler | express.ErrorRequestHandler {
 		return (req, res, next)=>{
-			var date = req.header('keyDate') ;
+			var date = Number(req.header('keyDate')) ;
 			var key = req.header('key')  ;
 			var requrl ;
 			var currentDate:number = Date.now() ;
@@ -40,9 +41,10 @@ export class UtilsSecu{
 					}else{
 						requrl = this.currentApp.conf.urlBase  ;
 					}
+					var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
 					
 					var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-			                   .update(date + requrl.toLowerCase())
+			                   .update(date + url)
 			                   .digest('hex') ;
 
 			        if(newKey == key){
@@ -64,9 +66,9 @@ export class UtilsSecu{
 
 	public get protectInternalMidelWare():express.RequestHandler | express.ErrorRequestHandler{
 		return (req, res, next) => {
-			var date = req.header('keyDate') ;
+			var date = Number(req.header('keyDate')) ;
 			var key = req.header('key')  ;
-			var requrl ;
+			var requrl:string ;
 			var currentDate:number = Date.now() ;
 			if(key){
 				if(currentDate > date + 30000){
@@ -78,9 +80,10 @@ export class UtilsSecu{
 					}else{
 						requrl = this.currentApp.conf.urlBase  ;
 					}
+					var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
 					
 					var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-		                   .update(date + requrl.toLowerCase())
+		                   .update(date + url)
 		                   .digest('hex') ;
 		                   
 			        if(newKey == key){

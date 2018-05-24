@@ -13,14 +13,14 @@ class UtilsSecu {
             rq.headers = {};
         }
         rq.headers.keyDate = date;
-        // rq.url = rq.url.toLowerCase().replace(/\/\//gi , '/').replace(/http:\//, "http://").replace(/https:\//, "https://")
+        var url = rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
         rq.headers.key = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-            .update(date + rq.url.toLowerCase())
+            .update(date + url)
             .digest('hex');
     }
     get chekInternalMidelWare() {
         return (req, res, next) => {
-            var date = req.header('keyDate');
+            var date = Number(req.header('keyDate'));
             var key = req.header('key');
             var requrl;
             var currentDate = Date.now();
@@ -36,8 +36,9 @@ class UtilsSecu {
                     else {
                         requrl = this.currentApp.conf.urlBase;
                     }
+                    var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
                     var newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-                        .update(date + requrl.toLowerCase())
+                        .update(date + url)
                         .digest('hex');
                     if (newKey == key) {
                         req.ctx.internalCallValid = true;
@@ -57,7 +58,7 @@ class UtilsSecu {
     }
     get protectInternalMidelWare() {
         return (req, res, next) => {
-            var date = req.header('keyDate');
+            var date = Number(req.header('keyDate'));
             var key = req.header('key');
             var requrl;
             var currentDate = Date.now();
@@ -73,8 +74,9 @@ class UtilsSecu {
                     else {
                         requrl = this.currentApp.conf.urlBase;
                     }
+                    var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
                     var newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-                        .update(date + requrl.toLowerCase())
+                        .update(date + url)
                         .digest('hex');
                     if (newKey == key) {
                         req.ctx.internalCallValid = true;
