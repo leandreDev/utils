@@ -53,6 +53,7 @@ class ServerBase {
         this.server = this.app.listen(this.currentApp.conf.port, () => {
             console.log('Server listen on port ' + this.currentApp.conf.port);
         });
+        this.currentApp.server = this.server;
     }
     init() {
         let prom = this.loadConfPromise().then((conf) => {
