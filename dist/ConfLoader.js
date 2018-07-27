@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const request = require("request-promise");
+const request = require("request-promise-native");
 const CtxInterpretor_1 = require("./CtxInterpretor");
 const UtilsSecu_1 = require("./UtilsSecu");
 const fs = require("fs-extra");

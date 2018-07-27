@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
-const request = require("request-promise");
+const request = require("request-promise-native");
 const ConfLoader_1 = require("./ConfLoader");
 const UtilsSecu_1 = require("./UtilsSecu");
 const jose = require("node-jose");
@@ -75,7 +75,9 @@ class ServerBase {
                 next();
             })
                 .use((req, res, next) => {
-                console.log(req.method + "," + req.url);
+                if (this.currentApp.conf.debug) {
+                    console.log(req.method + "," + req.url);
+                }
                 next();
             })
                 .use(this.addCtx, this.secu.chekInternalMidelWare, this.checkJWT);
@@ -128,7 +130,6 @@ class ServerBase {
                     }
                 }).catch(err => {
                     var valJwk = fs.readJSONSync("./confs/dep/" + conf.jwks_uri.replace(/\//gi, "_") + ".json");
-                    console.log("bkg jwk", valJwk);
                     return valJwk;
                 }).then((objKey) => {
                     fs.ensureDirSync("./confs/dep/");
@@ -250,7 +251,9 @@ class ServerBase {
             req.ctx.roles.push("*");
             // console.log("confSecu" , confSecu , this.currentApp.conf ,  )
             if ((!confSecu) && this.currentApp.conf && this.currentApp.conf.publicAccess) {
-                console.log("find public access " + "_$" + req.method.toLowerCase());
+                if (this.currentApp.conf.debug) {
+                    console.log("find public access " + "_$" + req.method.toLowerCase());
+                }
                 confSecu = this.currentApp.conf.publicAccess["_$" + req.method.toLowerCase()];
             }
             // console.log("confSecu" , confSecu )
@@ -267,12 +270,16 @@ class ServerBase {
                         next();
                     }
                     else {
-                        console.log("unautorized ", confSecu, access, path, req.ctx.roles);
+                        if (this.currentApp.conf.debug) {
+                            console.log("unautorized ", confSecu, access, path, req.ctx.roles);
+                        }
                         next("unautorized");
                     }
                 }
                 else {
-                    console.log("unautorized, no conf match", confSecu, path, req.ctx.roles);
+                    if (this.currentApp.conf.debug) {
+                        console.log("unautorized, no conf match", confSecu, path, req.ctx.roles);
+                    }
                     next("unautorized");
                 }
             }

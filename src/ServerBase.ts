@@ -1,5 +1,5 @@
 import * as express from 'express' ;
-import * as request from 'request-promise' ;
+import * as request from 'request-promise-native' ;
 import {ConfLoader} from './ConfLoader' ;
 import {UtilsSecu} from './UtilsSecu' ;
 import * as jose from 'node-jose' ;
@@ -79,7 +79,9 @@ export class ServerBase{
 			  next() ;
 			})
 			.use((req, res, next) => {
-			    console.log(req.method + "," +  req.url) ;
+				if(this.currentApp.conf.debug){
+					console.log(req.method + "," +  req.url) ;
+				}
 			    next() ;
 			})
 			.use(this.addCtx , this.secu.chekInternalMidelWare , this.checkJWT) 
@@ -143,7 +145,7 @@ export class ServerBase{
 						}
 					}).catch(err=>{
 						var valJwk = fs.readJSONSync("./confs/dep/" + conf.jwks_uri.replace(/\//gi, "_")  +".json" ) ;
-						console.log("bkg jwk" , valJwk) ;
+
 						return valJwk ;
 					}).then((objKey)=>{
 						fs.ensureDirSync("./confs/dep/")
@@ -280,7 +282,9 @@ export class ServerBase{
 			req.ctx.roles.push("*") ;
 			// console.log("confSecu" , confSecu , this.currentApp.conf ,  )
 			if((! confSecu) &&  this.currentApp.conf && this.currentApp.conf.publicAccess ){
-				console.log("find public access " + "_$" + req.method.toLowerCase())
+				if(this.currentApp.conf.debug){
+					console.log("find public access " + "_$" + req.method.toLowerCase())
+				}
 				confSecu = this.currentApp.conf.publicAccess["_$" + req.method.toLowerCase()] ;
 			}
 			// console.log("confSecu" , confSecu )
@@ -297,12 +301,15 @@ export class ServerBase{
 					if(access && _.intersection(access.role , req.ctx.roles).length > 0){
 						next() ;
 					}else{	
-						
-						console.log("unautorized " , confSecu , access , path , req.ctx.roles )
+						if(this.currentApp.conf.debug){
+							console.log("unautorized " , confSecu , access , path , req.ctx.roles );
+						}
 						next("unautorized" ) ;
 					}
 				}else{
-					console.log("unautorized, no conf match" , confSecu , path , req.ctx.roles )
+					if(this.currentApp.conf.debug){
+						console.log("unautorized, no conf match" , confSecu , path , req.ctx.roles ) ;
+					}
 						next("unautorized" ) ;
 				}
 				

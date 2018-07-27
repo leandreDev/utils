@@ -1,6 +1,6 @@
 {
   "name": "utils",
-  "version": "1.0.84",
+  "version": "1.0.85",
   "description": "utilitaire",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -26,13 +26,12 @@
     "lodash": "^4.17.4",
     "node-jose": "^1.0.0",
     "request": "^2.81.0",
-    "request-promise": "^4.2.1"
+    "request-promise-native": "^1.0.5"
   },
   "devDependencies": {
     "@types/assert": "0.0.31",
     "@types/fs-extra": "^3.0.3",
     "@types/lodash": "^4.14.66",
-    "@types/request": "0.0.44",
-    "@types/request-promise": "^4.1.35"
+    "@types/request": "0.0.44"
   }
 }

@@ -15,13 +15,12 @@ export class CtxInterpretor {
 
 
   private setEnv(varKey) {
-    console.log(varKey)
+
     if(varKey.indexOf(".") == -1){
 
       if (this.context.hasOwnProperty(varKey)) {
         return this.context[varKey];
       } else {
-        console.log(this.context.hasOwnProperty(varKey)) ;
         return this.startPatern + varKey + this.endPatern ;
       }
     }else{

@@ -1,5 +1,5 @@
 
-import * as request from 'request-promise' ;
+import * as request from 'request-promise-native' ;
 import {CtxInterpretor} from './CtxInterpretor' ;
 import {UtilsSecu} from './UtilsSecu' ;
 

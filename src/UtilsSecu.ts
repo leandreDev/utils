@@ -16,8 +16,9 @@ export class UtilsSecu{
 		if(!rq.headers ){
 			rq.headers = {}
 		}
+		
 		rq.headers.keyDate = date ;
-		var url = rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
+		var url = encodeURI(rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://"));
 		
 		rq.headers.key = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                    .update(date + url)
@@ -33,7 +34,9 @@ export class UtilsSecu{
 			var currentDate:number = Date.now() ;
 			if(key){
 				if(currentDate > date+ 30000){
-		        	console.log("keyDate is obsolete : " + currentDate + ">"  + date + "+ 30000" ) ;
+					if(this.currentApp.conf.debug){
+					console.log("keyDate is obsolete : " + currentDate + ">"  + date + "+ 30000" ) ;
+					}
 		        	next("keyDate is obsolete") ;
 				}else{
 					if(req.originalUrl && req.originalUrl.length > 1){
@@ -51,8 +54,10 @@ export class UtilsSecu{
 			        	req.ctx.internalCallValid = true ;
 			        	next() ;
 			        }else{
-			        	req.ctx.internalCallValid = false ;
-			        	console.log("key dont match uri : " + requrl , date , key , newKey) ;
+						req.ctx.internalCallValid = false ;
+						if(this.currentApp.conf.debug){
+						console.log("key dont match uri : " + requrl , date , key , newKey) ;
+						}
 			        	next() ;
 			        }
 		    	}
@@ -72,7 +77,9 @@ export class UtilsSecu{
 			var currentDate:number = Date.now() ;
 			if(key){
 				if(currentDate > date + 30000){
-		        	console.log("keyDate is obsolete : " + currentDate + ">"  + date + "+ 30000" ) ;
+					if(this.currentApp.conf.debug){
+					console.log("keyDate is obsolete : " + currentDate + ">"  + date + "+ 30000" ) ;
+					}
 		        	next("keyDate is obsolete") ;
 				}else{
 					if(req.originalUrl && req.originalUrl.length > 1){
@@ -91,7 +98,9 @@ export class UtilsSecu{
 
 			        	next() ;
 			        }else{
-			        	console.log("key dont match uri : " + requrl , date , key , newKey) ;
+						if(this.currentApp.conf.debug){
+						console.log("key dont match uri : " + requrl , date , key , newKey) ;
+						}
 			        	next("key dont match uri : " + requrl) ;
 			        }
 			    }
