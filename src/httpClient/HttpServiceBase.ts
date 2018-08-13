@@ -65,7 +65,7 @@ protected  globalCtxInt:CtxInterpretor = new CtxInterpretor(process.env) ;
   }
 
   public patch(
-    body: any | null,
+    body: any ,
     headers: any = {},
     query: string = ''
   ): Promise<IHttpResult<T>> {
@@ -90,7 +90,7 @@ protected  globalCtxInt:CtxInterpretor = new CtxInterpretor(process.env) ;
   }
 
   public post(
-    body: any | null,
+    body: T ,
     headers: any = {},
     query: string = ''
   ): Promise<IHttpResult<T>> {
@@ -117,7 +117,7 @@ protected  globalCtxInt:CtxInterpretor = new CtxInterpretor(process.env) ;
   }
   
   public put(
-    body: any | null,
+    body: T ,
     headers: any = {},
     query: string = ''
   ): Promise<IHttpResult<T>> {
