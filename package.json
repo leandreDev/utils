@@ -1,6 +1,6 @@
 {
   "name": "utils",
-  "version": "1.0.88",
+  "version": "1.0.89",
   "description": "utilitaire",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

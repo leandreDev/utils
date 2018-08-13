@@ -11,5 +11,6 @@ import {MiddleWareConfig} from "./httpClient/MiddleWareConfig" ;
 import {UtilsService} from "./httpClient/UtilsService" ;
 import {Base} from "./lib/Base" ;
 import {IBase} from "./lib/IBase" ;
+import {IApplicationConfiguration} from "./IApplicationConfiguration" ;
 
-export  {CtxInterpretor , ConfLoader , UtilsSecu , ServerBase ,HttpAbstractAggregaService , HttpAbstractService , HttpServiceBase ,IHttpResult , MiddleWareConfig ,UtilsService , Base ,  IBase } ;
+export  {IApplicationConfiguration ,CtxInterpretor , ConfLoader , UtilsSecu , ServerBase ,HttpAbstractAggregaService , HttpAbstractService , HttpServiceBase ,IHttpResult , MiddleWareConfig ,UtilsService , Base ,  IBase } ;
