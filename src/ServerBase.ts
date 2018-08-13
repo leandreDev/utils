@@ -8,10 +8,12 @@ import * as Util  from 'util' ;
 import * as http from 'http' ;
 import * as assert from 'assert' ;
 import * as fs  from 'fs-extra' ;
-import {RequestContext} from "./RequestContext"
+import {RequestContext} from "./RequestContext" ;
+import {IApplicationConfiguration} from './IApplicationConfiguration';
+
 export class ServerBase{
 
-	public currentApp:any ;
+	public currentApp:IApplicationConfiguration ;
 	public app:any ;
 	public secu:UtilsSecu ;
 	public server:http.Server ;
@@ -28,6 +30,7 @@ export class ServerBase{
 				console.log(err) ;
 			})
 		process.on('message', this.parentProcessHandler )
+		
 	}
 
 	protected get parentProcessHandler(){
@@ -180,7 +183,7 @@ export class ServerBase{
 		}
 	}
 
-	public get toErrRes () {
+	public get toErrRes ():{(err: any, code?:number):any} {
 		return (err: any, code:number=500):any => {
 			if(Util.isString(err)){
 				err = {message:err }
@@ -199,7 +202,7 @@ export class ServerBase{
 	    }
     };
 
-    public  get toJsonRes (){
+    public  get toJsonRes ():{ (objs: any, meta?:any ): any}{
     	return (objs: any, meta: any = null): any  =>{
 		    if (!Util.isArray(objs)) {
 		        objs = [objs];

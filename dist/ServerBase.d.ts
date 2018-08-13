@@ -2,8 +2,9 @@
 import * as express from 'express';
 import { UtilsSecu } from './UtilsSecu';
 import * as http from 'http';
+import { IApplicationConfiguration } from './IApplicationConfiguration';
 export declare class ServerBase {
-    currentApp: any;
+    currentApp: IApplicationConfiguration;
     app: any;
     secu: UtilsSecu;
     server: http.Server;
@@ -17,8 +18,12 @@ export declare class ServerBase {
     protected loadDepConfPromise(): Promise<any>;
     protected reloadConfPromise(): Promise<any>;
     readonly reloadConf: (req: any, res: any) => void;
-    readonly toErrRes: (err: any, code?: number) => any;
-    readonly toJsonRes: (objs: any, meta?: any) => any;
+    readonly toErrRes: {
+        (err: any, code?: number): any;
+    };
+    readonly toJsonRes: {
+        (objs: any, meta?: any): any;
+    };
     readonly addCtx: express.RequestHandler | express.ErrorRequestHandler;
     readonly checkJWT: express.RequestHandler | express.ErrorRequestHandler;
     readonly hasRight: express.RequestHandler | express.ErrorRequestHandler;
