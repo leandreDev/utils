@@ -16,15 +16,24 @@ export class UtilsSecu{
 		if(!rq.headers ){
 			rq.headers = {}
 		}
+		if(rq.headers.keyDate){
+			date = new Date(rq.headers.keyDate).valueOf() ;
+		}else{
+			rq.headers.keyDate = date ;
+		}
 		
-		rq.headers.keyDate = date ;
 		var url = encodeURI(rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://"));
-		
+		// console.log(url) ;
+		// var url = encodeURI(url);
+		// var url = rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://")
+		console.log(url) ;
 		rq.headers.key = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                    .update(date + url)
                    .digest('hex')
 
 	}
+
+	
 
 	public get chekInternalMidelWare(): express.RequestHandler | express.ErrorRequestHandler {
 		return (req, res, next)=>{
@@ -44,7 +53,7 @@ export class UtilsSecu{
 					}else{
 						requrl = this.currentApp.conf.urlBase  ;
 					}
-					var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
+					var url = decodeURI(requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://"));
 					
 					var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
 			                   .update(date + url)
@@ -87,7 +96,7 @@ export class UtilsSecu{
 					}else{
 						requrl = this.currentApp.conf.urlBase  ;
 					}
-					var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
+					var url = decodeURI(requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://")) ;
 					
 					var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
 		                   .update(date + url)

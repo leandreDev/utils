@@ -12,8 +12,17 @@ class UtilsSecu {
         if (!rq.headers) {
             rq.headers = {};
         }
-        rq.headers.keyDate = date;
+        if (rq.headers.keyDate) {
+            date = new Date(rq.headers.keyDate).valueOf();
+        }
+        else {
+            rq.headers.keyDate = date;
+        }
         var url = encodeURI(rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://"));
+        // console.log(url) ;
+        // var url = encodeURI(url);
+        // var url = rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://")
+        console.log(url);
         rq.headers.key = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
             .update(date + url)
             .digest('hex');
@@ -38,7 +47,7 @@ class UtilsSecu {
                     else {
                         requrl = this.currentApp.conf.urlBase;
                     }
-                    var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
+                    var url = decodeURI(requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://"));
                     var newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                         .update(date + url)
                         .digest('hex');
@@ -80,7 +89,7 @@ class UtilsSecu {
                     else {
                         requrl = this.currentApp.conf.urlBase;
                     }
-                    var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
+                    var url = decodeURI(requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://"));
                     var newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                         .update(date + url)
                         .digest('hex');
