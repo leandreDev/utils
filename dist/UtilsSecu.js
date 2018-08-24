@@ -47,7 +47,7 @@ class UtilsSecu {
                     else {
                         requrl = this.currentApp.conf.urlBase;
                     }
-                    var url = decodeURI(requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://"));
+                    var url = encodeURI(requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://"));
                     var newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                         .update(date + url)
                         .digest('hex');
@@ -89,7 +89,7 @@ class UtilsSecu {
                     else {
                         requrl = this.currentApp.conf.urlBase;
                     }
-                    var url = decodeURI(requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://"));
+                    var url = encodeURI(requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://"));
                     var newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                         .update(date + url)
                         .digest('hex');
