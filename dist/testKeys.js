@@ -1,11 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const UtilsSecu_1 = require("./UtilsSecu");
-var utilSecu = new UtilsSecu_1.UtilsSecu({ conf: { secretKey: "jgffnFDGijg654FGHdeamlkdfj8egsglkhjBrfohg" } });
+// BOf5u8FgRaUCe8h3oESxOiksanNEDi6T0AuL9qRRIZs='
+// jgffnFDGijg654FGHdeamlkdfj8egsglkhjBrfohg
+var utilSecu = new UtilsSecu_1.UtilsSecu({ conf: { secretKey: "BOf5u8FgRaUCe8h3oESxOiksanNEDi6T0AuL9qRRIZs=" } });
 var rq = {
-    url: "https://services-preprod.daesign.com/front-apps-dbs/collection/Task/startExecDate/$null/=/actionDate/2018-08-24T13:20:52.707Z/</&/1/$limit",
+    url: "https://services-dev.daesign.com/front-apps-dbs/collection/Task/startExecDate/$null/=/actionDate/Mon%20Aug%2027%202018%2013:46:25%20GMT+0000%20(UTC)/$date/</&/1/$limit",
     headers: {
-        keyDate: 1535116852707,
+        keyDate: 1535377585330,
     }
 };
 utilSecu.addHeadersKey(rq);
