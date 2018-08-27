@@ -58,7 +58,10 @@ class UtilsSecu {
                         next();
                     }
                     else {
-                        url = encodeURI(requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://"));
+                        if (this.currentApp.conf.debug) {
+                            console.log("key dont match uri nonEncodeURI: " + url, date, key, newKey);
+                        }
+                        url = encodeURI(requrl);
                         newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                             .update(date + url)
                             .digest('hex');
@@ -69,7 +72,7 @@ class UtilsSecu {
                         else {
                             req.ctx.internalCallValid = false;
                             if (this.currentApp.conf.debug) {
-                                console.log("key dont match uri : " + url, date, key, newKey);
+                                console.log("key dont match uri encodeURI: " + url, date, key, newKey);
                             }
                             next();
                         }
