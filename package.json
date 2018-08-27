@@ -7,7 +7,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsc",
-    "testing": "node dist/test.js"
+    "testing": "node dist/test.js",
+    "rmDist": "rm -r dist",
+    "devDistToMaster": "git checkout dev -- dist",
+    "updateMaster": "npm run rmDist && npm run devDistToMaster",
+    "version": "npm run updateMaster && git add -A ",
+    "postversion": "git push && git push --tags "
   },
   "scriptsDev": {
     "pub": "git checkout master && npm version $npm_package_version && git checkout dev",
