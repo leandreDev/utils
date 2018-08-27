@@ -22,7 +22,7 @@ class UtilsSecu {
         // console.log(url) ;
         // var url = encodeURI(url);
         // var url = rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://")
-        console.log(url);
+        // console.log(url) ;
         rq.headers.key = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
             .update(date + url)
             .digest('hex');
