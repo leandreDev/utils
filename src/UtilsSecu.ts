@@ -55,6 +55,7 @@ export class UtilsSecu{
 						requrl = this.currentApp.conf.urlBase  ;
 					}
 					var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
+					url = encodeURI(decodeURI(url)) ;
 					
 					var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
 			                   .update(date + url)
@@ -64,24 +65,13 @@ export class UtilsSecu{
 			        	req.ctx.internalCallValid = true ;
 			        	next() ;
 					}else{
+						
+						req.ctx.internalCallValid = false ;
 						if(this.currentApp.conf.debug){
-							console.log("key dont match uri nonEncodeURI: " + url , date , key , newKey) ;
+							console.log("key dont match uri encodeURI: " + url , date , key , newKey) ;
 						}
-						url = encodeURI(requrl);
-					
-						newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-								   .update(date + url)
-								   .digest('hex') ;
-						if(newKey == key){
-							req.ctx.internalCallValid = true ;
-							next() ;
-						}else{
-							req.ctx.internalCallValid = false ;
-							if(this.currentApp.conf.debug){
-								console.log("key dont match uri encodeURI: " + url , date , key , newKey) ;
-							}
-							next() ;
-						}
+						next() ;
+
 					}
 					
 
@@ -113,6 +103,7 @@ export class UtilsSecu{
 						requrl = this.currentApp.conf.urlBase  ;
 					}
 					var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://") ;
+					url = encodeURI(decodeURI(url)) ;
 					var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
 		                   .update(date + url)
 		                   .digest('hex') ;
@@ -122,22 +113,12 @@ export class UtilsSecu{
 
 			        	next() ;
 			        }else{
-						 url = encodeURI(requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://")) ;
-					
-						newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-		                   .update(date + url)
-						   .digest('hex') ;
 						
-						if(newKey == key){
-							req.ctx.internalCallValid = true ;
-	
-							next() ;
-						}else{
 							if(this.currentApp.conf.debug){
 							console.log("key dont match uri : " + requrl , date , key , newKey) ;
 							}
 							next("key dont match uri : " + requrl) ;
-						}
+						
 			        }
 			    }
 			}else{
