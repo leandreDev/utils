@@ -39,7 +39,7 @@ export class UtilsSecu{
 		return (req, res, next)=>{
 			var date = Number(req.header('keyDate')) ;
 			var key = req.header('key')  ;
-			var requrl ;
+			var requrl:string ;
 			var currentDate:number = Date.now() ;
 			if(key){
 				if(currentDate > date+ 30000){

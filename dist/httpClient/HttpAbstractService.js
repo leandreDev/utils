@@ -11,7 +11,7 @@ class HttpAbstractService {
         if (this.secure) {
             this.secure.addHeadersKey(options);
         }
-        console.log(options);
+        // console.log(options) ;
         return request(options);
     }
     baseDelete(url = '', headers = {}) {
