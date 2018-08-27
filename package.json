@@ -7,7 +7,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsc",
-    "testing": "node dist/test.js"
+    "build": "tsc",
+    "testing": "node dist/test.js",
+    "pub": "git checkout master && npm version $npm_package_version && git checkout dev",
+    "vMajor": "npm run initNewVBrach && npm --no-git-tag-version version major  && npm run pub",
+    "vMinor": "npm run initNewVBrach && npm --no-git-tag-version version minor && npm run pub",
+    "initNewVBrach": "git checkout -b V$npm_package_version && git push --set-upstream origin V$npm_package_version && git add -A && git push && git checkout dev ",
+    "vPatch": "npm --no-git-tag-version version patch && npm run pub",
+    "postversion": "git tag dev_$npm_package_version && git add -A && git commit -m 'dev_$npm_package_version' && git push && git push --tags ",
+    "publi": "npm run build && npm run vPatch"
   },
   "scriptsDev": {
     "pub": "git checkout master && npm version $npm_package_version && git checkout dev",
