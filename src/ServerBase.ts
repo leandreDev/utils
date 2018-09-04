@@ -197,7 +197,8 @@ export class ServerBase{
 	        
 	        if(this.currentApp.conf.debug){
 	          rep.stack = err.stack ;
-	        }
+			}
+			console.log(JSON.stringify(err)) ;
 	        return rep ;
 	    }
     };
