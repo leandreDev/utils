@@ -10,7 +10,7 @@ class CtxInterpretor {
         assert(context, "context is not spécified");
         this.context = context;
     }
-    setEnv(varKey) {
+    setEnv(varKey, removeUnknownVar = false) {
         if (varKey.indexOf(".") == -1) {
             if (this.context.hasOwnProperty(varKey)) {
                 return this.context[varKey];
@@ -39,12 +39,17 @@ class CtxInterpretor {
                 return targetContext;
             }
             else {
-                return this.startPatern + varKey + this.endPatern;
+                if (removeUnknownVar) {
+                    return "";
+                }
+                else {
+                    return this.startPatern + varKey + this.endPatern;
+                }
             }
         }
     }
     ;
-    setGlobalEnv(stringKey) {
+    setGlobalEnv(stringKey, removeUnknownVar = false) {
         var arr, result;
         if (stringKey.indexOf(this.startPatern) == -1) {
             return stringKey;
@@ -70,11 +75,11 @@ class CtxInterpretor {
                 }
                 envVar = stringKey.substring(envStart + startPaternLength, envEnd);
                 if (preEnv == "" && postEnv == "") {
-                    stringKey = this.setEnv(envVar);
+                    stringKey = this.setEnv(envVar, removeUnknownVar);
                     envStart = -1;
                 }
                 else {
-                    stringKey = preEnv + this.setEnv(envVar) + postEnv;
+                    stringKey = preEnv + this.setEnv(envVar, removeUnknownVar) + postEnv;
                     envStart = stringKey.indexOf(this.startPatern, envStart + 1);
                 }
             }
@@ -94,17 +99,17 @@ class CtxInterpretor {
         }
     }
     ;
-    updateArrEnv(obj, clone = false) {
+    updateArrEnv(obj, clone = false, removeUnknownVar = false) {
         let newArr = [];
         obj.map((data) => {
             if (_.isString(data)) {
-                newArr.push(this.setGlobalEnv(data));
+                newArr.push(this.setGlobalEnv(data, removeUnknownVar));
             }
             else if (_.isArray(data)) {
-                newArr.push(this.updateArrEnv(data, clone));
+                newArr.push(this.updateArrEnv(data, clone, removeUnknownVar));
             }
             else if (_.isObject(data)) {
-                newArr.push(this.updateEnv(data, clone));
+                newArr.push(this.updateEnv(data, clone, removeUnknownVar));
             }
             else {
                 newArr.push(data);
@@ -112,20 +117,20 @@ class CtxInterpretor {
         });
         return newArr;
     }
-    updateEnv(obj, clone = false) {
+    updateEnv(obj, clone = false, removeUnknownVar = false) {
         if (clone) {
             obj = Object.assign({}, obj);
         }
         _.each(obj, (val, key) => {
             var arr;
             if (_.isString(val)) {
-                obj[key] = this.setGlobalEnv(val);
+                obj[key] = this.setGlobalEnv(val, removeUnknownVar);
             }
             else if (_.isArray(val)) {
-                obj[key] = this.updateArrEnv(val, clone);
+                obj[key] = this.updateArrEnv(val, clone, removeUnknownVar);
             }
             else if (_.isObject(val)) {
-                obj[key] = this.updateEnv(val, clone);
+                obj[key] = this.updateEnv(val, clone, removeUnknownVar);
             }
         });
         return obj;

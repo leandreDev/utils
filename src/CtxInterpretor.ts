@@ -14,7 +14,7 @@ export class CtxInterpretor {
   }
 
 
-  private setEnv(varKey) {
+  private setEnv(varKey, removeUnknownVar:boolean=false) {
 
     if(varKey.indexOf(".") == -1){
 
@@ -41,13 +41,18 @@ export class CtxInterpretor {
       if(targetContext != null ){
         return targetContext ;
       }else{
-        return this.startPatern + varKey + this.endPatern  ;
+        if(removeUnknownVar){
+          return "" ;
+        }else{
+          return this.startPatern + varKey + this.endPatern  ;
+        }
+        
       }
     }
     
   };
 
-  private setGlobalEnv(stringKey) {
+  private setGlobalEnv(stringKey, removeUnknownVar:boolean=false) {
     var arr, result;
     if(stringKey.indexOf(this.startPatern) == -1){
       return stringKey ;
@@ -73,10 +78,10 @@ export class CtxInterpretor {
         envVar = stringKey.substring(envStart+startPaternLength , envEnd) ;
 
         if(preEnv == "" && postEnv == ""){
-          stringKey = this.setEnv(envVar)  ;
+          stringKey = this.setEnv(envVar , removeUnknownVar)  ;
           envStart = -1 ;
         }else{
-           stringKey = preEnv + this.setEnv(envVar) + postEnv ;
+           stringKey = preEnv + this.setEnv(envVar, removeUnknownVar) + postEnv ;
 
             envStart = stringKey.indexOf(this.startPatern , envStart+1) ;  
         }
@@ -99,22 +104,22 @@ export class CtxInterpretor {
     }
     
   };
-  public updateArrEnv( obj:any[] , clone:boolean=false):any{
+  public updateArrEnv( obj:any[] , clone:boolean=false, removeUnknownVar:boolean=false):any{
     let newArr:any[] = [] ;
     obj.map((data)=>{
       if (_.isString(data)) {
-        newArr.push(this.setGlobalEnv(data));
+        newArr.push(this.setGlobalEnv(data, removeUnknownVar));
       } else  if (_.isArray(data)) {
-        newArr.push(this.updateArrEnv(data , clone));
+        newArr.push(this.updateArrEnv(data , clone , removeUnknownVar));
       } else  if (_.isObject(data)) {
-        newArr.push(this.updateEnv(data , clone));
+        newArr.push(this.updateEnv(data , clone , removeUnknownVar));
       }else{
         newArr.push(data );
       }
     })
     return newArr ;
   }
-  public updateEnv( obj:any , clone:boolean=false):any{
+  public updateEnv( obj:any , clone:boolean=false , removeUnknownVar:boolean=false):any{
     if(clone){
       obj = Object.assign({} , obj) ;
     }
@@ -122,11 +127,11 @@ export class CtxInterpretor {
      _.each(obj, (val, key) => {
       var arr;
       if (_.isString(val)) {
-         obj[key] = this.setGlobalEnv(val);
+         obj[key] = this.setGlobalEnv(val , removeUnknownVar);
       } else if (_.isArray(val)) {
-        obj[key] = this.updateArrEnv(val , clone);
+        obj[key] = this.updateArrEnv(val , clone, removeUnknownVar);
       } else if (_.isObject(val)) {
-        obj[key] = this.updateEnv(val , clone);
+        obj[key] = this.updateEnv(val , clone , removeUnknownVar);
       }
     });
     return obj ;
