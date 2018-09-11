@@ -105,7 +105,7 @@ export class ServerBase{
 	public headers:string[][] = [
 			["Access-Control-Allow-Methods" , "GET, POST, OPTIONS, PUT, PATCH, DELETE"],
 			["Access-Control-Allow-Origin", "*"],
-			["Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, idtoken, JWT, keyDate , key"],
+			["Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, idtoken, JWT, jwt, keydate, keyDate , key"],
 			["Cache-Control", "no-cache, no-store, must-revalidate"],
 			["Pragma", "no-cache"],
 			["Expires", "0"]
