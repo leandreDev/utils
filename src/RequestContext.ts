@@ -2,7 +2,7 @@
 export class RequestContext {
 
 	"null" = null ;
-	
+	"emptyStr" = "" ;
 	get now():number{
 		return Date.now() 
 	}
