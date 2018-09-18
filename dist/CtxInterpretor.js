@@ -116,15 +116,15 @@ class CtxInterpretor {
                 newArr.push(data);
             }
         });
-        if (obj.length > 1 && (obj[0].toString()).slice(0, 3) == "$__") {
+        if (newArr.length > 1 && (newArr[0].toString()).slice(0, 3) == "$__") {
             // c'est une fonction
-            let key = obj[0].toString();
+            let key = newArr[0].toString();
             try {
                 switch (key) {
                     case "$__moment_add":
-                        return moment(obj[1]).add(parseFloat(obj[2].tostring()), obj[3]);
+                        return moment(newArr[1]).add(parseFloat(newArr[2].tostring()), newArr[3]);
                     case "$__moment_substract":
-                        return moment(obj[1]).add(parseFloat(obj[2].tostring()), obj[3]);
+                        return moment(newArr[1]).add(parseFloat(newArr[2].tostring()), newArr[3]);
                     default:
                         break;
                 }
