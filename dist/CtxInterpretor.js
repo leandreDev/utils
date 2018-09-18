@@ -122,9 +122,9 @@ class CtxInterpretor {
             try {
                 switch (key) {
                     case "$__moment_add":
-                        return moment(newArr[1]).add(parseFloat(newArr[2].toString()), newArr[3]);
+                        return moment(newArr[1]).add(parseFloat(newArr[2].toString()), newArr[3]).toDate();
                     case "$__moment_substract":
-                        return moment(newArr[1]).add(parseFloat(newArr[2].toString()), newArr[3]);
+                        return moment(newArr[1]).subtract(parseFloat(newArr[2].toString()), newArr[3]).toDate();
                     default:
                         break;
                 }
