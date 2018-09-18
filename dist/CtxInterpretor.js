@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const _ = require("lodash");
 const assert = require("assert");
+const moment = require("moment");
 class CtxInterpretor {
     constructor(context) {
         this.startPatern = "$ENV.";
@@ -101,7 +102,7 @@ class CtxInterpretor {
     ;
     updateArrEnv(obj, clone = false, removeUnknownVar = false) {
         let newArr = [];
-        obj.map((data) => {
+        obj.forEach((data) => {
             if (_.isString(data)) {
                 newArr.push(this.setGlobalEnv(data, removeUnknownVar));
             }
@@ -115,7 +116,26 @@ class CtxInterpretor {
                 newArr.push(data);
             }
         });
-        return newArr;
+        if (obj.length > 1 && (obj[0].toString()).slice(0, 3) == "$__") {
+            // c'est une fonction
+            let key = obj[0].toString();
+            try {
+                switch (key) {
+                    case "$__moment_add":
+                        return moment(obj[1]).add(parseFloat(obj[2].tostring()), obj[3]);
+                    case "$__moment_substract":
+                        return moment(obj[1]).add(parseFloat(obj[2].tostring()), obj[3]);
+                    default:
+                        break;
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+        else {
+            return newArr;
+        }
     }
     updateEnv(obj, clone = false, removeUnknownVar = false) {
         if (clone) {
