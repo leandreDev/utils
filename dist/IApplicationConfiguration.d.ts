@@ -6,7 +6,7 @@ import * as Jose from 'node-jose';
 export interface IApplicationConfiguration {
     licence_keyStore?: Jose.JWK.KeyStore;
     server?: http.Server;
-    express?: express;
+    express?: express.Application;
     toErrRes?: {
         (err: any, code?: number): any;
     };
