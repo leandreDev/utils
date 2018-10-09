@@ -4,11 +4,11 @@ export class RequestContext {
 	"null" = null ;
 	"emptyStr" = "" ;
 	get now():number{
-		return Date.now() 
+		return Date.now() ;
 	}
 
 	get DateNow(){
-		return new Date()
+		return new Date() ;
 	}
 
 }
