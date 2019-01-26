@@ -104,11 +104,11 @@ protected  globalCtxInt:CtxInterpretor = new CtxInterpretor(process.env) ;
       var localCtxInt:CtxInterpretor = new CtxInterpretor(req.ctx)
       localCtxInt.startPatern = "$ctx." ;
       var localConfig = localCtxInt.updateEnv(config , true) ;
-      console.log(JSON.stringify(localConfig))
+      // console.log(JSON.stringify(localConfig))
       this.post( localConfig.body , localConfig.headers , localConfig.params.query)
       .then((data)=>{
         req.ctx[localConfig.output] = data ;
-        console.log(JSON.stringify(data)) ;
+        // console.log(JSON.stringify(data)) ;
         next() ;
       }).catch((err)=>{
         next(err)

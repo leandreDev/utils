@@ -21,16 +21,25 @@ export class UtilsSecu{
 		}else{
 			rq.headers.keyDate = date ;
 		}
-		console.log(rq.url) ;
+		if(this.currentApp.conf.debug){
+			console.log(rq.url) ;
+		}
+		
 		var url = encodeURI(rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://"));
 		// console.log(url) ;
 		// var url = encodeURI(url);
 		// var url = rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://")
-		console.log(url) ;
+		
+		if(this.currentApp.conf.debug){
+			console.log(url) ;
+		}
 		rq.headers.key = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                    .update(date + url)
 				   .digest('hex') ;
-		console.log(rq.headers.keyDate , rq.headers.key)
+		if(this.currentApp.conf.debug){
+			console.log(rq.headers.keyDate , rq.headers.key)
+		}		   
+		
 
 	}
 

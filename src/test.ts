@@ -4,8 +4,8 @@ var test:CtxInterpretor = new CtxInterpretor({emailTarget:{toto:"bla", name:"dsd
 test.startPatern = "$ctx."
 var poi:any = { 
 		"aa":"$ENV.opt$$" , 
-		"zz":"$ENV.body.toto$$uuuu" , 
-		"qq":"qzsazqs$ENV.body.titi$$wxcvdfd",
+		"zz":"qqq$ENV.body.toto$$/uuuu" , 
+		"qq":"qzsazqs$/ENV.body.titi$$/wxcvdfd",
 		"aas":"$ENV.opt" ,
 		"aax":"www$ENV.opt" ,
 		"aasss":"www$ENV.optsdsds$$dsds" ,
@@ -31,8 +31,8 @@ var tester:any = {
 		}],
 		"substitutions": {
 			"@@nomParcours": "toto",
-			"@@mailClient": "$ctx.emailTarget.name",
-			"@@prenom": "tutu",
+			"@@mailClient": "http://$ctx.emailTarget.name$$//",
+			"@@prenom": "http://$ctx.emailTarget.name$$/",
 			"@@prenomClient": "toto",
 			"@@nomClient": "le hero",
 			"@@lienPfDaesign": "http://lienPfDaesign",
@@ -43,6 +43,17 @@ var tester:any = {
 	"template_id": "4cb2755a-ac05-4034-890a-f5c784dd1e98"
 };
 
-test.updateEnv(tester);
 
-console.log(JSON.stringify(tester)) ;
+// tester = {
+// 	"rerer" : "http://$ctx.emailTarget.name$$/"
+// }
+
+
+setTimeout(()=>{
+
+	debugger ;
+	test.updateEnv(tester);
+
+	console.log(JSON.stringify(tester)) ;
+}, 3000) ;
+

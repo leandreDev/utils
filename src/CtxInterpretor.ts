@@ -72,7 +72,7 @@ export class CtxInterpretor {
         envEnd = stringKey.indexOf(this.endPatern, envStart);
         if (envEnd == -1) {
           envEnd = stringKey.length;
-        } else if (envEnd + endPaternLength < stringKey.length - 1) {
+        } else if (envEnd + endPaternLength < stringKey.length ) {
           postEnv = stringKey.substr(envEnd + endPaternLength);
         }
 
