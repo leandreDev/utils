@@ -89,7 +89,15 @@ class ServerBase {
                 .get('/', (req, res) => {
                 res.send({ online: true });
             })
-                .get('/reloadConf', this.reloadConf);
+                .get('/reloadConf', this.reloadConf)
+                .get("/admin/info", (req, res) => {
+                let respObj = {
+                    cpuUsage: process.cpuUsage(),
+                    memoryUsage: process.memoryUsage(),
+                    upTime: process.uptime()
+                };
+                res.send(this.toJsonRes(respObj));
+            });
         });
         return prom;
     }
