@@ -56,7 +56,13 @@ class UtilsSecu {
                         requrl = this.currentApp.conf.urlBase;
                     }
                     var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
+                    if (this.currentApp.conf.debug) {
+                        console.log(`url : ${url}`);
+                    }
                     url = encodeURI(decodeURI(url));
+                    if (this.currentApp.conf.debug) {
+                        console.log(`url  decoded encoded : ${url}`);
+                    }
                     var newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                         .update(date + url)
                         .digest('hex');
