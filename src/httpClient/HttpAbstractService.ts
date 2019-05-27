@@ -3,6 +3,7 @@ import * as request from "request-promise-native" ;
 import {IHttpResult} from "./IHttpResult" ;
 import {UtilsSecu} from "../UtilsSecu" ;
 import * as _ from 'lodash' ;
+import * as Url from 'url' ;
 
 export class HttpAbstractService {
   constructor(
@@ -25,7 +26,7 @@ protected secure:UtilsSecu = null
   ): Promise<IHttpResult<T>> {
   	var options:any ;
   	options = {
-  		url:url,
+  		url: new Url.URL(url).href,
   		method:"DELETE",
   		headers :headers,
   		json:true
@@ -40,7 +41,7 @@ protected secure:UtilsSecu = null
   ): Promise<IHttpResult<T>> {
   	var options:any ;
   	options = {
-  		url:url,
+  		url:new Url.URL(url).href,
   		method:"GET",
   		headers :headers,
   		json:true
@@ -108,7 +109,7 @@ protected secure:UtilsSecu = null
   ): Promise<IHttpResult<T>> {
   	var options:any ;
   	options = {
-  		url:url,
+  		url:new Url.URL(url).href,
   		method:"PATCH",
   		headers :headers,
       body:body,
@@ -125,7 +126,7 @@ protected secure:UtilsSecu = null
   ): Promise<IHttpResult<T>> {
   	var options:any ;
   	options = {
-  		url:url,
+  		url:new Url.URL(url).href,
   		method:"POST",
   		headers :headers,
   		json:true,
@@ -142,7 +143,7 @@ protected secure:UtilsSecu = null
   ): Promise<IHttpResult<T>> {
   	var options:any ;
   	options = {
-  		url:url,
+  		url:new Url.URL(url).href,
   		method:"PUT",
   		headers :headers,
       body:body,
