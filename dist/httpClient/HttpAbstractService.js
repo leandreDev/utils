@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const request = require("request-promise-native");
 const _ = require("lodash");
+const Url = require("url");
 class HttpAbstractService {
     constructor(conf) {
         this.secure = null;
@@ -17,7 +18,7 @@ class HttpAbstractService {
     baseDelete(url = '', headers = {}) {
         var options;
         options = {
-            url: url,
+            url: new Url.URL(url).href,
             method: "DELETE",
             headers: headers,
             json: true
@@ -27,7 +28,7 @@ class HttpAbstractService {
     baseGet(url = '', headers = {}) {
         var options;
         options = {
-            url: url,
+            url: new Url.URL(url).href,
             method: "GET",
             headers: headers,
             json: true
@@ -93,7 +94,7 @@ class HttpAbstractService {
     basePatch(url = '', body, headers = {}) {
         var options;
         options = {
-            url: url,
+            url: new Url.URL(url).href,
             method: "PATCH",
             headers: headers,
             body: body,
@@ -104,7 +105,7 @@ class HttpAbstractService {
     basePost(url = '', body, headers = {}) {
         var options;
         options = {
-            url: url,
+            url: new Url.URL(url).href,
             method: "POST",
             headers: headers,
             json: true,
@@ -115,7 +116,7 @@ class HttpAbstractService {
     basePut(url = '', body, headers = {}) {
         var options;
         options = {
-            url: url,
+            url: new Url.URL(url).href,
             method: "PUT",
             headers: headers,
             body: body,
