@@ -234,6 +234,7 @@ class ServerBase {
                     }
                     else {
                         req.ctx.user = payload;
+                        req.ctx.JWT = token;
                         next();
                     }
                 }).catch(function (err) {
