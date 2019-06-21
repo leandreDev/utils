@@ -261,6 +261,7 @@ export class ServerBase{
 						next("nbf token is not valid" ) ;
 					}else{
 						req.ctx.user = payload ;
+						req.ctx.JWT = token ;
 						next() ;
 					}
 
