@@ -20,7 +20,7 @@ protected secure:UtilsSecu = null
   	return request(options)
   }
 
-  protected baseDelete<T>(
+  protected baseDelete<T >(
     url: string = '',
     headers:any = {} 
   ): Promise<IHttpResult<T>> {
@@ -119,9 +119,9 @@ protected secure:UtilsSecu = null
     return this.callRequest<IHttpResult<T>>(options) ;
   }
 
-  protected basePost<T>(
+  protected basePost<T , U=T>(
     url: string = '',
-    body: any | null,
+    body: U | null,
     headers: any = {}
   ): Promise<IHttpResult<T>> {
   	var options:any ;
@@ -136,9 +136,9 @@ protected secure:UtilsSecu = null
     return this.callRequest<IHttpResult<T>>(options) ;
   }
 
-  protected basePut<T>(
+  protected basePut<T , U=T>(
     url: string = '',
-    body: any | null,
+    body: U | null,
     headers: any = {}
   ): Promise<IHttpResult<T>> {
   	var options:any ;

@@ -18,10 +18,10 @@ import * as request from 'request-promise-native' ;
 // rq.headers.key = key
 
 
-var utilSecu:UtilsSecu = new UtilsSecu({conf:{secretKey:"poipoi"}}) ;
+var utilSecu:UtilsSecu = new UtilsSecu({conf:{secretKey:"poipoi" , urlBase:'https://bdd-preprod_demo.hiji.fr/'}}) ;
 var rq:any ={
 
-    url:"https://confService.hiji.fr/59f1918b650e4e6e3e8d2b77/"  ,
+    url:"https://bdd-preprod_demo.hiji.fr/collection/enseigne/name/groupe barrière/=/"  ,
     headers:{
         keyDate:Date.now(),
     }
@@ -29,9 +29,13 @@ var rq:any ={
 utilSecu.addHeadersKey(rq) ;
 console.log(rq.headers.keyDate) ;
 console.log(rq.headers.key) ;
-request.get(rq).then(
-    (val)=>{
-        console.log(val) ;
-    }
-)
+rq.originalUrl = '/collection/enseigne/name/groupe barrière/=/' ;
+rq.ctx = {} ;
+utilSecu.testkey(rq );
+console.log(rq) ;
+// request.get(rq).then(null
+//     (val)=>{
+//         console.log(val) ;
+//     }
+// )
 
