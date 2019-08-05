@@ -106,7 +106,7 @@ export class UtilsSecu{
 					if(this.currentApp.conf.debug){
 						console.log(`url : ${url}` ) ;
 					}
-					url = encodeURI(decodeURI(url)) ;
+					// url = encodeURI(decodeURI(url)) ;
 					if(this.currentApp.conf.debug){
 						console.log(`url  decoded encoded : ${url}` ) ;
 					}
