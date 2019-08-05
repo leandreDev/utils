@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const crypto = require("crypto");
+const URL = require("url");
 const assert = require("assert");
 class UtilsSecu {
     constructor(currentApp) {
@@ -21,10 +22,12 @@ class UtilsSecu {
         if (this.currentApp.conf.debug) {
             console.log(rq.url);
         }
-        var url = encodeURI(rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://"));
+        var url = URL.format(new URL.URL(rq.url.trim().toLowerCase()), { unicode: true });
+        // var url = encodeURI(rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://"));
         // console.log(url) ;
         // var url = encodeURI(url);
         // var url = rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://")
+        console.log(url);
         if (this.currentApp.conf.debug) {
             console.log(url);
         }
@@ -33,6 +36,39 @@ class UtilsSecu {
             .digest('hex');
         if (this.currentApp.conf.debug) {
             console.log(rq.headers.keyDate, rq.headers.key);
+        }
+    }
+    testkey(req) {
+        var date = Number(req.headers.keyDate);
+        var key = req.headers.key;
+        var requrl;
+        var currentDate = Date.now();
+        if (req.originalUrl && req.originalUrl.length > 1) {
+            requrl = this.currentApp.conf.urlBase + req.originalUrl.substr(1);
+        }
+        else {
+            requrl = this.currentApp.conf.urlBase;
+        }
+        // var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
+        var url = URL.format(new URL.URL(requrl.trim().toLowerCase()), { unicode: true });
+        if (this.currentApp.conf.debug) {
+            console.log(`url : ${url}`);
+        }
+        url = encodeURI(decodeURI(url));
+        if (this.currentApp.conf.debug) {
+            console.log(`url  decoded encoded : ${url}`);
+        }
+        var newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
+            .update(date + url)
+            .digest('hex');
+        if (newKey == key) {
+            req.ctx.internalCallValid = true;
+        }
+        else {
+            req.ctx.internalCallValid = false;
+            if (this.currentApp.conf.debug) {
+                console.log("key dont match uri encodeURI: " + url, date, key, newKey);
+            }
         }
     }
     get chekInternalMidelWare() {
@@ -55,7 +91,8 @@ class UtilsSecu {
                     else {
                         requrl = this.currentApp.conf.urlBase;
                     }
-                    var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
+                    // var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
+                    var url = URL.format(new URL.URL(requrl.trim().toLowerCase()), { unicode: true });
                     if (this.currentApp.conf.debug) {
                         console.log(`url : ${url}`);
                     }
@@ -104,8 +141,9 @@ class UtilsSecu {
                     else {
                         requrl = this.currentApp.conf.urlBase;
                     }
-                    var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
-                    url = encodeURI(decodeURI(url));
+                    var url = URL.format(new URL.URL(requrl.trim().toLowerCase()), { unicode: true });
+                    // var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://") ;
+                    // url = encodeURI(decodeURI(url)) ;
                     var newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
                         .update(date + url)
                         .digest('hex');

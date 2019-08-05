@@ -9,6 +9,6 @@ export declare class HttpAbstractService {
     cleanArr(value: any[]): any[];
     cleanObj(value: any): any;
     protected basePatch<T>(url: string, body: any | null, headers?: any): Promise<IHttpResult<T>>;
-    protected basePost<T>(url: string, body: any | null, headers?: any): Promise<IHttpResult<T>>;
-    protected basePut<T>(url: string, body: any | null, headers?: any): Promise<IHttpResult<T>>;
+    protected basePost<T, U = T>(url: string, body: U | null, headers?: any): Promise<IHttpResult<T>>;
+    protected basePut<T, U = T>(url: string, body: U | null, headers?: any): Promise<IHttpResult<T>>;
 }
