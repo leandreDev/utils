@@ -13,18 +13,13 @@ export class Base implements IBase {
     }
   }
 
-  public static async check(
-    target: any,
-    isCompleteObj: boolean = true,
-    path: string = ''
-  ): Promise<boolean> {
-    return true
+  public check(target: any,    isCompleteObj: boolean = true,    path: string = ''):string[]{
+    return Base.check(target, isCompleteObj,path) ;
   }
-  public static create(target: any, path: string = ''): Promise<Base> {
-    return Base.check(target, true, path).then(() => {
-      return new Base(target)
-    })
+  public static  check(  target: any,    isCompleteObj: boolean = true,    path: string = ''  ): string[]{
+    return null ;
   }
+ 
 
   public static stringObjectId(): string {
     var _increment = Math.floor(Math.random() * 16777216)
