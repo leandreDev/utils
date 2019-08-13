@@ -10,13 +10,11 @@ class Base {
             this._class = obj._class;
         }
     }
-    static async check(target, isCompleteObj = true, path = '') {
-        return true;
+    check(target, isCompleteObj = true, path = '') {
+        return Base.check(target, isCompleteObj, path);
     }
-    static create(target, path = '') {
-        return Base.check(target, true, path).then(() => {
-            return new Base(target);
-        });
+    static check(target, isCompleteObj = true, path = '') {
+        return null;
     }
     static stringObjectId() {
         var _increment = Math.floor(Math.random() * 16777216);
