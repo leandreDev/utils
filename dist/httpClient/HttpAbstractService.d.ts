@@ -1,7 +1,9 @@
 import { IHttpResult } from "./IHttpResult";
 import { UtilsSecu } from "../UtilsSecu";
 export declare class HttpAbstractService {
-    constructor(conf: any);
+    constructor(conf: {
+        secure: UtilsSecu;
+    });
     protected secure: UtilsSecu;
     protected callRequest<T>(options: any): Promise<T>;
     protected baseDelete<T>(url?: string, headers?: any): Promise<IHttpResult<T>>;
