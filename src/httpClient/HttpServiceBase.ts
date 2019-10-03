@@ -6,7 +6,10 @@ import {MiddleWareConfig} from "./MiddleWareConfig" ;
 
 export class HttpServiceBase<T> extends HttpAbstractService {
   constructor(
-    conf:any 
+    conf:{
+      url:string,
+      secure:UtilsSecu ;
+    } 
   ) {
   	super(conf) ;
     this.url = conf.url ;

@@ -1,9 +1,13 @@
 import { HttpAbstractService } from "./HttpAbstractService";
 import { IHttpResult } from "./IHttpResult";
+import { UtilsSecu } from "../UtilsSecu";
 import { CtxInterpretor } from "../CtxInterpretor";
 import { MiddleWareConfig } from "./MiddleWareConfig";
 export declare class HttpServiceBase<T> extends HttpAbstractService {
-    constructor(conf: any);
+    constructor(conf: {
+        url: string;
+        secure: UtilsSecu;
+    });
     protected url: string;
     protected globalCtxInt: CtxInterpretor;
     delete(id: string, headers?: any): Promise<IHttpResult<T>>;

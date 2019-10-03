@@ -7,7 +7,9 @@ import * as Url from 'url' ;
 
 export class HttpAbstractService {
   constructor(
-  	conf:any 
+  	conf:{
+      secure:UtilsSecu ;
+    } 
   ) {
     this.secure = conf.secure ;
   }

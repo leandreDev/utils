@@ -93,7 +93,8 @@ export class UtilsSecu{
 					if(this.currentApp.conf.debug){
 						console.log("keyDate is obsolete : " + currentDate + ">"  + date + "+ 30000" ) ;
 					}
-		        	next("keyDate is obsolete") ;
+					req.ctx.internalCallValid = false ;
+		        	next() ;
 				}else{
 					if(req.originalUrl && req.originalUrl.length > 1){
 						requrl = this.currentApp.conf.urlBase + req.originalUrl.substr(1) ;
