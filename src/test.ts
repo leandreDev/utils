@@ -37,7 +37,8 @@ var tester:any = {
 			"@@nomClient": "le hero",
 			"@@lienPfDaesign": "http://lienPfDaesign",
 			"@@dureeParcours": "30 min",
-			"@@objectifPedagogique": "$ctx.u.0.t"
+			"@@objectifPedagogique": "$ctx.u.0.t",
+			"@@length" : "$ctx.u.length"
 		}
 	}],
 	"template_id": "4cb2755a-ac05-4034-890a-f5c784dd1e98"
@@ -55,5 +56,5 @@ setTimeout(()=>{
 	test.updateEnv(tester);
 
 	console.log(JSON.stringify(tester)) ;
-}, 3000) ;
+}, 15000) ;
 
