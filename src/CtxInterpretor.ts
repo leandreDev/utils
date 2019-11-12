@@ -34,7 +34,7 @@ export class CtxInterpretor {
           } else if (targetContext.hasOwnProperty(val)) {
             targetContext = targetContext[val];
           } else {
-            targetContext = null;
+            targetContext = targetContext[val];
           }
         }
 

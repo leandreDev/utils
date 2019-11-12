@@ -32,7 +32,7 @@ class CtxInterpretor {
                         targetContext = targetContext[val];
                     }
                     else {
-                        targetContext = null;
+                        targetContext = targetContext[val];
                     }
                 }
             });
