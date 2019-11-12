@@ -25,14 +25,14 @@ class CtxInterpretor {
             let targetContext = this.context;
             argVar.forEach((val) => {
                 if (targetContext) {
-                    if (_.isArray(targetContext) && parseInt(val) != NaN) {
+                    if (_.isArray(targetContext) && (!isNaN(parseInt(val)))) {
                         targetContext = targetContext[parseInt(val)];
                     }
                     else if (targetContext.hasOwnProperty(val)) {
                         targetContext = targetContext[val];
                     }
                     else {
-                        targetContext = targetContext[val];
+                        targetContext = null;
                     }
                 }
             });
