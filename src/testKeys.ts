@@ -33,8 +33,8 @@ var rq:any ={
     }
 }
 utilSecu.addHeadersKey(rq) ;
-console.log(rq.headers.keyDate) ;
-console.log(rq.headers.key) ;
+// console.log(rq.headers.keyDate) ;
+// console.log(rq.headers.key) ;
 // utilSecu.testkey(rq );
 request.get(rq).then(
     (val)=>{
