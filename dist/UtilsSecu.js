@@ -22,12 +22,11 @@ class UtilsSecu {
         if (this.currentApp.conf.debug) {
             console.log(rq.url);
         }
-        var url = URL.format(new URL.URL(rq.url.trim().toLowerCase()), { unicode: true });
+        var url = URL.format(new URL.URL(rq.url.trim()), { unicode: true }).toLowerCase();
         // var url = encodeURI(rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://"));
         // console.log(url) ;
         // var url = encodeURI(url);
         // var url = rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://")
-        console.log(url);
         if (this.currentApp.conf.debug) {
             console.log(url);
         }
@@ -50,7 +49,7 @@ class UtilsSecu {
             requrl = this.currentApp.conf.urlBase;
         }
         // var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
-        var url = URL.format(new URL.URL(requrl.trim().toLowerCase()), { unicode: true });
+        var url = URL.format(new URL.URL(requrl.trim()), { unicode: true }).toLowerCase();
         if (this.currentApp.conf.debug) {
             console.log(`url : ${url}`);
         }
