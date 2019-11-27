@@ -18,10 +18,16 @@ import * as request from 'request-promise-native' ;
 // rq.headers.key = key
 
 
-var utilSecu:UtilsSecu = new UtilsSecu({conf:{secretKey:"poipoi" , urlBase:'https://bdd-preprod_demo.hiji.fr/'}}) ;
+var utilSecu:UtilsSecu = new UtilsSecu({conf:{secretKey:"poipoi" }}) ;
+// url:"http://localhost:3114/views/nbobservation/campaign/5d8490deea986b65521ad6dd/$objectId/=/creationDate/mon%20nov%2018%202019%2000:00:00%20gmt+0100%20(gmt+01:00)/$date/%3e/creationDate/mon%20nov%2025%202019%2000:00:00%20gmt+0100%20(gmt+01:00)/$date/%3c/&/&/"  ,
+
+// http://localhost:3114/views/nbobservation/campaign/5d8490deea986b65521ad6dd/$objectid/=/creationdate/mon%20nov%2018%202019%2000:00:00%20gmt+0100%20(gmt+01:00)/$date/%3E/creationdate/mon%20nov%2025%202019%2000:00:00%20gmt+0100%20(gmt+01:00)/$date/%3C/&/&/
+// http://localhost:3114/views/nbobservation/campaign/5d8490deea986b65521ad6dd/$objectid/=/creationdate/mon%20nov%2018%202019%2000:00:00%20gmt+0100%20(gmt+01:00)/$date/%3e/creationdate/mon%20nov%2025%202019%2000:00:00%20gmt+0100%20(gmt+01:00)/$date/%3c/&/&/
+
+
 var rq:any ={
 
-    url:"https://bdd-preprod_demo.hiji.fr/collection/enseigne/name/groupe barrière/=/"  ,
+    url:"http://localhost:3114/views/nbobservation/campaign/5d8490deea986b65521ad6dd/$objectId/=/creationDate/mon nov 18 2019 00:00:00 gmt+0100 (gmt+01:00)/$date/>/creationDate/mon nov 25 2019 00:00:00 gmt+0100 (gmt+01:00)/$date/</&/&/"  ,
     headers:{
         keyDate:Date.now(),
     }
@@ -29,13 +35,10 @@ var rq:any ={
 utilSecu.addHeadersKey(rq) ;
 console.log(rq.headers.keyDate) ;
 console.log(rq.headers.key) ;
-rq.originalUrl = '/collection/enseigne/name/groupe barrière/=/' ;
-rq.ctx = {} ;
-utilSecu.testkey(rq );
-console.log(rq) ;
-// request.get(rq).then(null
-//     (val)=>{
-//         console.log(val) ;
-//     }
-// )
+// utilSecu.testkey(rq );
+request.get(rq).then(
+    (val)=>{
+        console.log(val) ;
+    }
+)
 
