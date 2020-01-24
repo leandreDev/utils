@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import * as express from 'express';
 import { UtilsSecu } from './UtilsSecu';
 import * as http from 'http';

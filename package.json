@@ -1,6 +1,6 @@
 {
   "name": "utils",
-  "version": "1.0.133",
+  "version": "1.0.134",
   "description": "utilitaire",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -58,6 +58,7 @@
     "@types/assert": "0.0.31",
     "@types/fs-extra": "^3.0.3",
     "@types/lodash": "^4.14.66",
+    "@types/node": "^13.5.0",
     "@types/request": "0.0.44",
     "cross-env": "^5.1.0",
     "typescript": "^2.3.2"
