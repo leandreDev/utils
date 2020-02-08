@@ -22,35 +22,7 @@ protected secure:UtilsSecu = null
   	return request(options)
   }
 
-  protected baseDelete<T >(
-    url: string = '',
-    headers:any = {} 
-  ): Promise<IHttpResult<T>> {
-  	var options:any ;
-  	options = {
-  		url: new Url.URL(url).href,
-  		method:"DELETE",
-  		headers :headers,
-  		json:true
-  	} ;
-    
-    return this.callRequest<IHttpResult<T>>(options) ;
-  }
-
-  protected baseGet<T>(
-    url: string = '',
-    headers: any = {}
-  ): Promise<IHttpResult<T>> {
-  	var options:any ;
-  	options = {
-  		url:new Url.URL(url).href,
-  		method:"GET",
-  		headers :headers,
-  		json:true
-  	} ;
-    
-    return this.callRequest<IHttpResult<T>>(options) ;
-  }
+  
 
   public cleanArr(value: any[]): any[] {
     var resArr: any[] = []
@@ -125,7 +97,57 @@ protected secure:UtilsSecu = null
     url: string = '',
     body: U | null,
     headers: any = {}
+  ): Promise<IHttpResult<T>> {  
+    return this._post<IHttpResult<T>, U>(url , body , headers) ;
+  }
+
+  protected basePut<T , U=T>(
+    url: string = '',
+    body: U | null,
+    headers: any = {}
   ): Promise<IHttpResult<T>> {
+  
+    return this._put<IHttpResult<T>, U>(url , body, headers) ;
+  }
+
+  protected baseDelete<T >(
+    url: string = '',
+    headers:any = {} 
+  ): Promise<IHttpResult<T>> {
+    return this._delete<IHttpResult<T>>(url, headers) ;
+  }
+
+  protected baseGet<T>(
+    url: string = '',
+    headers: any = {}
+  ): Promise<IHttpResult<T>> {
+    return this._get<IHttpResult<T>>(url , headers ) ;
+  }
+
+  //without IHttpResult
+
+  protected _patch<T>(
+    url: string = '',
+    body: any | null,
+    headers: any = {}
+  ): Promise<T> {
+  	var options:any ;
+  	options = {
+  		url:new Url.URL(url).href,
+  		method:"PATCH",
+  		headers :headers,
+      body:body,
+  		json:true
+  	} ;
+    
+    return this.callRequest<T>(options) ;
+  }
+
+  protected _post<T , U=T>(
+    url: string = '',
+    body: U | null,
+    headers: any = {}
+  ): Promise<T> {
   	var options:any ;
   	options = {
   		url:new Url.URL(url).href,
@@ -135,14 +157,14 @@ protected secure:UtilsSecu = null
       body:body
   	} ;
     
-    return this.callRequest<IHttpResult<T>>(options) ;
+    return this.callRequest<T>(options) ;
   }
 
-  protected basePut<T , U=T>(
+  protected _put<T , U=T>(
     url: string = '',
     body: U | null,
     headers: any = {}
-  ): Promise<IHttpResult<T>> {
+  ): Promise<T> {
   	var options:any ;
   	options = {
   		url:new Url.URL(url).href,
@@ -152,7 +174,36 @@ protected secure:UtilsSecu = null
   		json:true
   	} ;
     
-    return this.callRequest<IHttpResult<T>>(options) ;
+    return this.callRequest<T>(options) ;
   }
 
+  protected _delete<T >(
+    url: string = '',
+    headers:any = {} 
+  ): Promise<T> {
+  	var options:any ;
+  	options = {
+  		url: new Url.URL(url).href,
+  		method:"DELETE",
+  		headers :headers,
+  		json:true
+  	} ;
+    
+    return this.callRequest<T>(options) ;
+  }
+
+  protected _get<T>(
+    url: string = '',
+    headers: any = {}
+  ): Promise<T> {
+  	var options:any ;
+  	options = {
+  		url:new Url.URL(url).href,
+  		method:"GET",
+  		headers :headers,
+  		json:true
+  	} ;
+    
+    return this.callRequest<T>(options) ;
+  }
 }
