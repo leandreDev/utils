@@ -15,26 +15,6 @@ class HttpAbstractService {
         // console.log(options) ;
         return request(options);
     }
-    baseDelete(url = '', headers = {}) {
-        var options;
-        options = {
-            url: new Url.URL(url).href,
-            method: "DELETE",
-            headers: headers,
-            json: true
-        };
-        return this.callRequest(options);
-    }
-    baseGet(url = '', headers = {}) {
-        var options;
-        options = {
-            url: new Url.URL(url).href,
-            method: "GET",
-            headers: headers,
-            json: true
-        };
-        return this.callRequest(options);
-    }
     cleanArr(value) {
         var resArr = [];
         value.forEach(data => {
@@ -103,6 +83,30 @@ class HttpAbstractService {
         return this.callRequest(options);
     }
     basePost(url = '', body, headers = {}) {
+        return this._post(url, body, headers);
+    }
+    basePut(url = '', body, headers = {}) {
+        return this._put(url, body, headers);
+    }
+    baseDelete(url = '', headers = {}) {
+        return this._delete(url, headers);
+    }
+    baseGet(url = '', headers = {}) {
+        return this._get(url, headers);
+    }
+    //without IHttpResult
+    _patch(url = '', body, headers = {}) {
+        var options;
+        options = {
+            url: new Url.URL(url).href,
+            method: "PATCH",
+            headers: headers,
+            body: body,
+            json: true
+        };
+        return this.callRequest(options);
+    }
+    _post(url = '', body, headers = {}) {
         var options;
         options = {
             url: new Url.URL(url).href,
@@ -113,13 +117,33 @@ class HttpAbstractService {
         };
         return this.callRequest(options);
     }
-    basePut(url = '', body, headers = {}) {
+    _put(url = '', body, headers = {}) {
         var options;
         options = {
             url: new Url.URL(url).href,
             method: "PUT",
             headers: headers,
             body: body,
+            json: true
+        };
+        return this.callRequest(options);
+    }
+    _delete(url = '', headers = {}) {
+        var options;
+        options = {
+            url: new Url.URL(url).href,
+            method: "DELETE",
+            headers: headers,
+            json: true
+        };
+        return this.callRequest(options);
+    }
+    _get(url = '', headers = {}) {
+        var options;
+        options = {
+            url: new Url.URL(url).href,
+            method: "GET",
+            headers: headers,
             json: true
         };
         return this.callRequest(options);
