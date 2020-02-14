@@ -9,7 +9,13 @@ export class UtilsSecu{
 	constructor(private currentApp:any){
 		 assert(currentApp.conf.secretKey, "secretKey is not spécified");
 	}
-	
+	public addHeadersKeyProm(rq):Promise<any>{
+		return Promise.resolve()
+		.then(()=>{
+			this.addHeadersKey(rq)
+			return ;
+		})
+	}
 	public addHeadersKey (rq:any){
 		
 		var date:number = Date.now() ;

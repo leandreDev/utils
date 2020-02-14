@@ -8,6 +8,13 @@ class UtilsSecu {
         this.currentApp = currentApp;
         assert(currentApp.conf.secretKey, "secretKey is not spécified");
     }
+    addHeadersKeyProm(rq) {
+        return Promise.resolve()
+            .then(() => {
+            this.addHeadersKey(rq);
+            return;
+        });
+    }
     addHeadersKey(rq) {
         var date = Date.now();
         if (!rq.headers) {
