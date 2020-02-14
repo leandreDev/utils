@@ -16,10 +16,21 @@ export class HttpAbstractService {
 protected secure:UtilsSecu = null 
   protected callRequest<T>(options):Promise<T>{
   	if ( this.secure ) {
-      this.secure.addHeadersKey(options) ;
-    } 
+      if(this.secure.addHeadersKey){
+        this.secure.addHeadersKey(options) ;
+        return request(options) ;
+      }else if(this.secure.addHeadersKeyProm){
+        this.secure.addHeadersKeyProm(options) 
+        .then(()=>{
+          return request(options) ;
+        })
+      }
+      
+    } else{
+      return request(options) ;
+    }
     // console.log(options) ;
-  	return request(options)
+  	
   }
 
   

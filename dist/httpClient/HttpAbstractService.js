@@ -10,10 +10,21 @@ class HttpAbstractService {
     }
     callRequest(options) {
         if (this.secure) {
-            this.secure.addHeadersKey(options);
+            if (this.secure.addHeadersKey) {
+                this.secure.addHeadersKey(options);
+                return request(options);
+            }
+            else if (this.secure.addHeadersKeyProm) {
+                this.secure.addHeadersKeyProm(options)
+                    .then(() => {
+                    return request(options);
+                });
+            }
+        }
+        else {
+            return request(options);
         }
         // console.log(options) ;
-        return request(options);
     }
     cleanArr(value) {
         var resArr = [];
