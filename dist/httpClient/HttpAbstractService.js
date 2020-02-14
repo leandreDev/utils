@@ -15,7 +15,7 @@ class HttpAbstractService {
                 return request(options);
             }
             else if (this.secure.addHeadersKeyProm) {
-                this.secure.addHeadersKeyProm(options)
+                return this.secure.addHeadersKeyProm(options)
                     .then(() => {
                     return request(options);
                 });
