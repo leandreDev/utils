@@ -30,7 +30,8 @@ export class UtilsSecu{
 		if(this.currentApp.conf.debug){
 			console.log(rq.url) ;
 		}
-		var url:string = URL.format(new URL.URL(rq.url.trim()) ,{unicode:true}).toLowerCase() ;
+		rq.url = URL.format(new URL.URL(rq.url.trim()) ,{unicode:true}) ;
+		var url:string = rq.url.toLowerCase() ;
 		
 		
 		// var url = encodeURI(rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://"));
