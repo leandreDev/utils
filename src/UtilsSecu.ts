@@ -29,24 +29,14 @@ export class UtilsSecu{
 		}
 
 		rq.url = URL.format(new URL.URL(rq.url.trim()) ,{unicode:true}) ;
-		if(this.currentApp.conf.debug){
-			console.log(rq.url) ;
-		}
+		
 		var url:string = rq.url.toLowerCase() ;
 		
-		
-		// var url = encodeURI(rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://"));
-		// console.log(url) ;
-		// var url = encodeURI(url);
-		// var url = rq.url.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://")
-		// if(this.currentApp.conf.debug){
-		// 	console.log(url) ;
-		// }
 		rq.headers.key = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
-                   .update(date + url)
+                   .update(rq.headers.keyDate + url)
 				   .digest('hex') ;
 		if(this.currentApp.conf.debug){
-			console.log(rq.headers.keyDate , rq.headers.key)
+			console.log("create sig" , url , rq.headers.keyDate , rq.headers.key)
 		}		   
 		
 
@@ -66,13 +56,7 @@ export class UtilsSecu{
 		// var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
 		var url:string = URL.format(new URL.URL(requrl.trim()) ,{unicode:true}).toLowerCase() ;
 
-		if(this.currentApp.conf.debug){
-			console.log(`url : ${url}` ) ;
-		}
-		// url = encodeURI(decodeURI(url)) ;
-		if(this.currentApp.conf.debug){
-			console.log(`url  decoded encoded : ${url}` ) ;
-		}
+		
 		var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
 				   .update(date + url)
 				   .digest('hex') ;
@@ -84,7 +68,7 @@ export class UtilsSecu{
 			
 			req.ctx.internalCallValid = false ;
 			if(this.currentApp.conf.debug){
-				console.log("key dont match uri encodeURI: " + url , date , key , newKey) ;
+				console.log("key dont match " + url , date , key , newKey) ;
 			}
 
 		}
@@ -108,16 +92,7 @@ export class UtilsSecu{
 					}else{
 						requrl = this.currentApp.conf.urlBase  ;
 					}
-					// var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
-					var url:string = URL.format(new URL.URL(requrl.trim().toLowerCase()) ,{unicode:true}) ;
-
-					if(this.currentApp.conf.debug){
-						console.log(`url : ${url}` ) ;
-					}
-					// url = encodeURI(decodeURI(url)) ;
-					if(this.currentApp.conf.debug){
-						console.log(`url  decoded encoded : ${url}` ) ;
-					}
+					var url:string = URL.format(new URL.URL(requrl.trim()) ,{unicode:true}).toLowerCase()  ;
 					var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
 			                   .update(date + url)
 			                   .digest('hex') ;
@@ -129,7 +104,7 @@ export class UtilsSecu{
 						
 						req.ctx.internalCallValid = false ;
 						if(this.currentApp.conf.debug){
-							console.log("key dont match uri encodeURI: " + url , date , key , newKey) ;
+							console.log("key dont match " + url , date , key , newKey) ;
 						}
 						next() ;
 
@@ -163,10 +138,9 @@ export class UtilsSecu{
 					}else{
 						requrl = this.currentApp.conf.urlBase  ;
 					}
-					var url:string = URL.format(new URL.URL(requrl.trim().toLowerCase()) ,{unicode:true}) ;
+					var url:string = URL.format(new URL.URL(requrl.trim()) ,{unicode:true}).toLowerCase() ;
 
-					// var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://") ;
-					// url = encodeURI(decodeURI(url)) ;
+					
 					var newKey:string = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
 		                   .update(date + url)
 		                   .digest('hex') ;
@@ -178,7 +152,7 @@ export class UtilsSecu{
 			        }else{
 						
 							if(this.currentApp.conf.debug){
-							console.log("key dont match uri : " + requrl , date , key , newKey) ;
+							console.log("key dont match uri : " + url , date , key , newKey) ;
 							}
 							next("key dont match uri : " + requrl) ;
 						
