@@ -1,10 +1,9 @@
 import {HttpAbstractService} from "./HttpAbstractService"
 import {IHttpResult} from "./IHttpResult" ;
-import {UtilsSecu} from "../UtilsSecu" ;
 import {CtxInterpretor} from "../CtxInterpretor" ;
-import {MiddleWareConfig} from "./MiddleWareConfig" ;
+import { IHttpServiceAdminBase } from "./IHttpServiceAdminBase";
 
-export class HttpServiceAdminBase<T> extends HttpAbstractService {
+export class HttpServiceAdminBase<T> extends HttpAbstractService implements IHttpServiceAdminBase<T> {
   constructor(
     conf:any 
   ) {

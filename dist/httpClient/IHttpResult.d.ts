@@ -4,10 +4,13 @@ export interface IHttpResult<T> {
     name?: string;
     stack?: string;
     meta?: {
-        count: number;
-        nb: number;
-        pageSize: number;
-        offset: number;
+        count?: number;
+        nb?: number;
+        pageSize?: number;
+        offset?: number;
+        sort?: {
+            [key: string]: 1 | -1;
+        };
         mongoquery?: any;
     };
     response: T[];

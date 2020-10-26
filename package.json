@@ -1,6 +1,6 @@
 {
   "name": "utils",
-  "version": "1.0.142",
+  "version": "1.0.143",
   "description": "utilitaire",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -48,9 +48,10 @@
     "assert": "^1.4.1",
     "express": "^4.16.1",
     "fs-extra": "^3.0.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "moment": "^2.22.2",
-    "node-jose": "^1.0.0",
+    "mongodb": "^3.5.6",
+    "node-jose": "^2.0.0",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.5"
   },

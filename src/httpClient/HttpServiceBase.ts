@@ -3,8 +3,9 @@ import {IHttpResult} from "./IHttpResult" ;
 import {UtilsSecu} from "../UtilsSecu" ;
 import {CtxInterpretor} from "../CtxInterpretor" ;
 import {MiddleWareConfig} from "./MiddleWareConfig" ;
+import { IHttpServiceBase } from "./IHttpServiceBase";
 
-export class HttpServiceBase<T> extends HttpAbstractService {
+export class HttpServiceBase<T> extends HttpAbstractService implements IHttpServiceBase<T>  {
   constructor(
     conf:{
       url:string,
