@@ -1,7 +1,8 @@
 import { HttpAbstractService } from "./HttpAbstractService";
 import { IHttpResult } from "./IHttpResult";
 import { CtxInterpretor } from "../CtxInterpretor";
-export declare class HttpServiceAdminBase<T> extends HttpAbstractService {
+import { IHttpServiceAdminBase } from "./IHttpServiceAdminBase";
+export declare class HttpServiceAdminBase<T> extends HttpAbstractService implements IHttpServiceAdminBase<T> {
     constructor(conf: any);
     protected url: string;
     protected globalCtxInt: CtxInterpretor;
