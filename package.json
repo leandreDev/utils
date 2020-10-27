@@ -10,26 +10,11 @@
     "testing": "node dist/test.js",
     "rmDist": "rm -r dist",
     "devDistToMaster": "git checkout dev -- dist",
-    "updateMaster": "npm run rmDist && npm run devDistToMaster",
+    "updateMaster": " npm run rmDist && npm run devDistToMaster",
     "version": "npm run updateMaster && git add -A ",
-    "postversion": "git push && git push --tags "
+    "postversion": "export minorTag=$(node -e \"console.log(process.env.npm_package_version.split('.')[1]);\") && export majorTag=$(node -e \"console.log(process.env.npm_package_version.split('.')[0]);\") && git tag -f $majorTag &&  git tag -f $majorTag.$minorTag && git push && git push -f --tags "
   },
-  "scriptsDev": {
-    "pub": "git checkout master && npm version $npm_package_version && git checkout dev",
-    "vMajor": "npm run initNewVBrach && npm --no-git-tag-version version major  && npm run pub",
-    "vMinor": "npm run initNewVBrach && npm --no-git-tag-version version minor && npm run pub",
-    "initNewVBrach": "git checkout -b V$npm_package_version && git push --set-upstream origin V$npm_package_version && git add -A && git push && git checkout dev ",
-    "vPatch": "npm --no-git-tag-version version patch && npm run pub",
-    "postversion": "git tag dev_$npm_package_version && git add -A && git commit -m 'dev_$npm_package_version' && git push && git push --tags ",
-    "publi": "npm run build && npm run vPatch"
-  },
-  "scriptsMaster": {
-    "rmDist": "rm -r dist",
-    "devDistToMaster": "git checkout dev -- dist",
-    "updateMaster": "npm run rmDist && npm run devDistToMaster",
-    "version": "npm run updateMaster && git add -A ",
-    "postversion": "git push && git push --tags "
-  },
+  
   "repository": {
     "type": "git",
     "url": "git+https://github.com/HF-dev/utils.git"
