@@ -5,6 +5,6 @@ export declare class UtilsSecu {
     addHeadersKeyProm(rq: any): Promise<any>;
     addHeadersKey(rq: any): void;
     testkey(req: any): void;
-    readonly chekInternalMidelWare: express.RequestHandler | express.ErrorRequestHandler;
-    readonly protectInternalMidelWare: express.RequestHandler | express.ErrorRequestHandler;
+    get chekInternalMidelWare(): express.RequestHandler | express.ErrorRequestHandler;
+    get protectInternalMidelWare(): express.RequestHandler | express.ErrorRequestHandler;
 }

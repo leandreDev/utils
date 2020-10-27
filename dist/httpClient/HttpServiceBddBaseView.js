@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.HttpServiceBddBaseView = void 0;
 const HttpResult_1 = require("./HttpResult");
 const CtxInterpretor_1 = require("../CtxInterpretor");
 const mongodb_1 = require("mongodb");
