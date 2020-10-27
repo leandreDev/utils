@@ -1,6 +1,6 @@
 {
   "name": "utils",
-  "version": "1.0.145",
+  "version": "1.0.146",
   "description": "utilitaire",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -14,7 +14,6 @@
     "version": "npm run updateMaster && git add -A ",
     "postversion": "export minorTag=$(node -e \"console.log(process.env.npm_package_version.split('.')[1]);\") && export majorTag=$(node -e \"console.log(process.env.npm_package_version.split('.')[0]);\") && git tag -f $majorTag &&  git tag -f $majorTag.$minorTag && git push && git push -f --tags "
   },
-  
   "repository": {
     "type": "git",
     "url": "git+https://github.com/HF-dev/utils.git"
