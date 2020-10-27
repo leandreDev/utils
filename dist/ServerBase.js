@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ServerBase = void 0;
 const express = require("express");
 const request = require("request-promise-native");
 const ConfLoader_1 = require("./ConfLoader");

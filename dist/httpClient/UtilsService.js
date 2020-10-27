@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.UtilsService = void 0;
 class UtilsService {
     // a mettre dans la lib utils
     static resultToObjWEmptyError(message) {

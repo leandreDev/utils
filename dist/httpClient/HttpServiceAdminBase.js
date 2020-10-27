@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.HttpServiceAdminBase = void 0;
 const HttpAbstractService_1 = require("./HttpAbstractService");
 const CtxInterpretor_1 = require("../CtxInterpretor");
 class HttpServiceAdminBase extends HttpAbstractService_1.HttpAbstractService {

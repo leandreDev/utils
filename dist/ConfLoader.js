@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ConfLoader = void 0;
 const request = require("request-promise-native");
 const CtxInterpretor_1 = require("./CtxInterpretor");
 const UtilsSecu_1 = require("./UtilsSecu");

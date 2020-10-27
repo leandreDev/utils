@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import * as express from 'express';
 import { UtilsSecu } from './UtilsSecu';
 import * as http from 'http';
@@ -8,7 +9,7 @@ export declare class ServerBase {
     secu: UtilsSecu;
     server: http.Server;
     constructor();
-    protected readonly parentProcessHandler: (msg: any) => void;
+    protected get parentProcessHandler(): (msg: any) => void;
     protected sendToParentProcess(msg: any): void;
     protected startHttpServer(): void;
     protected init(): Promise<any>;
@@ -16,14 +17,14 @@ export declare class ServerBase {
     protected loadConfPromise(): Promise<any>;
     protected loadDepConfPromise(): Promise<any>;
     protected reloadConfPromise(): Promise<any>;
-    readonly reloadConf: (req: any, res: any) => void;
-    readonly toErrRes: {
+    get reloadConf(): (req: any, res: any) => void;
+    get toErrRes(): {
         (err: any, code?: number): any;
     };
-    readonly toJsonRes: {
+    get toJsonRes(): {
         (objs: any, meta?: any): any;
     };
-    readonly addCtx: express.RequestHandler | express.ErrorRequestHandler;
-    readonly checkJWT: express.RequestHandler | express.ErrorRequestHandler;
-    readonly hasRight: express.RequestHandler | express.ErrorRequestHandler;
+    get addCtx(): express.RequestHandler | express.ErrorRequestHandler;
+    get checkJWT(): express.RequestHandler | express.ErrorRequestHandler;
+    get hasRight(): express.RequestHandler | express.ErrorRequestHandler;
 }

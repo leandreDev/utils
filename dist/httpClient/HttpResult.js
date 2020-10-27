@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.HttpResult = void 0;
 class HttpResult {
     constructor(obj, debug, meta = null) {
         if (obj instanceof Error) {
