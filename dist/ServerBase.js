@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ServerBase = void 0;
+const pkg = require(__dirname + '/../../../package.json');
+const pkg_lock = require(__dirname + '/../../../package-lock.json');
 const express = require("express");
 const request = require("request-promise-native");
 const ConfLoader_1 = require("./ConfLoader");
@@ -89,6 +91,9 @@ class ServerBase {
             this.app.use(this.hasRight)
                 .get('/', (req, res) => {
                 res.send({ online: true });
+            })
+                .get('/version', (req, res) => {
+                res.send(pkg_lock);
             })
                 .get('/reloadConf', this.reloadConf)
                 .get("/admin/info", (req, res) => {
