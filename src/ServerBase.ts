@@ -1,3 +1,5 @@
+const pkg = require(__dirname + '/../../../package.json') ;
+const pkg_lock = require(__dirname + '/../../../package-lock.json') ;
 import * as express from 'express' ;
 import * as request from 'request-promise-native' ;
 import {ConfLoader} from './ConfLoader' ;
@@ -94,7 +96,10 @@ export class ServerBase{
 		}).then(data=>{
 			this.app.use(this.hasRight)
 			.get('/', (req, res) => {
-				    res.send({online:true})
+				    res.send({online:true}) ;
+                })
+            .get('/version', (req, res) => {
+				    res.send(pkg_lock) ;
 				})
 			.get('/reloadConf', this.reloadConf)
 			.get("/admin/info" , (req , res)=>{
