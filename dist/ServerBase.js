@@ -1,8 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ServerBase = void 0;
-const pkg = require(__dirname + '/../../../package.json');
-const pkg_lock = require(__dirname + '/../../../package-lock.json');
+try {
+    var pkg = require(__dirname + '/../../../package.json');
+    var pkg_lock = require(__dirname + '/../../../package-lock.json');
+}
+catch (error) {
+}
 const express = require("express");
 const request = require("request-promise-native");
 const ConfLoader_1 = require("./ConfLoader");

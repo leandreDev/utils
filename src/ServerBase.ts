@@ -1,5 +1,12 @@
-const pkg = require(__dirname + '/../../../package.json') ;
-const pkg_lock = require(__dirname + '/../../../package-lock.json') ;
+
+try {
+ 
+var pkg = require(__dirname + '/../../../package.json') ;
+var pkg_lock = require(__dirname + '/../../../package-lock.json') ;   
+} catch (error) {
+    
+}
+
 import * as express from 'express' ;
 import * as request from 'request-promise-native' ;
 import {ConfLoader} from './ConfLoader' ;
