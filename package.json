@@ -1,5 +1,5 @@
 {
-  "name": "utils",
+  "name": "@hfdev/utils",
   "version": "1.0.151",
   "description": "utilitaire",
   "main": "./dist/index.js",
