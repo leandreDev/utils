@@ -5,4 +5,3 @@ class HttpAbstractAggregaService {
     constructor(conf) { }
 }
 exports.HttpAbstractAggregaService = HttpAbstractAggregaService;
-//# sourceMappingURL=HttpAbstractAggregaService.js.map

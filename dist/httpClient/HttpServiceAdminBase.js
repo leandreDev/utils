@@ -17,4 +17,3 @@ class HttpServiceAdminBase extends HttpAbstractService_1.HttpAbstractService {
     }
 }
 exports.HttpServiceAdminBase = HttpServiceAdminBase;
-//# sourceMappingURL=HttpServiceAdminBase.js.map

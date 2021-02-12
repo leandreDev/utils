@@ -541,4 +541,3 @@ function polonaisInverse(req = '*', entity) {
 }
 exports.polonaisInverse = polonaisInverse;
 ;
-//# sourceMappingURL=polonaisInverse.js.map

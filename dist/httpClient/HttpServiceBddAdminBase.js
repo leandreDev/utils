@@ -322,4 +322,3 @@ class HttpServiceBddAdminBase {
     }
 }
 exports.HttpServiceBddAdminBase = HttpServiceBddAdminBase;
-//# sourceMappingURL=HttpServiceBddAdminBase.js.map
