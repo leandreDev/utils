@@ -23,4 +23,3 @@ class HttpResult {
     }
 }
 exports.HttpResult = HttpResult;
-//# sourceMappingURL=HttpResult.js.map

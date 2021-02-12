@@ -103,4 +103,3 @@ class HttpServiceBase extends HttpAbstractService_1.HttpAbstractService {
     }
 }
 exports.HttpServiceBase = HttpServiceBase;
-//# sourceMappingURL=HttpServiceBase.js.map

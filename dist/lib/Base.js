@@ -65,4 +65,3 @@ class ObjectId {
     }
 }
 exports.ObjectId = ObjectId;
-//# sourceMappingURL=Base.js.map
