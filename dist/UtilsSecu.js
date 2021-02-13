@@ -146,5 +146,15 @@ class UtilsSecu {
             }
         };
     }
+    get protectUserConnected() {
+        return (req, res, next) => {
+            if (req.ctx && req.ctx.user) {
+                next();
+            }
+            else {
+                next(`user not connected`);
+            }
+        };
+    }
 }
 exports.UtilsSecu = UtilsSecu;

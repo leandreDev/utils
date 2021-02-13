@@ -7,4 +7,5 @@ export declare class UtilsSecu {
     testkey(req: any): void;
     get chekInternalMidelWare(): express.RequestHandler | express.ErrorRequestHandler;
     get protectInternalMidelWare(): express.RequestHandler | express.ErrorRequestHandler;
+    get protectUserConnected(): express.RequestHandler | express.ErrorRequestHandler;
 }
