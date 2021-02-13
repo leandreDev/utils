@@ -1,6 +1,6 @@
 {
   "name": "@hfdev/utils",
-  "version": "1.0.153",
+  "version": "1.0.154",
   "description": "utilitaire",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
