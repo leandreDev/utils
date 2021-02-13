@@ -164,4 +164,15 @@ export class UtilsSecu{
 			
 		}
 	} 
+
+    public get protectUserConnected():express.RequestHandler | express.ErrorRequestHandler{
+        return (req, res, next) => {
+
+            if(req.ctx && req.ctx.user){
+                next() ;
+            }else{
+                next(`user not connected`) ;
+            }
+        }
+    }
 }
