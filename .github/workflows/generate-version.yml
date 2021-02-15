@@ -1,0 +1,50 @@
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version : major, minor, patch'     
+        required: true
+        options: ['major', 'minor', 'patch']
+        default: 'minor'
+name: Generate Version 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      NODE_VERSION: 'v14.15.4'
+      VERSION_TYPE:
+      MODULE_VERSION:
+    steps:
+      - run: |
+          echo "${{ github.event.inputs.version }}"
+          echo "::set-env name=VERSION_TYPE::${{ github.event.inputs.version }}"
+      - uses: actions/checkout@v2
+        with:
+          ref: develop
+      - name: Setup nodejs ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: npm install and npm build
+        run: |
+          npm i
+          npm run build
+      - name: Generate new ${{ env.VERSION_TYPE}} version 
+        run: |
+          npm --no-git-tag-version version ${{ env.VERSION_TYPE}}
+      - id: set_var
+        run: |
+          content=`cat package.json`
+          # the following lines are only required for multi line json
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          # end of optional handling for multi line json
+          echo "::set-output name=packageJson::$content"
+      - run: |
+          echo "::set-env name=MODULE_VERSION::${{fromJson(steps.set_var.outputs.packageJson).version}}"
+         
+
+#
