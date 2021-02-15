@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
         with:
-        ref: dev
+          ref: dev
 
       - name: Node ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -41,7 +41,7 @@ jobs:
     steps: 
       - uses: actions/checkout@v1
         with:
-        ref: dev
+          ref: dev
       - name: Node ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
