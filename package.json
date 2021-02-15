@@ -1,6 +1,6 @@
 {
   "name": "@hfdev/utils",
-  "version": "1.0.155",
+  "version": "1.0.156",
   "description": "utilitaire",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -28,7 +28,6 @@
     "url": "https://github.com/HF-dev/utils/issues"
   },
   "homepage": "https://github.com/HF-dev/utils#readme",
-  "dependencies": {},
   "peerDependencies": {
     "assert": "^1.4.1",
     "express": "^4.16.1",
