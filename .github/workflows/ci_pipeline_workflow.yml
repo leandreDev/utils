@@ -2,11 +2,11 @@ on:
   push:
   workflow_dispatch:
     inputs:
-      name:
+      name: version
         description: 'Version to generate : [ major, minor, patch ]'
         required: true
         default: 'patch'
-      home:
+    
 name: Build Utils Version
 
 jobs:
@@ -48,6 +48,7 @@ jobs:
           node-version: 'v14.15.4'
       - name: Update Version
         run: |
+          echo "la version ${{ github.event.inputs.name }}!"
           echo "version : ${{env.VERSION}}"
          # npm --no-git-tag-version version ${{ VERSION }}
 
