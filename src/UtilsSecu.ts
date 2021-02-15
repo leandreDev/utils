@@ -146,6 +146,9 @@ export class UtilsSecu{
 		                   .digest('hex') ;
 		                   
 			        if(newKey == key){
+                        if(! req.ctx){
+                            req.ctx = {} ;
+                        }
 			        	req.ctx.internalCallValid = true ;
 
 			        	next() ;

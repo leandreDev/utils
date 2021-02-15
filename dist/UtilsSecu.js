@@ -130,6 +130,9 @@ class UtilsSecu {
                         .update(date + url)
                         .digest('hex');
                     if (newKey == key) {
+                        if (!req.ctx) {
+                            req.ctx = {};
+                        }
                         req.ctx.internalCallValid = true;
                         next();
                     }
