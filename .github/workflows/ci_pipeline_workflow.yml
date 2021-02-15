@@ -8,11 +8,12 @@ on:
         default: 'patch'
       home:
 name: Build Utils
-env:
-    VERSION: "0.0.0"
+
 jobs:
   
   build:
+    env:
+      VERSION: "0.0.0"
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -43,8 +44,8 @@ jobs:
           node-version: 'v14.15.4'
       - name: Update Version
         run: |
-          echo ${{env.VERSION}}
-          npm --no-git-tag-version version ${{VERSION}}
+          echo "version : $VERSION"
+          npm --no-git-tag-version version ${{ VERSION }}
 
       - name: npm install and npm run build
         run: |
