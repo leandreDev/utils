@@ -1,0 +1,54 @@
+on: 
+  push:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Version to generate : [ major, minor, patch ]'
+        required: true
+        default: 'patch'
+      home:
+name: Build Utils
+env:
+    VERSION: "0.0.0"
+jobs:
+  
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 14.x
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install and npm run build
+        run: |
+          npm i
+          npm run build
+      - name: Test
+        run: |
+          npm run testing
+  generate:
+    runs-on: ubuntu-latest
+    needs: build
+    steps: 
+      - uses: actions/checkout@v1
+      - name: Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: 'v14.15.4'
+      - name: Update Version
+        run: |
+          echo ${{env.VERSION}}
+          npm --no-git-tag-version version ${{VERSION}}
+
+      - name: npm install and npm run build
+        run: |
+          npm i
+          npm run build
+
+
