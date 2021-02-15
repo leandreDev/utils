@@ -45,7 +45,7 @@ jobs:
       - name: Update Version
         run: |
           echo "version : $VERSION"
-          npm --no-git-tag-version version ${{ VERSION }}
+         # npm --no-git-tag-version version ${{ VERSION }}
 
       - name: npm install and npm run build
         run: |
