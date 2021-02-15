@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       name: version
-        description: 'Version to generate : [ major, minor, patch ]'
+        description: 'Version to generate '
         required: true
         default: 'patch'
     
