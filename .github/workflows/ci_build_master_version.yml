@@ -13,7 +13,7 @@ jobs:
     
     env:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-      GITHUB_TOKEN: s{{secrets.DOPRR_TOKEN}}
+      GITHUB_TOKEN: s{{secrets.REPOSITORY_TOKEN}}
       NODE_VERSION: 'v14.15.4'
       VERSION_TAG:
       MODULE_VERSION:
@@ -43,8 +43,8 @@ jobs:
           git config  user.email "diegopatino@doprr.com"
           git config  user.name "Diego Patino"
           git fetch
-          git checkout origin/develop -- dist
-          git checkout origin/develop -- package.json
+          git checkout origin/dev -- dist
+          git checkout origin/dev -- package.json
           git add .
           git commit -am"Generate new version ${{env.VERSION_TAG}}"
           git push      
