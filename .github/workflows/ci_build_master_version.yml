@@ -1,0 +1,59 @@
+on: 
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'select tags'     
+        required: false
+        options: ['major', 'minor', 'patch']
+        default: ' '
+name: Generate Master Version 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      GITHUB_TOKEN: s{{secrets.DOPRR_TOKEN}}
+      NODE_VERSION: 'v14.15.4'
+      VERSION_TAG:
+      MODULE_VERSION:
+    steps:
+      - name: Install git 
+        run: |
+          sudo apt-get install -y git
+          git --version
+          echo "Path is ... $PATH"
+          PATH=$PATH:$(which git)
+          echo "Path is ... $PATH"
+
+      - name: Checout repository
+        uses: actions/checkout@v2
+        with:
+          ref: master
+            
+      - name: Update env with last tag 
+        run: |
+          git fetch --prune --unshallow
+          echo "VERSION_TAG=$(git describe --tags `git rev-list --tags --max-count=1`  |sed 's/dev_//g')" >> $GITHUB_ENV
+      
+      - name: Update dist folder
+        run: |
+          rm -rf dist
+          rm package.json
+          git config  user.email "diegopatino@doprr.com"
+          git config  user.name "Diego Patino"
+          git fetch
+          git checkout origin/develop -- dist
+          git checkout origin/develop -- package.json
+          git add .
+          git commit -am"Generate new version ${{env.VERSION_TAG}}"
+          git push      
+      - name: Tag Master Version ${{ env.VERSION_TAG }}
+        uses: tvdias/github-tagger@v0.0.1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          tag: "${{ env.VERSION_TAG }}"
+
+         
+
+#
