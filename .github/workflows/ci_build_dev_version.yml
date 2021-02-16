@@ -13,7 +13,7 @@ jobs:
     
     env:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-      GITHUB_TOKEN: s{{secrets.DOPRR_TOKEN}}
+      GITHUB_TOKEN: s{{secrets.REPOSITORY_TOKEN}}
       NODE_VERSION: 'v14.15.4'
       VERSION_TYPE:
       VERSION_TAG:
@@ -23,7 +23,7 @@ jobs:
           echo "::set-env name=VERSION_TYPE::${{ github.event.inputs.version }}"
       - uses: actions/checkout@v2
         with:
-          ref: develop
+          ref: dev
       - name: Setup nodejs ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v1
         with:
