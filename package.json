@@ -9,14 +9,7 @@
     "start": "tsc",
     "build": "tsc",
     "debug": "node --inspect dist/test.js ",
-    "testing": "node dist/test.js",
-    "pub": "git checkout master  && git pull && npm version $npm_package_version && git checkout dev",
-    "vMajor": "npm run initNewVBrach && npm --no-git-tag-version version major  && npm run pub",
-    "vMinor": "npm run initNewVBrach && npm --no-git-tag-version version minor && npm run pub",
-    "initNewVBrach": "git checkout -b V$npm_package_version && git push --set-upstream origin V$npm_package_version && git add -A && git push && git checkout dev ",
-    "vPatch": "npm --no-git-tag-version version patch && npm run pub",
-    "postversion": "export minorTag=$(node -e \"console.log(process.env.npm_package_version.split('.')[1]);\") && export majorTag=$(node -e \"console.log(process.env.npm_package_version.split('.')[0]);\") && git tag -f dev_$majorTag &&  git tag -f dev_$majorTag.$minorTag && git tag dev_$npm_package_version && git add -A && git commit -m 'dev_$npm_package_version' && git push && git push -f --tags ",
-    "publi": "npm run build && npm run vPatch"
+    "testing": "node dist/test.js"
   },
   "repository": {
     "type": "git",
