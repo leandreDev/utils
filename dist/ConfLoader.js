@@ -9,31 +9,33 @@ const assert = require("assert");
 class ConfLoader {
     static getConf() {
         return new Promise((resolve, reject) => {
-            let options = {};
-            assert(process.env.CONF_URL, "$env.CONF_URL is not spécified");
+            const options = {};
+            assert(process.env.CONF_URL, '$env.CONF_URL is not spécified');
             // assert(process.env.CLIENT_ID, "$env.CLIENT_ID is not spécified");
-            assert(process.env.SRV_ID, "$env.SRV_ID is not spécified");
-            assert(process.env.SECRET, "$env.SECRET is not spécified");
+            assert(process.env.SRV_ID, '$env.SRV_ID is not spécified');
+            assert(process.env.SECRET, '$env.SECRET is not spécified');
             options.url = process.env.CONF_URL + process.env.SRV_ID;
             options.json = true;
-            let secu = new UtilsSecu_1.UtilsSecu({ conf: { secretKey: process.env.SECRET, debug: false } });
-            let contextInterpretor = new CtxInterpretor_1.CtxInterpretor(process.env);
-            if (process.env.CONF_URL == "none") {
+            const secu = new UtilsSecu_1.UtilsSecu({
+                conf: { secretKey: process.env.SECRET, debug: false }
+            });
+            const contextInterpretor = new CtxInterpretor_1.CtxInterpretor(process.env);
+            if (process.env.CONF_URL == 'none') {
                 try {
-                    let val = fs.readJSONSync("./confs/" + process.env.SRV_ID + ".json");
-                    let conf = contextInterpretor.updateEnv(val);
+                    const val = fs.readJSONSync('./confs/' + process.env.SRV_ID + '.json');
+                    const conf = contextInterpretor.updateEnv(val);
                     resolve(val);
                 }
                 catch (err) {
-                    console.log("offline confloader error read JSON", err);
+                    console.log('offline confloader error read JSON', err);
                     reject(err);
                 }
             }
             else {
-                // 
+                //
                 let tempConf;
-                if (fs.existsSync("./confs/" + process.env.SRV_ID + ".json")) {
-                    tempConf = fs.readJSONSync("./confs/" + process.env.SRV_ID + ".json");
+                if (fs.existsSync('./confs/' + process.env.SRV_ID + '.json')) {
+                    tempConf = fs.readJSONSync('./confs/' + process.env.SRV_ID + '.json');
                     if (tempConf.loadConfAfter) {
                         ConfLoader.loadConf().catch((err) => {
                             console.log(err);
@@ -51,36 +53,43 @@ class ConfLoader {
         });
     }
     static loadConf() {
-        let options = {};
+        const options = {};
         options.url = process.env.CONF_URL + process.env.SRV_ID;
         options.json = true;
-        let secu = new UtilsSecu_1.UtilsSecu({ conf: { secretKey: process.env.SECRET, debug: false } });
-        let contextInterpretor = new CtxInterpretor_1.CtxInterpretor(process.env);
+        const secu = new UtilsSecu_1.UtilsSecu({
+            conf: { secretKey: process.env.SECRET, debug: false }
+        });
+        const contextInterpretor = new CtxInterpretor_1.CtxInterpretor(process.env);
         secu.addHeadersKey(options);
-        return Promise.resolve(request.get(options).then((val) => {
+        return Promise.resolve(request
+            .get(options)
+            .then((val) => {
             let data;
             if (val && val.code == 200 && val.response && val.response[0]) {
                 data = val.response[0];
-                fs.ensureDirSync("./confs");
-                fs.writeJSONSync("./confs/" + process.env.SRV_ID + ".json", data, { spaces: 2 });
+                fs.ensureDirSync('./confs');
+                fs.writeJSONSync('./confs/' + process.env.SRV_ID + '.json', data, {
+                    spaces: 2
+                });
             }
             else {
                 if (val && val.code != 200) {
-                    console.log("online confloader error read JSON", val, options.url);
+                    console.log('online confloader error read JSON', val, options.url);
                 }
-                data = fs.readJSONSync("./confs/" + process.env.SRV_ID + ".json");
+                data = fs.readJSONSync('./confs/' + process.env.SRV_ID + '.json');
             }
-            let conf = contextInterpretor.updateEnv(data);
+            const conf = contextInterpretor.updateEnv(data);
             return data;
-        }).catch(err => {
+        })
+            .catch((err) => {
             try {
-                console.log("confloader error on JSON ", err);
-                let val = fs.readJSONSync("./confs/" + process.env.SRV_ID + ".json");
-                let conf = contextInterpretor.updateEnv(val);
+                console.log('confloader error on JSON ', err);
+                const val = fs.readJSONSync('./confs/' + process.env.SRV_ID + '.json');
+                const conf = contextInterpretor.updateEnv(val);
                 return val;
             }
             catch (err2) {
-                console.log("confloader fatal error ", err2);
+                console.log('confloader fatal error ', err2);
                 throw err;
             }
         }));

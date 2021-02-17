@@ -1,7 +1,7 @@
-import { HttpAbstractService } from "./HttpAbstractService";
-import { IHttpResult } from "./IHttpResult";
-import { CtxInterpretor } from "../CtxInterpretor";
-import { IHttpServiceAdminBase } from "./IHttpServiceAdminBase";
+import { HttpAbstractService } from './HttpAbstractService';
+import { IHttpResult } from './IHttpResult';
+import { CtxInterpretor } from '../CtxInterpretor';
+import { IHttpServiceAdminBase } from './IHttpServiceAdminBase';
 export declare class HttpServiceAdminBase<T> extends HttpAbstractService implements IHttpServiceAdminBase<T> {
     constructor(conf: any);
     protected url: string;

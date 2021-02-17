@@ -38,4 +38,3 @@ __exportStar(require("./httpClient/IHttpServiceBase"), exports);
 __exportStar(require("./httpClient/polonaisInverse"), exports);
 const mongo = require("mongodb");
 exports.mongo = mongo;
-// export  {UtilSecuOAuthSrv , HttpServiceAdminBase ,IApplicationConfiguration ,CtxInterpretor , ConfLoader , UtilsSecu , ServerBase ,HttpAbstractAggregaService , HttpAbstractService , HttpServiceBase ,IHttpResult , MiddleWareConfig ,UtilsService , Base ,  IBase } ;

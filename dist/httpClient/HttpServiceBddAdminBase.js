@@ -9,7 +9,7 @@ class HttpServiceBddAdminBase {
     constructor(conf) {
         this.globalCtxInt = new CtxInterpretor_1.CtxInterpretor(process.env);
         this.collection = new Promise((resolve, reject) => {
-            conf.bdd.then(bd => {
+            conf.bdd.then((bd) => {
                 resolve(bd.collection(conf.collectionName));
             });
         });
@@ -28,19 +28,17 @@ class HttpServiceBddAdminBase {
             else if (stackArr.length > 0) {
                 q = stackArr.shift();
                 if (typeof q === 'string') {
-                    if (q == "*") {
+                    if (q == '*') {
                         q = {};
                     }
                     else {
                         q = { _id: new mongodb_1.ObjectId(q) };
                     }
-                    ;
                 }
                 else if (q instanceof mongodb_1.ObjectId) {
                     q = { _id: q };
                 }
             }
-            ;
             // averifier dans le cas d'un $and ou $or
             if (this._class) {
                 if (q.$and) {
@@ -69,8 +67,7 @@ class HttpServiceBddAdminBase {
                 q._class = this._class;
             }
             return this.collection.then((collection) => {
-                return collection.deleteMany(q)
-                    .then(result => {
+                return collection.deleteMany(q).then((result) => {
                     if (this.debug) {
                         meta = {
                             mongoquery: q
@@ -110,19 +107,17 @@ class HttpServiceBddAdminBase {
             else if (stackArr.length > 0) {
                 q = stackArr.shift();
                 if (typeof q === 'string') {
-                    if (q == "*") {
+                    if (q == '*') {
                         q = {};
                     }
                     else {
                         q = { _id: new mongodb_1.ObjectId(q) };
                     }
-                    ;
                 }
                 else if (q instanceof mongodb_1.ObjectId) {
                     q = { _id: q };
                 }
             }
-            ;
             // averifier dans le cas d'un $and ou $or
             if (this._class) {
                 if (q.$and) {
@@ -150,13 +145,13 @@ class HttpServiceBddAdminBase {
             if (this._class) {
                 q._class = this._class;
             }
-            let objSet = {};
+            const objSet = {};
             Object.keys(body).forEach((key) => {
                 if (key.charAt(0) === '$') {
                     if (key === '$addToSet') {
                         Object.keys(body.$addToSet).forEach((subkey) => {
                             if (subkey === '$each') {
-                                body.$addToSet[subkey].$each = body.$addToSet[subkey].$each.map(val => {
+                                body.$addToSet[subkey].$each = body.$addToSet[subkey].$each.map((val) => {
                                     return this.entity.castQueryParam(subkey.replace(/\.\$(\[[a-zA-Z_0-9]*\])*./gi, ''), val);
                                 });
                             }
@@ -177,10 +172,8 @@ class HttpServiceBddAdminBase {
                     delete body[key];
                 }
             });
-            return this.collection
-                .then(collection => {
-                return collection.updateMany(q, body)
-                    .then((objResult) => {
+            return this.collection.then((collection) => {
+                return collection.updateMany(q, body).then((objResult) => {
                     if (objResult.result.ok) {
                         return this.baseGet(q, { $projection: { _id: 1 } }, meta);
                     }
@@ -189,7 +182,8 @@ class HttpServiceBddAdminBase {
                     }
                 });
             });
-        }).catch(err => {
+        })
+            .catch((err) => {
             return new HttpResult_1.HttpResult(err, this.debug);
         });
     }
@@ -204,19 +198,17 @@ class HttpServiceBddAdminBase {
             else if (stackArr.length > 0) {
                 q = stackArr.shift();
                 if (typeof q === 'string') {
-                    if (q == "*") {
+                    if (q == '*') {
                         q = {};
                     }
                     else {
                         q = { _id: new mongodb_1.ObjectId(q) };
                     }
-                    ;
                 }
                 else if (q instanceof mongodb_1.ObjectId) {
                     q = { _id: q };
                 }
             }
-            ;
             // averifier dans le cas d'un $and ou $or
             if (this._class) {
                 if (q.$and) {
@@ -246,58 +238,64 @@ class HttpServiceBddAdminBase {
             const pop = [];
             while (stackArr.length > 0) {
                 // de nouvelle operation
-                let op = stackArr.shift();
+                const op = stackArr.shift();
                 switch (op.name) {
-                    case "$pop":
+                    case '$pop':
                         pop.push(op.value);
                         break;
-                    case "$limit":
+                    case '$limit':
                         meta.pageSize = op.value;
                         break;
-                    case "$skip":
+                    case '$skip':
                         meta.offset = op.value;
                         break;
-                    case "$sort":
+                    case '$sort':
                         meta.sort = op.value;
                         break;
-                    case "$count":
+                    case '$count':
                         break;
                     default:
                         // code...
                         break;
                 }
-                ;
             }
-            ;
-            return this.collection
-                .then(collection => {
-                const cursor = collection.find(q, { projection: headers.$projection });
-                return cursor.count(false)
+            return this.collection.then((collection) => {
+                const cursor = collection.find(q, {
+                    projection: headers.$projection
+                });
+                return cursor
+                    .count(false)
                     .then((count) => {
                     meta.count = count;
                     if (meta.sort) {
-                        return cursor.skip(meta.offset).limit(meta.pageSize).sort(meta.sort).toArray();
+                        return cursor
+                            .skip(meta.offset)
+                            .limit(meta.pageSize)
+                            .sort(meta.sort)
+                            .toArray();
                     }
                     else {
                         return cursor.skip(meta.offset).limit(meta.pageSize).toArray();
                     }
                 })
-                    .then(arr => {
+                    .then((arr) => {
                     meta.nb = arr.length;
                     // ajouter la gestion des pop
                     return new HttpResult_1.HttpResult(arr, this.debug, meta);
                 });
             });
         })
-            .catch(err => {
+            .catch((err) => {
             return new HttpResult_1.HttpResult(err, this.debug, meta);
         });
     }
     baseGet(q, headers = {}, meta = {}) {
-        return this.collection
-            .then(collection => {
-            const cursor = collection.find(q, { projection: headers.$projection });
-            return cursor.count(false)
+        return this.collection.then((collection) => {
+            const cursor = collection.find(q, {
+                projection: headers.$projection
+            });
+            return cursor
+                .count(false)
                 .then((count) => {
                 meta.count = count;
                 if (!meta.offset) {
@@ -307,13 +305,17 @@ class HttpServiceBddAdminBase {
                     meta.pageSize = 1000;
                 }
                 if (meta.sort) {
-                    return cursor.skip(meta.offset).limit(meta.pageSize).sort(meta.sort).toArray();
+                    return cursor
+                        .skip(meta.offset)
+                        .limit(meta.pageSize)
+                        .sort(meta.sort)
+                        .toArray();
                 }
                 else {
                     return cursor.skip(meta.offset).limit(meta.pageSize).toArray();
                 }
             })
-                .then(arr => {
+                .then((arr) => {
                 meta.nb = arr.length;
                 // ajouter la gestion des pop
                 return new HttpResult_1.HttpResult(arr, this.debug, meta);

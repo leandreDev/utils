@@ -8,6 +8,5 @@ export declare class Base implements IBase {
     static stringObjectId(): string;
 }
 export declare class ObjectId {
-    constructor();
     static stringObjectId(): string;
 }
