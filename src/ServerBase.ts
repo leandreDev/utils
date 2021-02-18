@@ -36,6 +36,7 @@ export class ServerBase {
       .catch((err) => {
         console.log(err);
       });
+
     process.on('message', this.parentProcessHandler);
   }
 
