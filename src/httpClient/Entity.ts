@@ -1,20 +1,19 @@
 import * as mongo from 'mongodb';
 
 export class Entity {
-
-  static cast(obj: any, castChildClass:boolean=false) {
+  static cast(obj: any, castChildClass = false) {
     if (obj._id) {
       obj._id = new mongo.ObjectId(obj._id);
     }
   }
 
-  static check(target: any, isCompleteObj: boolean = true, path: string = ""): string[] {
+  static check(target: any, isCompleteObj = true, path = ''): string[] {
     return [];
   }
 
   static castQueryParam(path: string, value: any): any {
-    if(value === null){
-      return null ;
+    if (value === null) {
+      return null;
     }
     switch (path) {
       case '_id':
@@ -24,14 +23,12 @@ export class Entity {
         return new String(value).valueOf();
         break;
       default:
-        return value ;
+        return value;
         break;
     }
-    
-    
   }
 
-  public static getClassNameOfProp(path:string):string{
-    return null ;
+  public static getClassNameOfProp(path: string): string {
+    return null;
   }
 }

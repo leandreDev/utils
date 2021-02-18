@@ -1,5 +1,5 @@
-import { IHttpResult } from "./IHttpResult";
-import { UtilsSecu } from "../UtilsSecu";
+import { IHttpResult } from './IHttpResult';
+import { UtilsSecu } from '../UtilsSecu';
 export declare class HttpAbstractService {
     constructor(conf: {
         secure: UtilsSecu;

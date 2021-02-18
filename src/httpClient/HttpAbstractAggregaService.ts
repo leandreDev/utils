@@ -1,7 +1,3 @@
-
-
 export class HttpAbstractAggregaService {
-  constructor(
-    conf:any 
-  ) {}
+  constructor(conf: any) {}
 }

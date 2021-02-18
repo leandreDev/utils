@@ -3,6 +3,6 @@ export interface IMeta {
   nb?: number;
   pageSize?: number;
   offset?: number;
-  sort?:{[key:string]:1|-1}
+  sort?: { [key: string]: 1 | -1 };
   mongoquery?: any;
 }

@@ -1,4 +1,4 @@
-import { IHttpResult } from "./IHttpResult";
+import { IHttpResult } from './IHttpResult';
 export declare class UtilsService {
     static resultToObjWEmptyError<T>(message: string): {
         (dataResult: IHttpResult<T>): Promise<T>;

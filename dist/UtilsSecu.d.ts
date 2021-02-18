@@ -1,4 +1,4 @@
-import * as express from "express";
+import * as express from 'express';
 export declare class UtilsSecu {
     private currentApp;
     constructor(currentApp: any);
