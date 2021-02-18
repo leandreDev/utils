@@ -1,9 +1,9 @@
-import { HttpAbstractService } from "./HttpAbstractService";
-import { IHttpResult } from "./IHttpResult";
-import { UtilsSecu } from "../UtilsSecu";
-import { CtxInterpretor } from "../CtxInterpretor";
-import { MiddleWareConfig } from "./MiddleWareConfig";
-import { IHttpServiceBase } from "./IHttpServiceBase";
+import { HttpAbstractService } from './HttpAbstractService';
+import { IHttpResult } from './IHttpResult';
+import { UtilsSecu } from '../UtilsSecu';
+import { CtxInterpretor } from '../CtxInterpretor';
+import { MiddleWareConfig } from './MiddleWareConfig';
+import { IHttpServiceBase } from './IHttpServiceBase';
 export declare class HttpServiceBase<T> extends HttpAbstractService implements IHttpServiceBase<T> {
     constructor(conf: {
         url: string;

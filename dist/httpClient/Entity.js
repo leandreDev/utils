@@ -8,7 +8,7 @@ class Entity {
             obj._id = new mongo.ObjectId(obj._id);
         }
     }
-    static check(target, isCompleteObj = true, path = "") {
+    static check(target, isCompleteObj = true, path = '') {
         return [];
     }
     static castQueryParam(path, value) {

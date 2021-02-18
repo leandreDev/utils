@@ -6,14 +6,14 @@ const assert = require("assert");
 const moment = require("moment");
 class CtxInterpretor {
     constructor(context) {
-        this.startPatern = "$ENV.";
-        this.endPatern = "$$";
-        this.splitPatern = ".";
-        assert(context, "context is not spécified");
+        this.startPatern = '$ENV.';
+        this.endPatern = '$$';
+        this.splitPatern = '.';
+        assert(context, 'context is not spécified');
         this.context = context;
     }
     setEnv(varKey, removeUnknownVar = false) {
-        if (varKey.indexOf(".") == -1) {
+        if (varKey.indexOf('.') == -1) {
             if (this.context.hasOwnProperty(varKey)) {
                 return this.context[varKey];
             }
@@ -22,11 +22,11 @@ class CtxInterpretor {
             }
         }
         else {
-            let argVar = varKey.split(this.splitPatern);
+            const argVar = varKey.split(this.splitPatern);
             let targetContext = this.context;
             argVar.forEach((val) => {
                 if (targetContext) {
-                    if (_.isArray(targetContext) && (!isNaN(parseInt(val)))) {
+                    if (_.isArray(targetContext) && !isNaN(parseInt(val))) {
                         targetContext = targetContext[parseInt(val)];
                     }
                     else if (targetContext.hasOwnProperty(val)) {
@@ -42,7 +42,7 @@ class CtxInterpretor {
             }
             else {
                 if (removeUnknownVar) {
-                    return "";
+                    return '';
                 }
                 else {
                     return this.startPatern + varKey + this.endPatern;
@@ -50,21 +50,20 @@ class CtxInterpretor {
             }
         }
     }
-    ;
     setGlobalEnv(stringKey, removeUnknownVar = false) {
-        var arr, result;
+        let arr, result;
         if (stringKey.indexOf(this.startPatern) == -1) {
             return stringKey;
         }
         else {
-            var envStart = stringKey.indexOf(this.startPatern);
-            var envEnd;
-            var startPaternLength = this.startPatern.length;
-            var endPaternLength = this.endPatern.length;
+            let envStart = stringKey.indexOf(this.startPatern);
+            let envEnd;
+            const startPaternLength = this.startPatern.length;
+            const endPaternLength = this.endPatern.length;
             while (envStart > -1) {
-                let preEnv = "";
-                let postEnv = "";
-                let envVar = "";
+                let preEnv = '';
+                let postEnv = '';
+                let envVar = '';
                 if (envStart > 0) {
                     preEnv = stringKey.substr(0, envStart);
                 }
@@ -76,7 +75,7 @@ class CtxInterpretor {
                     postEnv = stringKey.substr(envEnd + endPaternLength);
                 }
                 envVar = stringKey.substring(envStart + startPaternLength, envEnd);
-                if (preEnv == "" && postEnv == "") {
+                if (preEnv == '' && postEnv == '') {
                     stringKey = this.setEnv(envVar, removeUnknownVar);
                     envStart = -1;
                 }
@@ -100,9 +99,8 @@ class CtxInterpretor {
             // return result;
         }
     }
-    ;
     updateArrEnv(obj, clone = false, removeUnknownVar = false) {
-        let newArr = [];
+        const newArr = [];
         obj.forEach((data) => {
             if (_.isString(data)) {
                 newArr.push(this.setGlobalEnv(data, removeUnknownVar));
@@ -117,15 +115,20 @@ class CtxInterpretor {
                 newArr.push(data);
             }
         });
-        if (newArr.length > 1 && (newArr[0].toString()).slice(0, 3) == "$__") {
+        if (newArr.length > 1 &&
+            newArr[0].toString().slice(0, 3) == '$__') {
             // c'est une fonction
-            let key = newArr[0].toString();
+            const key = newArr[0].toString();
             try {
                 switch (key) {
-                    case "$__moment_add":
-                        return moment(newArr[1]).add(parseFloat(newArr[2].toString()), newArr[3]).toDate();
-                    case "$__moment_substract":
-                        return moment(newArr[1]).subtract(parseFloat(newArr[2].toString()), newArr[3]).toDate();
+                    case '$__moment_add':
+                        return moment(newArr[1])
+                            .add(parseFloat(newArr[2].toString()), newArr[3])
+                            .toDate();
+                    case '$__moment_substract':
+                        return moment(newArr[1])
+                            .subtract(parseFloat(newArr[2].toString()), newArr[3])
+                            .toDate();
                     default:
                         break;
                 }
@@ -143,7 +146,7 @@ class CtxInterpretor {
             obj = Object.assign({}, obj);
         }
         _.each(obj, (val, key) => {
-            var arr;
+            let arr;
             if (_.isString(val)) {
                 obj[key] = this.setGlobalEnv(val, removeUnknownVar);
             }

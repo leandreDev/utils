@@ -7,17 +7,16 @@ const assert = require("assert");
 class UtilsSecu {
     constructor(currentApp) {
         this.currentApp = currentApp;
-        assert(currentApp.conf.secretKey, "secretKey is not spécified");
+        assert(currentApp.conf.secretKey, 'secretKey is not spécified');
     }
     addHeadersKeyProm(rq) {
-        return Promise.resolve()
-            .then(() => {
+        return Promise.resolve().then(() => {
             this.addHeadersKey(rq);
             return;
         });
     }
     addHeadersKey(rq) {
-        var date = Date.now();
+        let date = Date.now();
         if (!rq.headers) {
             rq.headers = {};
         }
@@ -28,19 +27,20 @@ class UtilsSecu {
             rq.headers.keyDate = date;
         }
         rq.url = URL.format(new URL.URL(rq.url.trim()), { unicode: true });
-        var url = rq.url.toLowerCase();
-        rq.headers.key = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
+        const url = rq.url.toLowerCase();
+        rq.headers.key = crypto
+            .createHmac('sha256', this.currentApp.conf.secretKey)
             .update(rq.headers.keyDate + url)
             .digest('hex');
         if (this.currentApp.conf.debug) {
-            console.log("create sig", url, rq.headers.keyDate, rq.headers.key);
+            console.log('create sig', url, rq.headers.keyDate, rq.headers.key);
         }
     }
     testkey(req) {
-        var date = Number(req.headers.keyDate);
-        var key = req.headers.key;
-        var requrl;
-        var currentDate = Date.now();
+        const date = Number(req.headers.keyDate);
+        const key = req.headers.key;
+        let requrl;
+        const currentDate = Date.now();
         if (req.originalUrl && req.originalUrl.length > 1) {
             requrl = this.currentApp.conf.urlBase + req.originalUrl.substr(1);
         }
@@ -48,8 +48,11 @@ class UtilsSecu {
             requrl = this.currentApp.conf.urlBase;
         }
         // var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
-        var url = URL.format(new URL.URL(requrl.trim()), { unicode: true }).toLowerCase();
-        var newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
+        const url = URL.format(new URL.URL(requrl.trim()), {
+            unicode: true
+        }).toLowerCase();
+        const newKey = crypto
+            .createHmac('sha256', this.currentApp.conf.secretKey)
             .update(date + url)
             .digest('hex');
         if (newKey == key) {
@@ -58,20 +61,20 @@ class UtilsSecu {
         else {
             req.ctx.internalCallValid = false;
             if (this.currentApp.conf.debug) {
-                console.log("key dont match " + url, date, key, newKey);
+                console.log('key dont match ' + url, date, key, newKey);
             }
         }
     }
     get chekInternalMidelWare() {
         return (req, res, next) => {
-            var date = Number(req.header('keyDate'));
-            var key = req.header('key');
-            var requrl;
-            var currentDate = Date.now();
+            const date = Number(req.header('keyDate'));
+            const key = req.header('key');
+            let requrl;
+            const currentDate = Date.now();
             if (key) {
                 if (currentDate > date + 30000) {
                     if (this.currentApp.conf.debug) {
-                        console.log("keyDate is obsolete : " + currentDate + ">" + date + "+ 30000");
+                        console.log('keyDate is obsolete : ' + currentDate + '>' + date + '+ 30000');
                     }
                     req.ctx.internalCallValid = false;
                     next();
@@ -83,8 +86,11 @@ class UtilsSecu {
                     else {
                         requrl = this.currentApp.conf.urlBase;
                     }
-                    var url = URL.format(new URL.URL(requrl.trim()), { unicode: true }).toLowerCase();
-                    var newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
+                    const url = URL.format(new URL.URL(requrl.trim()), {
+                        unicode: true
+                    }).toLowerCase();
+                    const newKey = crypto
+                        .createHmac('sha256', this.currentApp.conf.secretKey)
                         .update(date + url)
                         .digest('hex');
                     if (newKey == key) {
@@ -94,7 +100,7 @@ class UtilsSecu {
                     else {
                         req.ctx.internalCallValid = false;
                         if (this.currentApp.conf.debug) {
-                            console.log("key dont match " + url, date, key, newKey);
+                            console.log('key dont match ' + url, date, key, newKey);
                         }
                         next();
                     }
@@ -107,16 +113,16 @@ class UtilsSecu {
     }
     get protectInternalMidelWare() {
         return (req, res, next) => {
-            var date = Number(req.header('keyDate'));
-            var key = req.header('key');
-            var requrl;
-            var currentDate = Date.now();
+            const date = Number(req.header('keyDate'));
+            const key = req.header('key');
+            let requrl;
+            const currentDate = Date.now();
             if (key) {
                 if (currentDate > date + 30000) {
                     if (this.currentApp.conf.debug) {
-                        console.log("keyDate is obsolete : " + currentDate + ">" + date + "+ 30000");
+                        console.log('keyDate is obsolete : ' + currentDate + '>' + date + '+ 30000');
                     }
-                    next("keyDate is obsolete");
+                    next('keyDate is obsolete');
                 }
                 else {
                     if (req.originalUrl && req.originalUrl.length > 1) {
@@ -125,8 +131,11 @@ class UtilsSecu {
                     else {
                         requrl = this.currentApp.conf.urlBase;
                     }
-                    var url = URL.format(new URL.URL(requrl.trim()), { unicode: true }).toLowerCase();
-                    var newKey = crypto.createHmac('sha256', this.currentApp.conf.secretKey)
+                    const url = URL.format(new URL.URL(requrl.trim()), {
+                        unicode: true
+                    }).toLowerCase();
+                    const newKey = crypto
+                        .createHmac('sha256', this.currentApp.conf.secretKey)
                         .update(date + url)
                         .digest('hex');
                     if (newKey == key) {
@@ -138,14 +147,14 @@ class UtilsSecu {
                     }
                     else {
                         if (this.currentApp.conf.debug) {
-                            console.log("key dont match uri : " + url, date, key, newKey);
+                            console.log('key dont match uri : ' + url, date, key, newKey);
                         }
-                        next("key dont match uri : " + requrl);
+                        next('key dont match uri : ' + requrl);
                     }
                 }
             }
             else {
-                next("no key");
+                next('no key');
             }
         };
     }
@@ -155,7 +164,7 @@ class UtilsSecu {
                 next();
             }
             else {
-                next(`user not connected`);
+                next('user not connected');
             }
         };
     }

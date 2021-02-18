@@ -10,14 +10,15 @@ class HttpServiceBase extends HttpAbstractService_1.HttpAbstractService {
         this.deleteMiddleware = (config) => {
             config = this.globalCtxInt.updateEnv(config, true);
             return (req, res, next) => {
-                var localCtxInt = new CtxInterpretor_1.CtxInterpretor(req.ctx);
-                localCtxInt.startPatern = "$ctx.";
-                var localConfig = localCtxInt.updateEnv(config, true);
+                const localCtxInt = new CtxInterpretor_1.CtxInterpretor(req.ctx);
+                localCtxInt.startPatern = '$ctx.';
+                const localConfig = localCtxInt.updateEnv(config, true);
                 this.delete(localConfig.params.id, localConfig.headers)
                     .then((data) => {
                     req.ctx[localConfig.output] = data;
                     next();
-                }).catch((err) => {
+                })
+                    .catch((err) => {
                     next(err);
                 });
             };
@@ -25,14 +26,15 @@ class HttpServiceBase extends HttpAbstractService_1.HttpAbstractService {
         this.getMiddleware = (config) => {
             config = this.globalCtxInt.updateEnv(config, true);
             return (req, res, next) => {
-                var localCtxInt = new CtxInterpretor_1.CtxInterpretor(req.ctx);
-                localCtxInt.startPatern = "$ctx.";
-                var localConfig = localCtxInt.updateEnv(config, true);
+                const localCtxInt = new CtxInterpretor_1.CtxInterpretor(req.ctx);
+                localCtxInt.startPatern = '$ctx.';
+                const localConfig = localCtxInt.updateEnv(config, true);
                 this.get(localConfig.params.query, localConfig.headers)
                     .then((data) => {
                     req.ctx[localConfig.output] = data;
                     next();
-                }).catch((err) => {
+                })
+                    .catch((err) => {
                     next(err);
                 });
             };
@@ -40,14 +42,15 @@ class HttpServiceBase extends HttpAbstractService_1.HttpAbstractService {
         this.patchMiddleware = (config) => {
             config = this.globalCtxInt.updateEnv(config, true);
             return (req, res, next) => {
-                var localCtxInt = new CtxInterpretor_1.CtxInterpretor(req.ctx);
-                localCtxInt.startPatern = "$ctx.";
-                var localConfig = localCtxInt.updateEnv(config, true);
+                const localCtxInt = new CtxInterpretor_1.CtxInterpretor(req.ctx);
+                localCtxInt.startPatern = '$ctx.';
+                const localConfig = localCtxInt.updateEnv(config, true);
                 this.patch(localConfig.body, localConfig.headers, localConfig.params.query)
                     .then((data) => {
                     req.ctx[localConfig.output] = data;
                     next();
-                }).catch((err) => {
+                })
+                    .catch((err) => {
                     next(err);
                 });
             };
@@ -55,16 +58,17 @@ class HttpServiceBase extends HttpAbstractService_1.HttpAbstractService {
         this.postMiddleware = (config) => {
             config = this.globalCtxInt.updateEnv(config, true);
             return (req, res, next) => {
-                var localCtxInt = new CtxInterpretor_1.CtxInterpretor(req.ctx);
-                localCtxInt.startPatern = "$ctx.";
-                var localConfig = localCtxInt.updateEnv(config, true);
+                const localCtxInt = new CtxInterpretor_1.CtxInterpretor(req.ctx);
+                localCtxInt.startPatern = '$ctx.';
+                const localConfig = localCtxInt.updateEnv(config, true);
                 // console.log(JSON.stringify(localConfig))
                 this.post(localConfig.body, localConfig.headers, localConfig.params.query)
                     .then((data) => {
                     req.ctx[localConfig.output] = data;
                     // console.log(JSON.stringify(data)) ;
                     next();
-                }).catch((err) => {
+                })
+                    .catch((err) => {
                     next(err);
                 });
             };
@@ -72,14 +76,15 @@ class HttpServiceBase extends HttpAbstractService_1.HttpAbstractService {
         this.putMiddleware = (config) => {
             config = this.globalCtxInt.updateEnv(config, true);
             return (req, res, next) => {
-                var localCtxInt = new CtxInterpretor_1.CtxInterpretor(req.ctx);
-                localCtxInt.startPatern = "$ctx.";
-                var localConfig = localCtxInt.updateEnv(config, true);
+                const localCtxInt = new CtxInterpretor_1.CtxInterpretor(req.ctx);
+                localCtxInt.startPatern = '$ctx.';
+                const localConfig = localCtxInt.updateEnv(config, true);
                 this.put(localConfig.body, localConfig.headers, localConfig.params.query)
                     .then((data) => {
                     req.ctx[localConfig.output] = data;
                     next();
-                }).catch((err) => {
+                })
+                    .catch((err) => {
                     next(err);
                 });
             };
