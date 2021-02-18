@@ -16,14 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HF-dev/utils.git"
+    "url": "git+https://github.com/leandreDev/utils.git"
   },
-  "author": "hf-dev",
+  "author": "leandreDev",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/HF-dev/utils/issues"
+    "url": "https://github.com/leandreDev/utils/issues"
   },
-  "homepage": "https://github.com/HF-dev/utils#readme",
+  "homepage": "https://github.com/leandreDev/utils#readme",
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/parser": "^4.15.1",
