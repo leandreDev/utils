@@ -1,0 +1,61 @@
+sur:
+  workflow_dispatch:
+    contributions:
+      version:
+        description: "Version: majeure, mineure, patch"
+        requis: vrai
+        options: ["majeur", "mineur", "patch"]
+        par défaut: "patch"
+nom: Generate Dev Version
+emplois:
+  construire:
+    run-on: ubuntu-latest
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: "vrai"
+      GITHUB_TOKEN: s {{secrets.REPOSITORY_TOKEN}}
+      NODE_VERSION: "v14.15.4"
+      VERSION_TYPE:
+      VERSION_TAG:
+    pas:
+      - exécuter: |
+          echo "$ {{github.event.inputs.version}}"
+          echo ":: set-env name = VERSION_TYPE :: $ {{github.event.inputs.version}}"
+      - utilise: actions / checkout @ v2
+        avec:
+          réf: dev
+      - nom: Setup nodejs $ {{env.NODE_VERSION}}
+        utilise: actions / setup-node @ v1
+        avec:
+          version du nœud: $ {{env.NODE_VERSION}}
+      - nom: npm install et npm build
+        exécuter: |
+          npm ci
+          npm run build
+      - nom: Génère une nouvelle version de $ {{env.VERSION_TYPE}}
+        exécuter: |
+          npm --no-git-tag-version version $ {{env.VERSION_TYPE}}
+      - nom: Lire le nouveau package Json
+        id: set_var
+        exécuter: |
+          content = `chat package.json`
+          # les lignes suivantes ne sont requises que pour json multi-lignes
+          content = "$ {content // '%' / '% 25'}"
+          content = "$ {content // $ '\ n' / '% 0A'}"
+          content = "$ {content // $ '\ r' / '% 0D'}"
+          # fin de la gestion facultative pour json multi-lignes
+          echo ":: set-output name = packageJson :: $ content"
+      - nom: update runner env
+        exécuter: |
+          echo ":: set-env name = VERSION_TAG :: dev _ $ {{fromJson (steps.set_var.outputs.packageJson) .version}}"
+      - nom: fichiers de validation
+        exécuter: |
+          git config user.email "diegopatino@doprr.com"
+          git config user.name "Diego Patino"
+          git add.
+          git commit -m "Générer la version de développement $ {{env.VERSION_TAG}}"
+          git push
+      - nom: Tag Dev Version $ {{env.VERSION_TAG}}
+        utilise: tvdias/github-tagger@v0.0.1
+        avec:
+          repo-token: $ {{secrets.GITHUB_TOKEN}}
+          tag: "$ {{env.VERSION_TAG}}"
