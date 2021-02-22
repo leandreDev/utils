@@ -1,5 +1,5 @@
 {
-  "name": "@hfdev/utils",
+  "name": "@leandredev/utils",
   "version": "1.1.0",
   "description": "utilitaire",
   "main": "./dist/index.js",
