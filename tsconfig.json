@@ -1,23 +1,24 @@
 {
-  "compilerOptions": {
-    "declaration": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "outDir": "dist",
-    "sourceMap": true,
-    "target": "es2017"
-  },
-  "exclude": [
-    "node_modules"
-  ],
-  "compileOnSave": false,
-  "buildOnSave": false,
-  "atom": { "rewriteTsconfig": false } ,
-  "files": [
-    "./src/index.ts",
-    "./src/test.ts",
-    "./src/testKeys.ts"
-  ]
-}
+    "compilerOptions": {
+      "declaration": true,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "outDir": "dist",
+      "sourceMap": false,
+      "target": "es2017"
+    },
+    "exclude": [
+      "node_modules"
+    ],
+    "compileOnSave": false,
+    "buildOnSave": false,
+    "atom": { "rewriteTsconfig": false } ,
+    "files": [
+      "./src/index.ts",
+      "./src/test.ts",
+      "./src/testKeys.ts"
+    ]
+  }
+  
