@@ -1,0 +1,36 @@
+{
+  "trailingComma": "all",
+  "printWidth": 140,
+  "tabWidth": 2,
+  "semi": true,
+  "singleQuote": true,
+  "bracketSpacing": true,
+  "arrowParens": "avoid",
+  "endOfLine": "lf",
+  "overrides": [
+    {
+      "files": ".prettierrc",
+      "options": {
+        "parser": "json"
+      }
+    },
+    {
+      "files": "*.scss",
+      "options": {
+        "singleQuote": false
+      }
+    },
+    {
+      "files": "*.html",
+      "options": {
+        "printWidth": 110
+      }
+    },
+    {
+      "files": "*.yml",
+      "options": {
+        "singleQuote": true
+      }
+    }
+  ]
+}

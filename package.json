@@ -10,7 +10,7 @@
     "build": "tsc",
     "debug": "node --inspect dist/test.js ",
     "testing": "node dist/test.js",
-    "lint": "eslint './src/**/*.{js,ts,tsx}' ",
+    "lint": "eslint . --ext .ts",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}"
   },
@@ -28,9 +28,6 @@
   },
   "homepage": "https://github.com/leandreDev/utils#readme",
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.15.1",
-    "@typescript-eslint/parser": "^4.15.1",
-    "eslint": "^7.20.0",
     "prettier": "^2.2.1"
   },
   "peerDependencies": {
@@ -50,8 +47,11 @@
     "@types/lodash": "^4.14.66",
     "@types/node": "^13.5.0",
     "@types/request": "0.0.44",
+    "@typescript-eslint/eslint-plugin": "^4.20.0",
+    "@typescript-eslint/parser": "^4.20.0",
     "assert": "^1.4.1",
     "cross-env": "^5.1.0",
+    "eslint": "^7.23.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-react": "^7.22.0",

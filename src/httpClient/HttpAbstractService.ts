@@ -22,13 +22,14 @@ export class HttpAbstractService {
     } else {
       return request(options);
     }
-    // console.log(options) ;
+    // console.info(options) ;
   }
 
   public cleanArr(value: any[]): any[] {
     const resArr: any[] = [];
     value.forEach((data) => {
       if (_.isFunction(data)) {
+        console.info('_.isFunction')
       } else if (_.isBoolean(data)) {
         resArr.push(data);
       } else if (_.isString(data) && data != '') {
@@ -52,7 +53,7 @@ export class HttpAbstractService {
     const newValue: any = {};
 
     for (const propName in value) {
-      if (_.isFunction(value[propName])) {
+      if (_.isFunction(value[propName])) {console.info('_.isFunction')
       } else if (_.isBoolean(value[propName])) {
         newValue[propName] = value[propName];
       } else if (_.isString(value[propName]) && value[propName] != '') {
@@ -83,7 +84,7 @@ export class HttpAbstractService {
       method: 'PATCH',
       headers: headers,
       body: body,
-      json: true
+      json: true,
     };
 
     return this.callRequest<IHttpResult<T>>(options);
@@ -128,7 +129,7 @@ export class HttpAbstractService {
       method: 'PATCH',
       headers: headers,
       body: body,
-      json: true
+      json: true,
     };
 
     return this.callRequest<T>(options);
@@ -144,7 +145,7 @@ export class HttpAbstractService {
       method: 'POST',
       headers: headers,
       json: true,
-      body: body
+      body: body,
     };
 
     return this.callRequest<T>(options);
@@ -160,7 +161,7 @@ export class HttpAbstractService {
       method: 'PUT',
       headers: headers,
       body: body,
-      json: true
+      json: true,
     };
 
     return this.callRequest<T>(options);
@@ -171,7 +172,7 @@ export class HttpAbstractService {
       url: new Url.URL(url).href,
       method: 'DELETE',
       headers: headers,
-      json: true
+      json: true,
     };
 
     return this.callRequest<T>(options);
@@ -182,7 +183,7 @@ export class HttpAbstractService {
       url: new Url.URL(url).href,
       method: 'GET',
       headers: headers,
-      json: true
+      json: true,
     };
 
     return this.callRequest<T>(options);

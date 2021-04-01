@@ -1,0 +1,78 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    "@typescript-eslint/explicit-module-boundary-types": [
+      "off"
+    ],
+    "@typescript-eslint/no-empty-function": [
+      "off"
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "off"
+    ],
+    "@typescript-eslint/no-any": [
+      "off"
+    ],
+    "@typescript-eslint/no-explicit-any": [
+      "off"
+    ],
+    "no-console": [
+      "off"
+    ],
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "CallExpression[callee.object.name='console'][callee.property.name!=/^(warn|error|info|trace)$/]",
+        "message": "NOT USE 'console.log'"
+      }
+    ],
+    "prefer-arrow/prefer-arrow-functions": [
+      "off"
+    ],
+    "no-underscore-dangle": [
+      "off"
+    ],
+    "arrow-body-style": [
+      "off"
+    ],
+    "@typescript-eslint/dot-notation": [
+      "off"
+    ],
+    "@typescript-eslint/naming-convention": [
+      "off"
+    ],
+    "@typescript-eslint/explicit-member-accessibility": [
+      "off",
+      {
+        "accessibility": "explicit"
+      }
+    ],
+    "@typescript-eslint/quotes": [
+      "error",
+      "single",
+      {
+        "allowTemplateLiterals": true
+      }
+    ],
+    "arrow-parens": [
+      "off",
+      "always"
+    ],
+    "import/order": "off",
+    "max-len": [
+      "error",
+      {
+        "code": 200
+      }
+    ]
+  }
+}

@@ -9,3 +9,4 @@ generator
 .eslintrc.js
 .vscode
 .prettierrc
+.eslintignore

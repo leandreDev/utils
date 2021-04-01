@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 import * as _ from 'lodash';
 import * as assert from 'assert';
 import * as moment from 'moment';
@@ -133,7 +134,7 @@ export class CtxInterpretor {
             break;
         }
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     } else {
       return newArr;

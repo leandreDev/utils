@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { ObjectId } from 'mongodb';
 export function polonaisInverse(
   req = '*',
@@ -338,7 +339,7 @@ export function polonaisInverse(
             $search: search,
             $language: language,
             $caseSensitive: caseSensitive,
-            $diacriticSensitive: diacriticSensitive
+            $diacriticSensitive: diacriticSensitive,
           };
           stackArr.push(obj);
         }
@@ -442,7 +443,7 @@ export function polonaisInverse(
           const obj: any = { name: '$count' };
           stackArr.push(obj);
         }
-      }
+      },
     };
     const stackArr: any[] = [];
     const queryArr: string[] = req

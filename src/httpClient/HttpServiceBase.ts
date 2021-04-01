@@ -95,11 +95,9 @@ export class HttpServiceBase<T>
       const localCtxInt: CtxInterpretor = new CtxInterpretor(req.ctx);
       localCtxInt.startPatern = '$ctx.';
       const localConfig = localCtxInt.updateEnv(config, true);
-      // console.log(JSON.stringify(localConfig))
       this.post(localConfig.body, localConfig.headers, localConfig.params.query)
         .then((data) => {
           req.ctx[localConfig.output] = data;
-          // console.log(JSON.stringify(data)) ;
           next();
         })
         .catch((err) => {

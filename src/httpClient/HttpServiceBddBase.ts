@@ -65,7 +65,7 @@ export class HttpServiceBddBase<T extends IBase>
           return collection.findOneAndDelete(q).then((result) => {
             if (this.debug) {
               meta = {
-                mongoquery: q
+                mongoquery: q,
               };
             }
             if (result.ok) {
@@ -111,7 +111,7 @@ export class HttpServiceBddBase<T extends IBase>
             arr.unshift({ _class: this._class });
           } else if (q.$or) {
             q = {
-              $and: [{ _class: this._class }, q]
+              $and: [{ _class: this._class }, q],
             };
           } else {
             q._class = this._class;
@@ -120,7 +120,7 @@ export class HttpServiceBddBase<T extends IBase>
         // ajouter les metas de pagination
         if (this.debug) {
           meta = {
-            mongoquery: q
+            mongoquery: q,
           };
         } else {
           meta = {};
@@ -139,6 +139,7 @@ export class HttpServiceBddBase<T extends IBase>
             case '$pop':
               // recupérer la class de l'objet
               // pop.push({propName:op.value});
+              // eslint-disable-next-line no-case-declarations
               const className: string = this.entity.getClassNameOfProp(
                 op.value
               );
@@ -150,7 +151,7 @@ export class HttpServiceBddBase<T extends IBase>
                   pop.push({
                     propName: op.value,
                     httpService: httpServ,
-                    className: className
+                    className: className,
                   });
                 }
               }
@@ -176,7 +177,7 @@ export class HttpServiceBddBase<T extends IBase>
         }
         return this.collection.then((collection) => {
           const cursor: Cursor = collection.find(q, {
-            projection: headers.$projection
+            projection: headers.$projection,
           });
           return cursor
             .count(false)
@@ -266,7 +267,7 @@ export class HttpServiceBddBase<T extends IBase>
                         });
                     })
                     .catch((err) => {
-                      console.log(err);
+                      console.error(err);
                       return arr;
                     });
                 });
@@ -414,13 +415,13 @@ export class HttpServiceBddBase<T extends IBase>
                   arr.unshift({ _id: body._id });
                 } else if (q.$or) {
                   q = {
-                    $and: [{ _id: body._id }, q]
+                    $and: [{ _id: body._id }, q],
                   };
                 } else {
                   q._id = body._id;
                 }
                 return collection.findOneAndReplace(q, body, {
-                  returnOriginal: false
+                  returnOriginal: false,
                 });
               })
               .then((objResult) => {
@@ -440,7 +441,7 @@ export class HttpServiceBddBase<T extends IBase>
           return this.collection.then((collection) => {
             return collection
               .findOneAndReplace({ _id: body._id }, body, {
-                returnOriginal: false
+                returnOriginal: false,
               })
               .then((objResult) => {
                 if (objResult.ok) {

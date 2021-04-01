@@ -1,25 +1,25 @@
 {
+  "prettier.configPath": ".prettierrc",
+  "prettier.ignorePath": ".prettierignore",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
-  "[typescript]": {
-    "editor.formatOnPaste": false,
-    "editor.formatOnSave": true
-  },
-  "editor.formatOnPaste": true,
-
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "editor.formatOnSave": true,
-  "typescript.preferences.importModuleSpecifier": "relative",
-  "sort-imports.on-save": true,
-  "search.exclude": {
-    "**/node_modules": true,
-    "**/bower_components": true,
-    "**/*.code-search": true,
-    "**/build": true,
-    "**/log_files": true
-  }
+  "editor.rulers": [
+    140
+  ],
+  "editor.tabSize": 2,
+  "files.trimTrailingWhitespace": true,
+  "files.eol": "\n",
+  "editor.detectIndentation": false,
+  "html.format.indentHandlebars": true,
+  "html.format.endWithNewline": true,
+  "html.format.wrapAttributes": "force-expand-multiline",
+  "eslint.alwaysShowStatus": true,
+  "eslint.workingDirectories": [
+    "src/"
+  ],
+  "telemetry.enableCrashReporter": false,
+  "telemetry.enableTelemetry": false
 }

@@ -4,13 +4,14 @@ const test: CtxInterpretor = new CtxInterpretor({
   emailTarget: { toto: 'bla', name: 'dsdsds' },
   opt: 'erttyy',
   num: 32,
-  u: [{ t: 'rere' }, 'tutu']
+  u: [{ t: 'rere' }, 'tutu'],
 });
 test.startPatern = '$ctx.';
 const poi: any = {
   aa: '$ENV.opt$$',
   zz: 'qqq$ENV.body.toto$$/uuuu',
   qq: 'qzsazqs$/ENV.body.titi$$/wxcvdfd',
+
   aas: '$ENV.opt',
   aax: 'www$ENV.opt',
   aasss: 'www$ENV.optsdsds$$dsds',
@@ -20,22 +21,22 @@ const poi: any = {
   ooo: '$ENV.num',
   ooo2: '$ENV.num$$dsqdsq',
   ooo3: 'dsqdsq$ENV.num$$dsqdsq',
-  ooo4: 'dsqdsq$ENV.num'
+  ooo4: 'dsqdsq$ENV.num',
 };
 const tester: any = {
   from: {
-    email: 'toto@toto.com'
+    email: 'toto@toto.com',
   },
   reply_to: {
-    email: 'toto@toto.com'
+    email: 'toto@toto.com',
   },
   personalizations: [
     {
       to: [
         {
           email: 'hfdevpro@gmail.com',
-          name: 'henry favre'
-        }
+          name: 'henry favre',
+        },
       ],
       substitutions: {
         '@@nomParcours': 'toto',
@@ -46,11 +47,11 @@ const tester: any = {
         '@@lienPfDaesign': 'http://lienPfDaesign',
         '@@dureeParcours': '30 min',
         '@@objectifPedagogique': '$ctx.u.0.t',
-        '@@length': '$ctx.u.length'
-      }
-    }
+        '@@length': '$ctx.u.length',
+      },
+    },
   ],
-  template_id: '4cb2755a-ac05-4034-890a-f5c784dd1e98'
+  template_id: '4cb2755a-ac05-4034-890a-f5c784dd1e98',
 };
 
 // tester = {
@@ -58,8 +59,9 @@ const tester: any = {
 // }
 
 setTimeout(() => {
+  // eslint-disable-next-line no-debugger
   debugger;
   test.updateEnv(tester);
 
-  console.log(JSON.stringify(tester));
+  console.info(JSON.stringify(tester));
 }, 15000);

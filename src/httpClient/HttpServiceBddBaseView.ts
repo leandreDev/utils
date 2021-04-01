@@ -109,9 +109,8 @@ export class HttpServiceBddBaseView<T extends IBase>
             case '$pop':
               // recupérer la class de l'objet
               // pop.push({propName:op.value});
-              const className: string = this.entity.getClassNameOfProp(
-                op.value
-              );
+              // eslint-disable-next-line no-case-declarations
+              const className: string = this.entity.getClassNameOfProp(op.value);
               if (className) {
                 const httpServ: HttpServiceBddBase<IBase> = this.collections.getHttpService(
                   className
@@ -165,8 +164,8 @@ export class HttpServiceBddBaseView<T extends IBase>
           });
         }
         filterAgg = [...filterAgg, ...aggregate];
-        const CtxInt: CtxInterpretor = new CtxInterpretor(ctx);
-        CtxInt.startPatern = '$ctx.';
+        const ctxInt: CtxInterpretor = new CtxInterpretor(ctx);
+        ctxInt.startPatern = '$ctx.';
         // let agg:any[] = CtxInt.updateArrEnv(filterAgg , true) ;
         const agg: any[] = filterAgg.slice();
         if (this.debug) {
@@ -240,7 +239,7 @@ export class HttpServiceBddBaseView<T extends IBase>
                         });
                     })
                     .catch((err) => {
-                      console.log(err);
+                      console.error(err);
                       return arr;
                     });
                 });

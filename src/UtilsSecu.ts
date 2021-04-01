@@ -33,7 +33,7 @@ export class UtilsSecu {
       .update(rq.headers.keyDate + url)
       .digest('hex');
     if (this.currentApp.conf.debug) {
-      console.log('create sig', url, rq.headers.keyDate, rq.headers.key);
+      console.info('create sig', url, rq.headers.keyDate, rq.headers.key);
     }
   }
 
@@ -49,7 +49,7 @@ export class UtilsSecu {
     }
     // var url = requrl.trim().toLowerCase().replace(/\/\/+/gi, '/').replace(/^([a-z]+):\/+/, "$1://");
     const url: string = URL.format(new URL.URL(requrl.trim()), {
-      unicode: true
+      unicode: true,
     }).toLowerCase();
 
     const newKey: string = crypto
@@ -62,7 +62,7 @@ export class UtilsSecu {
     } else {
       req.ctx.internalCallValid = false;
       if (this.currentApp.conf.debug) {
-        console.log('key dont match ' + url, date, key, newKey);
+        console.error('key dont match ' + url, date, key, newKey);
       }
     }
   }
@@ -77,7 +77,7 @@ export class UtilsSecu {
       if (key) {
         if (currentDate > date + 30000) {
           if (this.currentApp.conf.debug) {
-            console.log(
+            console.error(
               'keyDate is obsolete : ' + currentDate + '>' + date + '+ 30000'
             );
           }
@@ -90,7 +90,7 @@ export class UtilsSecu {
             requrl = this.currentApp.conf.urlBase;
           }
           const url: string = URL.format(new URL.URL(requrl.trim()), {
-            unicode: true
+            unicode: true,
           }).toLowerCase();
           const newKey: string = crypto
             .createHmac('sha256', this.currentApp.conf.secretKey)
@@ -103,7 +103,7 @@ export class UtilsSecu {
           } else {
             req.ctx.internalCallValid = false;
             if (this.currentApp.conf.debug) {
-              console.log('key dont match ' + url, date, key, newKey);
+              console.error('key dont match ' + url, date, key, newKey);
             }
             next();
           }
@@ -125,7 +125,7 @@ export class UtilsSecu {
       if (key) {
         if (currentDate > date + 30000) {
           if (this.currentApp.conf.debug) {
-            console.log(
+            console.error(
               'keyDate is obsolete : ' + currentDate + '>' + date + '+ 30000'
             );
           }
@@ -137,7 +137,7 @@ export class UtilsSecu {
             requrl = this.currentApp.conf.urlBase;
           }
           const url: string = URL.format(new URL.URL(requrl.trim()), {
-            unicode: true
+            unicode: true,
           }).toLowerCase();
 
           const newKey: string = crypto
@@ -154,7 +154,7 @@ export class UtilsSecu {
             next();
           } else {
             if (this.currentApp.conf.debug) {
-              console.log('key dont match uri : ' + url, date, key, newKey);
+              console.error('key dont match uri : ' + url, date, key, newKey);
             }
             next('key dont match uri : ' + requrl);
           }
