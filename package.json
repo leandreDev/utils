@@ -11,6 +11,8 @@
     "debug": "node --inspect dist/test.js ",
     "testing": "node dist/test.js",
     "lint": "eslint . --ext .ts",
+    "version": "npm run build && git add -A dist",
+    "postversion": "git push && git push --follow-tags",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}"
   },

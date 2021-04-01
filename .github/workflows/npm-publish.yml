@@ -55,24 +55,9 @@ jobs:
         run: |
           git config --global url."https://${{ secrets.LEANDRE_DEV_AUTH_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
           npm ci
-      - name: Npm run build
-        run: |
-          npm run build
-      - name: Commit new Generate files
-        run: |
-          git config  user.email "diegopatino@doprr.com"
-          git config  user.name "Diego Patino"
-          git add .
-          git commit -m "Build new Version" 
-          git push
       - name: Generate new version
         run: |
           npm  version ${{ env.VERSION_TYPE}} -m"New Version"
-      - name: Commit new tagged files
-        run: |
-          git config  user.email "diegopatino@doprr.com"
-          git config  user.name "Diego Patino"
-          git push --follow-tags
       - name: Publish package to npm registry
         run: |
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.LEANDRE_DEV_AUTH_TOKEN }}" > ~/.npmrc

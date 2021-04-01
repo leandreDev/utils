@@ -29,7 +29,7 @@ export class ConfLoader {
           const conf: any = contextInterpretor.updateEnv(val);
           resolve(val);
         } catch (err) {
-          console.info('offline confloader error read JSON', err);
+          console.error('offline confloader error read JSON', err);
           reject(err);
         }
       } else {
