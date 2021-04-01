@@ -6,3 +6,6 @@ src
 bdschema
 dataTest
 generator
+.eslintrc.js
+.vscode
+.prettierrc
