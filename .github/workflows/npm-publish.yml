@@ -6,10 +6,11 @@ on:
         required: true
         options: ["major", "minor", "patch"]
         default: "patch"
-name: Generate Version
+name: Generate Version Utils Version
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: Generate new Version @leandeerdev/utils
     env:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
       GITHUB_TOKEN: s{{secrets.LEANDRE_DEV_AUTH_TOKEN}}
@@ -64,7 +65,7 @@ jobs:
           git add .
           git commit -m "Build new Version" 
           git push
-      - name: Generate new  version
+      - name: Generate new version
         run: |
           npm  version ${{ env.VERSION_TYPE}} -m"New Version"
       - name: Commit new tagged files
