@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CtxInterpretor = void 0;
+/* eslint-disable no-prototype-builtins */
 const _ = require("lodash");
 const assert = require("assert");
 const moment = require("moment");
@@ -134,7 +135,7 @@ class CtxInterpretor {
                 }
             }
             catch (err) {
-                console.log(err);
+                console.error(err);
             }
         }
         else {

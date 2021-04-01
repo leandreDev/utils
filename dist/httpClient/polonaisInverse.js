@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.polonaisInverse = void 0;
+/* eslint-disable @typescript-eslint/ban-types */
 const mongodb_1 = require("mongodb");
 function polonaisInverse(req = '*', entity) {
     return Promise.resolve().then(() => {
@@ -363,7 +364,7 @@ function polonaisInverse(req = '*', entity) {
                         $search: search,
                         $language: language,
                         $caseSensitive: caseSensitive,
-                        $diacriticSensitive: diacriticSensitive
+                        $diacriticSensitive: diacriticSensitive,
                     };
                     stackArr.push(obj);
                 }
@@ -476,7 +477,7 @@ function polonaisInverse(req = '*', entity) {
                     const obj = { name: '$count' };
                     stackArr.push(obj);
                 }
-            }
+            },
         };
         const stackArr = [];
         const queryArr = req

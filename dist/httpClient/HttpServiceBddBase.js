@@ -31,7 +31,7 @@ class HttpServiceBddBase {
                 return collection.findOneAndDelete(q).then((result) => {
                     if (this.debug) {
                         meta = {
-                            mongoquery: q
+                            mongoquery: q,
                         };
                     }
                     if (result.ok) {
@@ -77,7 +77,7 @@ class HttpServiceBddBase {
                 }
                 else if (q.$or) {
                     q = {
-                        $and: [{ _class: this._class }, q]
+                        $and: [{ _class: this._class }, q],
                     };
                 }
                 else {
@@ -87,7 +87,7 @@ class HttpServiceBddBase {
             // ajouter les metas de pagination
             if (this.debug) {
                 meta = {
-                    mongoquery: q
+                    mongoquery: q,
                 };
             }
             else {
@@ -103,6 +103,7 @@ class HttpServiceBddBase {
                     case '$pop':
                         // recupérer la class de l'objet
                         // pop.push({propName:op.value});
+                        // eslint-disable-next-line no-case-declarations
                         const className = this.entity.getClassNameOfProp(op.value);
                         if (className) {
                             const httpServ = this.collections.getHttpService(className);
@@ -110,7 +111,7 @@ class HttpServiceBddBase {
                                 pop.push({
                                     propName: op.value,
                                     httpService: httpServ,
-                                    className: className
+                                    className: className,
                                 });
                             }
                         }
@@ -133,7 +134,7 @@ class HttpServiceBddBase {
             }
             return this.collection.then((collection) => {
                 const cursor = collection.find(q, {
-                    projection: headers.$projection
+                    projection: headers.$projection,
                 });
                 return cursor
                     .count(false)
@@ -217,7 +218,7 @@ class HttpServiceBddBase {
                                 });
                             })
                                 .catch((err) => {
-                                console.log(err);
+                                console.error(err);
                                 return arr;
                             });
                         });
@@ -360,14 +361,14 @@ class HttpServiceBddBase {
                         }
                         else if (q.$or) {
                             q = {
-                                $and: [{ _id: body._id }, q]
+                                $and: [{ _id: body._id }, q],
                             };
                         }
                         else {
                             q._id = body._id;
                         }
                         return collection.findOneAndReplace(q, body, {
-                            returnOriginal: false
+                            returnOriginal: false,
                         });
                     })
                         .then((objResult) => {
@@ -390,7 +391,7 @@ class HttpServiceBddBase {
                 return this.collection.then((collection) => {
                     return collection
                         .findOneAndReplace({ _id: body._id }, body, {
-                        returnOriginal: false
+                        returnOriginal: false,
                     })
                         .then((objResult) => {
                         if (objResult.ok) {

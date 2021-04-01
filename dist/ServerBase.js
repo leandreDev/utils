@@ -7,7 +7,9 @@ try {
     pkg = require(__dirname + '/../../../package.json');
     pkg_lock = require(__dirname + '/../../../package-lock.json');
 }
-catch (error) { }
+catch (error) {
+    console.error(error);
+}
 const express = require("express");
 const request = require("request-promise-native");
 const ConfLoader_1 = require("./ConfLoader");
@@ -24,11 +26,11 @@ class ServerBase {
             ['Access-Control-Allow-Origin', '*'],
             [
                 'Access-Control-Allow-Headers',
-                'Origin, X-Requested-With, Content-Type, Accept, idtoken, JWT, jwt, keydate, keyDate , key, ngsw-bypass'
+                'Origin, X-Requested-With, Content-Type, Accept, idtoken, JWT, jwt, keydate, keyDate , key, ngsw-bypass',
             ],
             ['Cache-Control', 'no-cache, no-store, must-revalidate'],
             ['Pragma', 'no-cache'],
-            ['Expires', '0']
+            ['Expires', '0'],
         ];
         this.currentApp = {};
         this.init()
@@ -40,13 +42,13 @@ class ServerBase {
             this.startHttpServer();
         })
             .catch((err) => {
-            console.log(err);
+            console.error(err);
         });
         process.on('message', this.parentProcessHandler);
     }
     get parentProcessHandler() {
         return (msg) => {
-            console.log('parentMessage ', msg);
+            console.info('parentMessage ', msg);
             switch (msg) {
                 case 'reloadConf':
                     this.reloadConfPromise()
@@ -54,7 +56,7 @@ class ServerBase {
                         this.currentApp.conf = conf;
                     })
                         .catch((err) => {
-                        console.log(err);
+                        console.error(err);
                     });
                     break;
             }
@@ -65,7 +67,7 @@ class ServerBase {
     }
     startHttpServer() {
         this.server = this.app.listen(this.currentApp.conf.port, () => {
-            console.log('Server listen on port ' + this.currentApp.conf.port);
+            console.info('Server listen on port ' + this.currentApp.conf.port);
         });
         this.currentApp.server = this.server;
     }
@@ -74,10 +76,10 @@ class ServerBase {
             .then((conf) => {
             this.currentApp.conf = conf;
             if (this.currentApp.conf.debug) {
-                console.log(this.currentApp);
+                console.info(this.currentApp);
             }
             this.app = express();
-            console.log('start app');
+            console.info('start app');
             this.currentApp.express = this.app;
             this.currentApp.toErrRes = this.toErrRes;
             this.currentApp.toJsonRes = this.toJsonRes;
@@ -92,7 +94,7 @@ class ServerBase {
             })
                 .use((req, res, next) => {
                 if (this.currentApp.conf.debug) {
-                    console.log(req.method + ',' + req.url);
+                    console.info(req.method + ',' + req.url);
                 }
                 next();
             })
@@ -116,7 +118,7 @@ class ServerBase {
                 const respObj = {
                     cpuUsage: process.cpuUsage(),
                     memoryUsage: process.memoryUsage(),
-                    upTime: process.uptime()
+                    upTime: process.uptime(),
                 };
                 res.send(this.toJsonRes(respObj));
             });
@@ -131,7 +133,7 @@ class ServerBase {
             this.currentApp.conf['licence_well-known'] != '') {
             const opt = {
                 url: this.currentApp.conf['licence_well-known'],
-                json: true
+                json: true,
             };
             return Promise.resolve(request.get(opt))
                 .then((data) => {
@@ -155,7 +157,7 @@ class ServerBase {
                     '.json', conf);
                 const opt2 = {
                     url: conf.jwks_uri,
-                    json: true
+                    json: true,
                 };
                 return request
                     .get(opt2)
@@ -215,12 +217,12 @@ class ServerBase {
                 code: code,
                 message: err.message,
                 name: err.name,
-                stack: undefined
+                stack: undefined,
             };
             if (this.currentApp.conf.debug) {
                 rep.stack = err.stack;
             }
-            console.log(JSON.stringify(err));
+            console.error(JSON.stringify(err));
             return rep;
         };
     }
@@ -235,7 +237,7 @@ class ServerBase {
             return {
                 code: 200,
                 meta: meta,
-                response: objs
+                response: objs,
             };
         };
     }
@@ -257,11 +259,11 @@ class ServerBase {
                     const payload = JSON.parse(result.payload.toString());
                     const myDate = Date.now() / 1000;
                     if (payload.exp < myDate) {
-                        console.log('token is expired', req.ctx.user);
+                        console.error('token is expired', req.ctx.user);
                         next('token is expired');
                     }
                     else if (payload.nbf > myDate) {
-                        console.log('nbf token is not valid', req.ctx.user);
+                        console.error('nbf token is not valid', req.ctx.user);
                         next('nbf token is not valid');
                     }
                     else {
@@ -284,6 +286,7 @@ class ServerBase {
             req.ctx.roles = [];
             let confSecu;
             if (req.ctx.internalCallValid) {
+                console.info('internalCallValid');
             }
             else if (req.ctx.user) {
                 req.ctx.roles = req.ctx.user.role;
@@ -295,16 +298,16 @@ class ServerBase {
                 }
             }
             req.ctx.roles.push('*');
-            // console.log("confSecu" , confSecu , this.currentApp.conf ,  )
+            // console.info("confSecu" , confSecu , this.currentApp.conf ,  )
             if (!confSecu &&
                 this.currentApp.conf &&
                 this.currentApp.conf.publicAccess) {
                 if (this.currentApp.conf.debug) {
-                    console.log('find public access ' + '_$' + req.method.toLowerCase());
+                    console.info('find public access ' + '_$' + req.method.toLowerCase());
                 }
                 confSecu = this.currentApp.conf.publicAccess['_$' + req.method.toLowerCase()];
             }
-            // console.log("confSecu" , confSecu )
+            // console.info("confSecu" , confSecu )
             if (req.ctx.internalCallValid || req.method.toLowerCase() == 'options') {
                 next();
             }
@@ -319,14 +322,14 @@ class ServerBase {
                     }
                     else {
                         if (this.currentApp.conf.debug) {
-                            console.log('unautorized ', confSecu, access, path, req.ctx.roles);
+                            console.info('unautorized ', confSecu, access, path, req.ctx.roles);
                         }
                         next('unautorized');
                     }
                 }
                 else {
                     if (this.currentApp.conf.debug) {
-                        console.log('unautorized, no conf match', confSecu, path, req.ctx.roles);
+                        console.info('unautorized, no conf match', confSecu, path, req.ctx.roles);
                     }
                     next('unautorized');
                 }

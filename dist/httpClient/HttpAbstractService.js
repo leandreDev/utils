@@ -24,12 +24,13 @@ class HttpAbstractService {
         else {
             return request(options);
         }
-        // console.log(options) ;
+        // console.info(options) ;
     }
     cleanArr(value) {
         const resArr = [];
         value.forEach((data) => {
             if (_.isFunction(data)) {
+                console.info('_.isFunction');
             }
             else if (_.isBoolean(data)) {
                 resArr.push(data);
@@ -56,6 +57,7 @@ class HttpAbstractService {
         const newValue = {};
         for (const propName in value) {
             if (_.isFunction(value[propName])) {
+                console.info('_.isFunction');
             }
             else if (_.isBoolean(value[propName])) {
                 newValue[propName] = value[propName];
@@ -84,7 +86,7 @@ class HttpAbstractService {
             method: 'PATCH',
             headers: headers,
             body: body,
-            json: true
+            json: true,
         };
         return this.callRequest(options);
     }
@@ -107,7 +109,7 @@ class HttpAbstractService {
             method: 'PATCH',
             headers: headers,
             body: body,
-            json: true
+            json: true,
         };
         return this.callRequest(options);
     }
@@ -117,7 +119,7 @@ class HttpAbstractService {
             method: 'POST',
             headers: headers,
             json: true,
-            body: body
+            body: body,
         };
         return this.callRequest(options);
     }
@@ -127,7 +129,7 @@ class HttpAbstractService {
             method: 'PUT',
             headers: headers,
             body: body,
-            json: true
+            json: true,
         };
         return this.callRequest(options);
     }
@@ -136,7 +138,7 @@ class HttpAbstractService {
             url: new Url.URL(url).href,
             method: 'DELETE',
             headers: headers,
-            json: true
+            json: true,
         };
         return this.callRequest(options);
     }
@@ -145,7 +147,7 @@ class HttpAbstractService {
             url: new Url.URL(url).href,
             method: 'GET',
             headers: headers,
-            json: true
+            json: true,
         };
         return this.callRequest(options);
     }

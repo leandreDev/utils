@@ -61,11 +61,9 @@ class HttpServiceBase extends HttpAbstractService_1.HttpAbstractService {
                 const localCtxInt = new CtxInterpretor_1.CtxInterpretor(req.ctx);
                 localCtxInt.startPatern = '$ctx.';
                 const localConfig = localCtxInt.updateEnv(config, true);
-                // console.log(JSON.stringify(localConfig))
                 this.post(localConfig.body, localConfig.headers, localConfig.params.query)
                     .then((data) => {
                     req.ctx[localConfig.output] = data;
-                    // console.log(JSON.stringify(data)) ;
                     next();
                 })
                     .catch((err) => {

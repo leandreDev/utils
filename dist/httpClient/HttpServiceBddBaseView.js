@@ -69,6 +69,7 @@ class HttpServiceBddBaseView {
                     case '$pop':
                         // recupérer la class de l'objet
                         // pop.push({propName:op.value});
+                        // eslint-disable-next-line no-case-declarations
                         const className = this.entity.getClassNameOfProp(op.value);
                         if (className) {
                             const httpServ = this.collections.getHttpService(className);
@@ -121,8 +122,8 @@ class HttpServiceBddBaseView {
                 });
             }
             filterAgg = [...filterAgg, ...aggregate];
-            const CtxInt = new CtxInterpretor_1.CtxInterpretor(ctx);
-            CtxInt.startPatern = '$ctx.';
+            const ctxInt = new CtxInterpretor_1.CtxInterpretor(ctx);
+            ctxInt.startPatern = '$ctx.';
             // let agg:any[] = CtxInt.updateArrEnv(filterAgg , true) ;
             const agg = filterAgg.slice();
             if (this.debug) {
@@ -189,7 +190,7 @@ class HttpServiceBddBaseView {
                                 });
                             })
                                 .catch((err) => {
-                                console.log(err);
+                                console.error(err);
                                 return arr;
                             });
                         });
