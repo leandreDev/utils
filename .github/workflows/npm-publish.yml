@@ -1,0 +1,78 @@
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version : major, minor, patch"
+        required: true
+        options: ["major", "minor", "patch"]
+        default: "patch"
+name: Generate Version
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+      GITHUB_TOKEN: s{{secrets.LEANDRE_DEV_AUTH_TOKEN}}
+      NODE_VERSION: "v14.15.4"
+      VERSION_TYPE:
+      VERSION_TAG:
+    steps:
+      - name: Display runner information
+        run: |
+          echo "CI = ${CI}"
+          echo "GITHUB_ACTION = ${GITHUB_ACTION}"
+          echo "GITHUB_ACTIONS = ${GITHUB_ACTIONS}"
+          echo "GITHUB_ACTOR = ${GITHUB_ACTOR}"
+          echo "GITHUB_EVENT_NAME = ${GITHUB_EVENT_NAME}"
+          echo "GITHUB_EVENT_PATH = ${GITHUB_EVENT_PATH}"
+          echo "GITHUB_REF = ${GITHUB_REF}"
+          echo "GITHUB_REPOSITORY = ${GITHUB_REPOSITORY}"
+          echo "GITHUB_RUN_ID = ${GITHUB_RUN_ID}"
+          echo "GITHUB_RUN_NUMBER = ${GITHUB_RUN_NUMBER}"
+          echo "GITHUB_SHA = ${GITHUB_SHA}"
+          echo "GITHUB_WORKFLOW = ${GITHUB_WORKFLOW}"
+          echo "GITHUB_WORKSPACE = ${GITHUB_WORKSPACE}"
+          echo "HOME = ${HOME}"
+          echo "HOSTNAME = ${HOSTNAME}"
+          echo "USER = ${USER}"
+          echo "ID = $(id)"
+          git --version
+          git lfs version
+          echo "Amount of free and used memory:"
+          free -h
+      - run: |
+          echo "${{ github.event.inputs.version }}"
+          echo "::set-env name=VERSION_TYPE::${{ github.event.inputs.version }}"
+      - uses: actions/checkout@v2
+        with:
+          ref: dev
+      - name: Setup nodejs ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Npm CI installpackage from package-lock.json
+        run: |
+          git config --global url."https://${{ secrets.LEANDRE_DEV_AUTH_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
+          npm ci
+      - name: Npm run build
+        run: |
+          npm run build
+      - name: Commit new Generate files
+        run: |
+          git config  user.email "diegopatino@doprr.com"
+          git config  user.name "Diego Patino"
+          git add .
+          git commit -m "Build new Version" 
+          git push
+      - name: Generate new  version
+        run: |
+          npm  version ${{ env.VERSION_TYPE}} -m"New Version"
+      - name: Commit new tagged files
+        run: |
+          git config  user.email "diegopatino@doprr.com"
+          git config  user.name "Diego Patino"
+          git push --follow-tags
+      - name: Publish package to npm registry
+        run: |
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.LEANDRE_DEV_AUTH_TOKEN }}" > ~/.npmrc
+          npm publish

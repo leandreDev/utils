@@ -18,6 +18,9 @@
     "type": "git",
     "url": "git+https://github.com/leandreDev/utils.git"
   },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "author": "leandreDev",
   "license": "ISC",
   "bugs": {
