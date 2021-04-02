@@ -1,8 +1,8 @@
 let pkg_lock;
 let pkg;
 try {
-  pkg = require(__dirname + '/../../../package.json');
-  pkg_lock = require(__dirname + '/../../../package-lock.json');
+  pkg = require(__dirname + '/../../../../package.json');
+  pkg_lock = require(__dirname + '/../../../../package-lock.json');
 } catch (error) {console.error(error)}
 
 import * as express from 'express';
