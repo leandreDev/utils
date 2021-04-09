@@ -335,12 +335,21 @@ export function polonaisInverse(
           const language: string = stackArr.pop();
           const search: string = stackArr.pop();
           const obj: any = {};
-          obj.$text = {
-            $search: search,
-            $language: language,
-            $caseSensitive: caseSensitive,
-            $diacriticSensitive: diacriticSensitive,
-          };
+          if (language === 'all') {
+            obj.$text = {
+              $search: search,
+              $caseSensitive: caseSensitive,
+              $diacriticSensitive: diacriticSensitive,
+            };
+          } else {
+            obj.$text = {
+              $search: search,
+              $language: language,
+              $caseSensitive: caseSensitive,
+              $diacriticSensitive: diacriticSensitive,
+            };
+          }
+
           stackArr.push(obj);
         }
       },
