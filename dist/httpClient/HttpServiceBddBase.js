@@ -194,7 +194,9 @@ class HttpServiceBddBase {
                                                 objTarget[lastPropName + '_pop'] = [];
                                             }
                                             objTarget[lastPropName].forEach((element) => {
-                                                objTarget[lastPropName + '_pop'].push(objKeyCache[element]);
+                                                if (objKeyCache[element] !== null && objKeyCache[element] !== undefined) {
+                                                    objTarget[lastPropName + '_pop'].push(objKeyCache[element]);
+                                                }
                                             });
                                         }
                                         else {
