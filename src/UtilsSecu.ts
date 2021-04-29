@@ -2,7 +2,7 @@ import * as crypto from 'crypto';
 import * as URL from 'url';
 import * as assert from 'assert';
 import * as express from 'express';
-
+// rtest
 export class UtilsSecu {
   constructor(private currentApp: any) {
     assert(currentApp.conf.secretKey, 'secretKey is not spécified');
