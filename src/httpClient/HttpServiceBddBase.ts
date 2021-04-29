@@ -17,7 +17,7 @@ export class HttpServiceBddBase<T extends IBase>
     debug: boolean;
     _class?: string;
     entity: {
-      new (): Entity;
+      new(): Entity;
       cast(obj: any);
       check(target: any, isCompleteObj: boolean, path: string): string[];
       castQueryParam(path: string, value: any): any;
@@ -40,7 +40,7 @@ export class HttpServiceBddBase<T extends IBase>
     getHttpService(colName: string): HttpServiceBddBase<IBase>;
   };
   protected entity: {
-    new (): Entity;
+    new(): Entity;
     cast(obj: any);
     check(target: any, isCompleteObj: boolean, path: string): string[];
     castQueryParam(path: string, value: any): any;
@@ -242,9 +242,12 @@ export class HttpServiceBddBase<T extends IBase>
                                 objTarget[lastPropName + '_pop'] = [];
                               }
                               objTarget[lastPropName].forEach((element) => {
-                                objTarget[lastPropName + '_pop'].push(
-                                  objKeyCache[element]
-                                );
+                                if (objKeyCache[element] !== null && objKeyCache[element] !== undefined) {
+                                  objTarget[lastPropName + '_pop'].push(
+                                    objKeyCache[element]
+                                  );
+                                }
+
                               });
                             } else {
                               objTarget[lastPropName + '_pop'] =
