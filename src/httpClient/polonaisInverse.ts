@@ -455,6 +455,7 @@ export function polonaisInverse(
       },
     };
     const stackArr: any[] = [];
+    req = `${req}`;
     const queryArr: string[] = req
       .split('/')
       .filter(function (value, index, arr) {
