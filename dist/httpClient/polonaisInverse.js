@@ -489,6 +489,7 @@ function polonaisInverse(req = '*', entity) {
             },
         };
         const stackArr = [];
+        req = `${req}`;
         const queryArr = req
             .split('/')
             .filter(function (value, index, arr) {
