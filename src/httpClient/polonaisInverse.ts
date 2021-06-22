@@ -470,15 +470,15 @@ export function polonaisInverse(
       if (operators[word]) {
         operators[word](stackArr);
       } else {
-        if (
-          word.length === 24 &&
-          /^[a-h0-9]{24}$/i.test(word) &&
-          ObjectId.isValid(word)
-        ) {
-          stackArr.push(new ObjectId(word));
-        } else {
+        // if (
+        //   word.length === 24 &&
+        //   /^[a-h0-9]{24}$/i.test(word) &&
+        //   ObjectId.isValid(word)
+        // ) {
+        //   stackArr.push(new ObjectId(word));
+        // } else {
           stackArr.push(word);
-        }
+        // }
       }
     }
 
