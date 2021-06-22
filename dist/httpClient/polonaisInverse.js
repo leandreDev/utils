@@ -506,14 +506,15 @@ function polonaisInverse(req = '*', entity) {
                 operators[word](stackArr);
             }
             else {
-                if (word.length === 24 &&
-                    /^[a-h0-9]{24}$/i.test(word) &&
-                    mongodb_1.ObjectId.isValid(word)) {
-                    stackArr.push(new mongodb_1.ObjectId(word));
-                }
-                else {
-                    stackArr.push(word);
-                }
+                // if (
+                //   word.length === 24 &&
+                //   /^[a-h0-9]{24}$/i.test(word) &&
+                //   ObjectId.isValid(word)
+                // ) {
+                //   stackArr.push(new ObjectId(word));
+                // } else {
+                stackArr.push(word);
+                // }
             }
         }
         return stackArr;
