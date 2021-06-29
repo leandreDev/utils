@@ -129,7 +129,8 @@ export class UtilsSecu {
               'keyDate is obsolete : ' + currentDate + '>' + date + '+ 30000'
             );
           }
-          next('keyDate is obsolete');
+          throw new Error('keyDate is obsolete');
+          // next('keyDate is obsolete');
         } else {
           if (req.originalUrl && req.originalUrl.length > 1) {
             requrl = this.currentApp.conf.urlBase + req.originalUrl.substr(1);
@@ -156,11 +157,13 @@ export class UtilsSecu {
             if (this.currentApp.conf.debug) {
               console.error('key dont match uri : ' + url, date, key, newKey);
             }
-            next('key dont match uri : ' + requrl);
+            throw new Error('key dont match uri : ' + requrl)
+            // next('key dont match uri : ' + requrl);
           }
         }
       } else {
-        next('no key');
+        throw new Error('no key');
+        // next('no key');
       }
     };
   }
@@ -172,7 +175,9 @@ export class UtilsSecu {
       if (req.ctx && req.ctx.user) {
         next();
       } else {
-        next('user not connected');
+        throw new Error('user not connected');
+
+        // next('user not connected');
       }
     };
   }
