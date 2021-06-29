@@ -3,7 +3,7 @@ let pkg;
 try {
   pkg = require(__dirname + '/../../../../package.json');
   pkg_lock = require(__dirname + '/../../../../package-lock.json');
-} catch (error) {console.error(error)}
+} catch (error) { console.error(error) }
 
 import * as express from 'express';
 import * as request from 'request-promise-native';
@@ -161,8 +161,8 @@ export class ServerBase {
         .catch((err) => {
           const val = fs.readJSONSync(
             './confs/dep/' +
-              this.currentApp.conf['licence_well-known'].replace(/\//gi, '_') +
-              '.json'
+            this.currentApp.conf['licence_well-known'].replace(/\//gi, '_') +
+            '.json'
           );
           return val;
         })
@@ -170,8 +170,8 @@ export class ServerBase {
           fs.ensureDirSync('./confs/dep/');
           fs.writeJSONSync(
             './confs/dep/' +
-              this.currentApp.conf['licence_well-known'].replace(/\//gi, '_') +
-              '.json',
+            this.currentApp.conf['licence_well-known'].replace(/\//gi, '_') +
+            '.json',
             conf
           );
           const opt2 = {
@@ -291,10 +291,12 @@ export class ServerBase {
             const myDate: number = Date.now() / 1000;
             if (payload.exp < myDate) {
               console.error('token is expired', req.ctx.user);
-              next('token is expired');
+              throw new Error('token is expired');
+              // next('token is expired');
             } else if (payload.nbf > myDate) {
               console.error('nbf token is not valid', req.ctx.user);
-              next('nbf token is not valid');
+              throw new Error('nbf token is not valid');
+              // next('nbf token is not valid');
             } else {
               req.ctx.user = payload;
               req.ctx.JWT = token;
@@ -302,7 +304,8 @@ export class ServerBase {
             }
           })
           .catch(function (err) {
-            next(err);
+            throw err;
+            // next(err);
           });
       } else {
         next();
@@ -363,7 +366,8 @@ export class ServerBase {
                 req.ctx.roles
               );
             }
-            next('unautorized');
+            throw new Error('unautorized');
+            // next('unautorized');
           }
         } else {
           if (this.currentApp.conf.debug) {
@@ -374,7 +378,8 @@ export class ServerBase {
               req.ctx.roles
             );
           }
-          next('unautorized');
+          throw new Error('unautorized');
+          // next('unautorized');
         }
       }
     };
