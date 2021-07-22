@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HttpServiceBddAdminBase = void 0;
-const HttpResult_1 = require("./HttpResult");
-const CtxInterpretor_1 = require("../CtxInterpretor");
 const mongodb_1 = require("mongodb");
+const CtxInterpretor_1 = require("../CtxInterpretor");
+const HttpResult_1 = require("./HttpResult");
 const polonaisInverse_1 = require("./polonaisInverse");
 class HttpServiceBddAdminBase {
     constructor(conf) {
