@@ -142,9 +142,9 @@ class HttpServiceBddBase {
                     meta.count = count;
                     if (meta.sort) {
                         return cursor
+                            .sort(meta.sort)
                             .skip(meta.offset)
                             .limit(meta.pageSize)
-                            .sort(meta.sort)
                             .toArray();
                     }
                     else {

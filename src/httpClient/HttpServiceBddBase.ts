@@ -1,13 +1,14 @@
-import { IHttpResult } from './IHttpResult';
-import { HttpResult } from './HttpResult';
-import { IMeta } from './IMeta';
-import { IBase } from '../lib/IBase';
+import { Collection, Cursor, Db, ObjectId } from 'mongodb';
+
 import { CtxInterpretor } from '../CtxInterpretor';
-import { Db, Collection, ObjectId, Cursor } from 'mongodb';
 import { Entity } from './Entity';
+import { HttpResult } from './HttpResult';
+import { IBase } from '../lib/IBase';
+import { IHttpResult } from './IHttpResult';
 import { IHttpServiceBase } from './IHttpServiceBase';
-import { polonaisInverse } from './polonaisInverse';
+import { IMeta } from './IMeta';
 import { isArray } from 'lodash';
+import { polonaisInverse } from './polonaisInverse';
 
 export class HttpServiceBddBase<T extends IBase>
   implements IHttpServiceBase<T> {
@@ -185,9 +186,9 @@ export class HttpServiceBddBase<T extends IBase>
               meta.count = count;
               if (meta.sort) {
                 return cursor
+                  .sort(meta.sort)
                   .skip(meta.offset)
                   .limit(meta.pageSize)
-                  .sort(meta.sort)
                   .toArray();
               } else {
                 return cursor.skip(meta.offset).limit(meta.pageSize).toArray();

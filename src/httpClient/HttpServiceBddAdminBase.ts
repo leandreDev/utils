@@ -1,11 +1,12 @@
-import { IHttpResult } from './IHttpResult';
-import { HttpResult } from './HttpResult';
-import { IMeta } from './IMeta';
-import { IBase } from '../lib/IBase';
+import { Collection, Cursor, Db, ObjectId } from 'mongodb';
+
 import { CtxInterpretor } from '../CtxInterpretor';
-import { Db, Collection, ObjectId, Cursor } from 'mongodb';
 import { Entity } from './Entity';
+import { HttpResult } from './HttpResult';
+import { IBase } from '../lib/IBase';
+import { IHttpResult } from './IHttpResult';
 import { IHttpServiceAdminBase } from './IHttpServiceAdminBase';
+import { IMeta } from './IMeta';
 import { polonaisInverse } from './polonaisInverse';
 
 export class HttpServiceBddAdminBase<T extends IBase>
@@ -290,9 +291,9 @@ export class HttpServiceBddAdminBase<T extends IBase>
               meta.count = count;
               if (meta.sort) {
                 return cursor
+                  .sort(meta.sort)
                   .skip(meta.offset)
                   .limit(meta.pageSize)
-                  .sort(meta.sort)
                   .toArray();
               } else {
                 return cursor.skip(meta.offset).limit(meta.pageSize).toArray();
@@ -327,9 +328,9 @@ export class HttpServiceBddAdminBase<T extends IBase>
           }
           if (meta.sort) {
             return cursor
+              .sort(meta.sort)
               .skip(meta.offset)
               .limit(meta.pageSize)
-              .sort(meta.sort)
               .toArray();
           } else {
             return cursor.skip(meta.offset).limit(meta.pageSize).toArray();
