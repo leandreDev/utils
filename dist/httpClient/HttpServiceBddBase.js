@@ -6,6 +6,7 @@ const CtxInterpretor_1 = require("../CtxInterpretor");
 const HttpResult_1 = require("./HttpResult");
 const lodash_1 = require("lodash");
 const polonaisInverse_1 = require("./polonaisInverse");
+// comment
 class HttpServiceBddBase {
     constructor(conf) {
         this.globalCtxInt = new CtxInterpretor_1.CtxInterpretor(process.env);
