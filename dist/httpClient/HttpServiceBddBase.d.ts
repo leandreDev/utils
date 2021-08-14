@@ -37,6 +37,7 @@ export declare class HttpServiceBddBase<T extends IBase> implements IHttpService
     protected url: string;
     protected globalCtxInt: CtxInterpretor;
     delete(id: string, headers?: any): Promise<IHttpResult<T>>;
+    protected stackArrToMongoQuery(stackArr: any[]): any;
     get(query?: string, headers?: any): Promise<IHttpResult<T>>;
     patch(body: any, headers?: any, query?: string): Promise<IHttpResult<T>>;
     post(body: T, headers?: any, query?: string): Promise<IHttpResult<T>>;
