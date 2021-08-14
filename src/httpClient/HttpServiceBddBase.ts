@@ -10,6 +10,7 @@ import { IMeta } from './IMeta';
 import { isArray } from 'lodash';
 import { polonaisInverse } from './polonaisInverse';
 
+// comment
 export class HttpServiceBddBase<T extends IBase>
   implements IHttpServiceBase<T> {
   constructor(conf: {
