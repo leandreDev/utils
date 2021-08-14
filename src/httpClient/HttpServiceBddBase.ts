@@ -86,96 +86,110 @@ export class HttpServiceBddBase<T extends IBase>
       });
   }
 
+  protected stackArrToMongoQuery(stackArr: any[]): any {
+    let q: any;
+    let meta: IMeta;
+    if (stackArr.length == 0) {
+      q = {};
+    } else if (stackArr.length > 0) {
+      q = stackArr.shift();
+      if (typeof q === 'string') {
+        if (q == '*') {
+          q = {};
+        } else {
+          q = { _id: new ObjectId(q) };
+        }
+      } else if (q instanceof ObjectId) {
+        q = { _id: q };
+      }
+    }
+    // averifier dans le cas d'un $and ou $or
+    if (this._class) {
+      if (q.$and) {
+        const arr: any[] = q.$and;
+        arr.unshift({ _class: this._class });
+      } else if (q.$or) {
+        q = {
+          $and: [{ _class: this._class }, q],
+        };
+      } else {
+        q._class = this._class;
+      }
+    }
+    // ajouter les metas de pagination
+    if (this.debug) {
+      meta = {
+        mongoquery: q,
+      };
+    } else {
+      meta = {};
+    }
+    meta.offset = 0;
+    meta.pageSize = 1000;
+    const pop: {
+      propName: string;
+      httpService: HttpServiceBddBase<IBase>;
+      className: string;
+    }[] = [];
+    while (stackArr.length > 0) {
+      // de nouvelle operation
+      const op: any = stackArr.shift();
+      switch (op.name) {
+        case '$pop':
+          // recupérer la class de l'objet
+          // pop.push({propName:op.value});
+          // eslint-disable-next-line no-case-declarations
+          const className: string = this.entity.getClassNameOfProp(
+            op.value
+          );
+          if (className) {
+            const httpServ: HttpServiceBddBase<IBase> = this.collections.getHttpService(
+              className
+            );
+            if (httpServ) {
+              pop.push({
+                propName: op.value,
+                httpService: httpServ,
+                className: className,
+              });
+            }
+          }
+          break;
+        case '$limit':
+          meta.pageSize = op.value;
+
+          break;
+        case '$skip':
+          meta.offset = op.value;
+
+          break;
+        case '$sort':
+          meta.sort = op.value;
+
+          break;
+        case '$count':
+          break;
+        default:
+          // code...
+          break;
+      }
+    }
+    return { q: q, meta: meta, pop: pop };
+  }
   public get(query = '*', headers: any = {}): Promise<IHttpResult<T>> {
     let meta: IMeta;
     return polonaisInverse(query, this.entity)
       .then((stackArr) => {
-        let q: any;
-        if (stackArr.length == 0) {
-          q = {};
-        } else if (stackArr.length > 0) {
-          q = stackArr.shift();
-          if (typeof q === 'string') {
-            if (q == '*') {
-              q = {};
-            } else {
-              q = { _id: new ObjectId(q) };
-            }
-          } else if (q instanceof ObjectId) {
-            q = { _id: q };
-          }
-        }
-        // averifier dans le cas d'un $and ou $or
-        if (this._class) {
-          if (q.$and) {
-            const arr: any[] = q.$and;
-            arr.unshift({ _class: this._class });
-          } else if (q.$or) {
-            q = {
-              $and: [{ _class: this._class }, q],
-            };
-          } else {
-            q._class = this._class;
-          }
-        }
-        // ajouter les metas de pagination
-        if (this.debug) {
-          meta = {
-            mongoquery: q,
-          };
-        } else {
-          meta = {};
-        }
-        meta.offset = 0;
-        meta.pageSize = 1000;
+        return this.stackArrToMongoQuery(stackArr)
+      })
+      .then((queryMongo) => {
+        const q = queryMongo.q;
+        meta = queryMongo.meta;
         const pop: {
           propName: string;
           httpService: HttpServiceBddBase<IBase>;
           className: string;
-        }[] = [];
-        while (stackArr.length > 0) {
-          // de nouvelle operation
-          const op: any = stackArr.shift();
-          switch (op.name) {
-            case '$pop':
-              // recupérer la class de l'objet
-              // pop.push({propName:op.value});
-              // eslint-disable-next-line no-case-declarations
-              const className: string = this.entity.getClassNameOfProp(
-                op.value
-              );
-              if (className) {
-                const httpServ: HttpServiceBddBase<IBase> = this.collections.getHttpService(
-                  className
-                );
-                if (httpServ) {
-                  pop.push({
-                    propName: op.value,
-                    httpService: httpServ,
-                    className: className,
-                  });
-                }
-              }
-              break;
-            case '$limit':
-              meta.pageSize = op.value;
-
-              break;
-            case '$skip':
-              meta.offset = op.value;
-
-              break;
-            case '$sort':
-              meta.sort = op.value;
-
-              break;
-            case '$count':
-              break;
-            default:
-              // code...
-              break;
-          }
-        }
+        }[] = queryMongo.pop;
         return this.collection.then((collection) => {
           const cursor: Cursor = collection.find(q, {
             projection: headers.$projection,
@@ -294,8 +308,21 @@ export class HttpServiceBddBase<T extends IBase>
     headers: any = {},
     query = ''
   ): Promise<IHttpResult<T>> {
-    return Promise.resolve(null)
-      .then(() => {
+    let q;
+    let meta;
+    let pop: {
+      propName: string;
+      httpService: HttpServiceBddBase<IBase>;
+      className: string;
+    }[]
+    return polonaisInverse(query, this.entity)
+      .then((stackArr) => {
+        return this.stackArrToMongoQuery(stackArr)
+      })
+      .then((queryMongo) => {
+        q = queryMongo.q;
+        meta = queryMongo.meta;
+        pop = queryMongo.pop;
         this.entity.cast(body);
         const err: string[] = this.entity.check(body, false, '');
         if (err && err.length > 0) {
@@ -340,9 +367,9 @@ export class HttpServiceBddBase<T extends IBase>
             delete body[key];
           }
         });
-
+        q._id = _id;
         return collection
-          .findOneAndUpdate({ _id: _id }, body, { returnOriginal: false })
+          .findOneAndUpdate(q, body, { returnOriginal: false })
           .then((objResult) => {
             if (objResult.ok) {
               return new HttpResult(objResult.value, this.debug);
