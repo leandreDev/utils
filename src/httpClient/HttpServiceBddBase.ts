@@ -341,7 +341,7 @@ export class HttpServiceBddBase<T extends IBase>
             // add $push $pull $pop $pullAll
             if (key === '$addToSet') {
               Object.keys(body.$addToSet).forEach((subkey: string) => {
-                if (subkey === '$each') {
+                if (body.$addToSet[subkey].$each) {
                   body.$addToSet[subkey].$each = body.$addToSet[
                     subkey
                   ].$each.map((val) => {
