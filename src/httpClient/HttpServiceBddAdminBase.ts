@@ -17,7 +17,7 @@ export class HttpServiceBddAdminBase<T extends IBase>
     debug: boolean;
     _class?: string;
     entity: {
-      new (): Entity;
+      new(): Entity;
       cast(obj: any);
       check(target: any, isCompleteObj: boolean, path: string): string[];
       castQueryParam(path: string, value: any): any;
@@ -34,7 +34,7 @@ export class HttpServiceBddAdminBase<T extends IBase>
   }
 
   protected entity: {
-    new (): Entity;
+    new(): Entity;
     cast(obj: any);
     check(target: any, isCompleteObj: boolean, path: string): string[];
     castQueryParam(path: string, value: any): any;
@@ -170,7 +170,7 @@ export class HttpServiceBddAdminBase<T extends IBase>
           if (key.charAt(0) === '$') {
             if (key === '$addToSet') {
               Object.keys(body.$addToSet).forEach((subkey: string) => {
-                if (subkey === '$each') {
+                if (body.$addToSet[subkey].$each) {
                   body.$addToSet[subkey].$each = body.$addToSet[
                     subkey
                   ].$each.map((val) => {
