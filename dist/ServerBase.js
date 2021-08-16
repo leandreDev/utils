@@ -260,13 +260,13 @@ class ServerBase {
                     const myDate = Date.now() / 1000;
                     if (payload.exp < myDate) {
                         console.error('token is expired', req.ctx.user);
-                        throw new Error('token is expired');
-                        // next('token is expired');
+                        // throw new Error('token is expired');
+                        next(new Error('token is expired'));
                     }
                     else if (payload.nbf > myDate) {
                         console.error('nbf token is not valid', req.ctx.user);
-                        throw new Error('nbf token is not valid');
-                        // next('nbf token is not valid');
+                        // throw new Error('nbf token is not valid');
+                        next(new Error('nbf token is not valid'));
                     }
                     else {
                         req.ctx.user = payload;
@@ -327,16 +327,16 @@ class ServerBase {
                         if (this.currentApp.conf.debug) {
                             console.info('unautorized ', confSecu, access, path, req.ctx.roles);
                         }
-                        throw new Error('unautorized');
-                        // next('unautorized');
+                        // throw new Error('unautorized');
+                        next(new Error('unautorized'));
                     }
                 }
                 else {
                     if (this.currentApp.conf.debug) {
                         console.info('unautorized, no conf match', confSecu, path, req.ctx.roles);
                     }
-                    throw new Error('unautorized');
-                    // next('unautorized');
+                    // throw new Error('unautorized');
+                    next(new Error('unautorized'));
                 }
             }
         };

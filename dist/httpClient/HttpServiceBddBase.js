@@ -278,7 +278,7 @@ class HttpServiceBddBase {
                     // add $push $pull $pop $pullAll
                     if (key === '$addToSet') {
                         Object.keys(body.$addToSet).forEach((subkey) => {
-                            if (subkey === '$each') {
+                            if (body.$addToSet[subkey].$each) {
                                 body.$addToSet[subkey].$each = body.$addToSet[subkey].$each.map((val) => {
                                     return this.entity.castQueryParam(subkey.replace(/\.\$(\[[a-zA-Z_0-9]*\])*./gi, ''), val);
                                 });
