@@ -53,27 +53,41 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
       - name: Npm CI installpackage from package-lock.json
         run: |
-          git config --global url."https://${{ secrets.LEANDRE_DEV_AUTH_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.LEANDRE_DEV_AUTH_TOKEN }}" > ~/.npmrc
           npm ci
       - name: Npm run build
         run: |
           npm run build
-      - name: Commit new Generate files
-        run: |
-          git config  user.email "diegopatino@doprr.com"
-          git config  user.name "Diego Patino"
-          git add .
-          git commit -m "Build new Version" 
-          git push
       - name: Generate new version
         run: |
-          npm  version ${{ env.VERSION_TYPE}} -m"New Version"
-      - name: Commit new tagged files
+          npm  version --no-commit-hooks ${{ env.VERSION_TYPE}}
+      - name: R3 node-lib, npm Pack
         run: |
-          git config  user.email "diegopatino@doprr.com"
-          git config  user.name "Diego Patino"
-          git push --follow-tags
-      - name: Publish package to npm registry
+
+          npm pack
+      - name: R3 node-lib, Publish package to npm registry
         run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.LEANDRE_DEV_AUTH_TOKEN }}" > ~/.npmrc
+
           npm publish
+       ### SECTION EXTRACT VERSION
+      - name: Get new Version
+        id: extract_version
+        uses: martinbeentjes/npm-get-version-action@master
+        with:
+          path: .
+      - name: Print the new generate version
+        run: |
+          echo "VERSION_TAG=${{steps.extract_version.outputs.current-version }}" >> $GITHUB_ENV
+      ### SECTION GITHUB COMMIT
+      - name: Commit and push new Version ${{ env.VERSION_TAG }}
+        run: |
+          git config --global user.email "${{env.GH_USERNAME}}@users.noreply.github.com"
+          git config --global user.name "${{env.GH_USERNAME}}"
+          git add .
+          git commit -m "Version ${{ env.VERSION_TYPE}} : ${{ env.VERSION_TAG }}"
+          git tag ${{ env.VERSION_TAG }}
+          git push origin --tags
+          git push
+        env:
+          GH_USERNAME: ${{ github.actor }}
+
