@@ -61,7 +61,7 @@ jobs:
           npm run build
       - name: Generate new version
         run: |
-          npm  version --no-commit-hooks ${{ env.VERSION_TYPE}}
+          npm  version --no-git-tag-version ${{ env.VERSION_TYPE}}
       - name:  npm Pack
         run: |
 
