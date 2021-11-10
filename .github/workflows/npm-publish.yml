@@ -13,6 +13,7 @@ jobs:
     name: Generate new Version @leandeerdev/utils
     env:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+      NODE_AUTH_TOKEN: ${{secrets.LEANDRE_DEV_AUTH_TOKEN}}
       GITHUB_TOKEN: s{{secrets.LEANDRE_DEV_AUTH_TOKEN}}
       NODE_VERSION: "v14.15.4"
       VERSION_TYPE:
