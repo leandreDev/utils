@@ -189,9 +189,13 @@ class HttpServiceBddBase {
                                     //   }
                                     // }
                                 });
+                                let popProjection = {};
+                                if (headers.$projection[popObj.propName]) {
+                                    popProjection = { projection: headers.$projection[popObj.propName] };
+                                }
                                 return popObj.httpService.collection
                                     .then((extCol) => {
-                                    return extCol.find({ _id: { $in: ids } }).toArray();
+                                    return extCol.find({ _id: { $in: ids } }, popProjection).toArray();
                                 })
                                     .then((popArr) => {
                                     const objKeyCache = {};
