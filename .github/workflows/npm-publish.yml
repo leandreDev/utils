@@ -68,7 +68,7 @@ jobs:
           npm pack
       - name: Publish package to npm registry
         run: |
-
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.LEANDRE_DEV_AUTH_TOKEN }}" > ~/.npmrc
           npm publish
        ### SECTION EXTRACT VERSION
       - name: Get new Version
