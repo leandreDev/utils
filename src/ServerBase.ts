@@ -5,17 +5,18 @@ try {
   pkg_lock = require(__dirname + '/../../../../package-lock.json');
 } catch (error) { console.error(error) }
 
-import * as express from 'express';
-import * as request from 'request-promise-native';
-import { ConfLoader } from './ConfLoader';
-import { UtilsSecu } from './UtilsSecu';
-import * as jose from 'node-jose';
-import * as _ from 'lodash';
 import * as Util from 'util';
-import * as http from 'http';
+import * as _ from 'lodash';
+import * as express from 'express';
 import * as fs from 'fs-extra';
-import { RequestContext } from './RequestContext';
+import * as http from 'http';
+import * as jose from 'node-jose';
+import * as request from 'request-promise-native';
+
+import { ConfLoader } from './ConfLoader';
 import { IApplicationConfiguration } from './IApplicationConfiguration';
+import { RequestContext } from './RequestContext';
+import { UtilsSecu } from './UtilsSecu';
 
 export class ServerBase {
   public currentApp: IApplicationConfiguration;
@@ -42,7 +43,7 @@ export class ServerBase {
 
   protected get parentProcessHandler() {
     return (msg) => {
-      console.info('parentMessage ', msg);
+      console.info('Parent Message ', msg);
       switch (msg) {
         case 'reloadConf':
           this.reloadConfPromise()

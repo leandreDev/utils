@@ -1,8 +1,8 @@
 /// <reference types="node" />
 import * as express from 'express';
-import { UtilsSecu } from './UtilsSecu';
 import * as http from 'http';
 import { IApplicationConfiguration } from './IApplicationConfiguration';
+import { UtilsSecu } from './UtilsSecu';
 export declare class ServerBase {
     currentApp: IApplicationConfiguration;
     app: any;

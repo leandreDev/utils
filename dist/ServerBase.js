@@ -10,15 +10,15 @@ try {
 catch (error) {
     console.error(error);
 }
+const Util = require("util");
+const _ = require("lodash");
 const express = require("express");
+const fs = require("fs-extra");
+const jose = require("node-jose");
 const request = require("request-promise-native");
 const ConfLoader_1 = require("./ConfLoader");
-const UtilsSecu_1 = require("./UtilsSecu");
-const jose = require("node-jose");
-const _ = require("lodash");
-const Util = require("util");
-const fs = require("fs-extra");
 const RequestContext_1 = require("./RequestContext");
+const UtilsSecu_1 = require("./UtilsSecu");
 class ServerBase {
     constructor() {
         this.headers = [
@@ -48,7 +48,7 @@ class ServerBase {
     }
     get parentProcessHandler() {
         return (msg) => {
-            console.info('parentMessage ', msg);
+            console.info('Parent Message ', msg);
             switch (msg) {
                 case 'reloadConf':
                     this.reloadConfPromise()
