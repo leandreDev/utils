@@ -190,7 +190,7 @@ class HttpServiceBddBase {
                                     // }
                                 });
                                 let popProjection = {};
-                                if (headers.$projection[popObj.propName]) {
+                                if (headers && headers.$projection && headers.$projection[popObj.propName]) {
                                     popProjection = { projection: headers.$projection[popObj.propName] };
                                 }
                                 return popObj.httpService.collection
