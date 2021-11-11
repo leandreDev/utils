@@ -13,6 +13,7 @@ jobs:
     name: Generate new Version @leandeerdev/utils
     env:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
+      NODE_AUTH_TOKEN: ${{secrets.LEANDRE_DEV_AUTH_TOKEN}}
       GITHUB_TOKEN: s{{secrets.LEANDRE_DEV_AUTH_TOKEN}}
       NODE_VERSION: "v14.15.4"
       VERSION_TYPE:
@@ -32,7 +33,7 @@ jobs:
           echo "GITHUB_RUN_NUMBER = ${GITHUB_RUN_NUMBER}"
           echo "GITHUB_SHA = ${GITHUB_SHA}"
           echo "GITHUB_WORKFLOW = ${GITHUB_WORKFLOW}"
-          echo "GITHUB_WORKSPACE = ${GITHUB_WORKSPACE}"
+          echo "GITHUB_WORKSPACE = ${GITHUB_WORKSPACE}"  >> $GITHUB_ENV
           echo "HOME = ${HOME}"
           echo "HOSTNAME = ${HOSTNAME}"
           echo "USER = ${USER}"
@@ -46,34 +47,49 @@ jobs:
           echo "::set-env name=VERSION_TYPE::${{ github.event.inputs.version }}"
       - uses: actions/checkout@v2
         with:
-          ref: dev
+          fetch-depth: 0
       - name: Setup nodejs ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://npm.pkg.github.com'
       - name: Npm CI installpackage from package-lock.json
         run: |
-          git config --global url."https://${{ secrets.LEANDRE_DEV_AUTH_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.LEANDRE_DEV_AUTH_TOKEN }}" > ~/.npmrc
           npm ci
       - name: Npm run build
         run: |
           npm run build
-      - name: Commit new Generate files
-        run: |
-          git config  user.email "diegopatino@doprr.com"
-          git config  user.name "Diego Patino"
-          git add .
-          git commit -m "Build new Version" 
-          git push
       - name: Generate new version
         run: |
-          npm  version ${{ env.VERSION_TYPE}} -m"New Version"
-      - name: Commit new tagged files
+          npm  version --no-git-tag-version ${{ env.VERSION_TYPE}}
+      - name:  npm Pack
         run: |
-          git config  user.email "diegopatino@doprr.com"
-          git config  user.name "Diego Patino"
-          git push --follow-tags
+
+          npm pack
       - name: Publish package to npm registry
         run: |
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.LEANDRE_DEV_AUTH_TOKEN }}" > ~/.npmrc
           npm publish
+       ### SECTION EXTRACT VERSION
+      - name: Get new Version
+        id: extract_version
+        uses: martinbeentjes/npm-get-version-action@master
+        with:
+          path: .
+      - name: Print the new generate version
+        run: |
+          echo "VERSION_TAG=${{steps.extract_version.outputs.current-version }}" >> $GITHUB_ENV
+      ### SECTION GITHUB COMMIT
+      - name: Commit and push new Version ${{ env.VERSION_TAG }}
+        run: |
+          git config --global user.email "${{env.GH_USERNAME}}@users.noreply.github.com"
+          git config --global user.name "${{env.GH_USERNAME}}"
+          git add .
+          git commit -m "Version ${{ env.VERSION_TYPE}} : ${{ env.VERSION_TAG }}"
+          git tag ${{ env.VERSION_TAG }}
+          git push origin --tags
+          git push
+        env:
+          GH_USERNAME: ${{ github.actor }}
+
