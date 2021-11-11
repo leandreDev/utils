@@ -191,10 +191,19 @@ export class HttpServiceBddBase<T extends IBase>
           httpService: HttpServiceBddBase<IBase>;
           className: string;
         }[] = queryMongo.pop;
+        const proj = {
+          projection: {
+            ...headers.$projection
+          }
+        };
+
+        Object.keys(proj.projection).forEach((prop) => {
+          if (prop.indexOf('_pop') > -1) {
+            delete proj.projection[prop];
+          }
+        })
         return this.collection.then((collection) => {
-          const cursor: Cursor = collection.find(q, {
-            projection: headers.$projection,
-          });
+          const cursor: Cursor = collection.find(q, proj);
           return cursor
             .count(false)
             .then((count) => {
