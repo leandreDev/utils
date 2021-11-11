@@ -197,10 +197,8 @@ export class HttpServiceBddBase<T extends IBase>
           }
         };
 
-        Object.keys(proj.projection).forEach((prop) => {
-          if (prop.indexOf('_pop') > -1) {
-            delete proj.projection[prop];
-          }
+        pop.forEach(popObj => {
+          delete proj.projection[popObj.propName];
         })
         return this.collection.then((collection) => {
           const cursor: Cursor = collection.find(q, proj);
