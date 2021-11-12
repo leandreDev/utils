@@ -196,10 +196,12 @@ export class HttpServiceBddBase<T extends IBase>
             ...headers.$projection
           }
         };
-
-        pop.forEach(popObj => {
-          delete proj.projection[popObj.propName];
+        Object.keys(proj.projection).forEach(prop => {
+          if (prop.endsWith('_pop')) {
+            delete proj.projection[prop];
+          }
         })
+
         return this.collection.then((collection) => {
           const cursor: Cursor = collection.find(q, proj);
           return cursor
@@ -249,8 +251,10 @@ export class HttpServiceBddBase<T extends IBase>
                         // }
                       });
                       let popProjection: any = {};
-                      if (headers && headers.$projection && headers.$projection[popObj.propName]) {
-                        popProjection = { projection: headers.$projection[popObj.propName] };
+                      const keyName: string = popObj.propName + '_pop';
+                      if (headers && headers.$projection && headers.$projection[keyName]) {
+                        const keyValue: any = headers.$projection[keyName];
+                        popProjection = { projection: keyValue };
                       }
                       return popObj.httpService.collection
                         .then((extCol) => {
