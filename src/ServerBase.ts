@@ -63,7 +63,7 @@ export class ServerBase {
   }
 
   protected startHttpServer() {
-    this.server = this.app.listen(this.currentApp.conf.port, () => {
+    this.server = this.app.listen(this.currentApp.conf.port, this.currentApp.conf.bindIp, () => {
       console.info('Server listen on port ' + this.currentApp.conf.port);
     });
     this.currentApp.server = this.server;
