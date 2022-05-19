@@ -1,14 +1,15 @@
-import { IHttpResult } from './IHttpResult';
-import { HttpResult } from './HttpResult';
-import { IMeta } from './IMeta';
-import { IBase } from '../lib/IBase';
+import { AggregationCursor, Collection, Cursor, Db, ObjectId } from 'mongodb';
+
 import { CtxInterpretor } from '../CtxInterpretor';
-import { Db, Collection, ObjectId, Cursor, AggregationCursor } from 'mongodb';
 import { Entity } from './Entity';
-import { IHttpServiceBaseView } from './IHttpServiceBaseView';
+import { HttpResult } from './HttpResult';
 import { HttpServiceBddBase } from './HttpServiceBddBase';
-import { polonaisInverse } from './polonaisInverse';
+import { IBase } from '../lib/IBase';
+import { IHttpResult } from './IHttpResult';
+import { IHttpServiceBaseView } from './IHttpServiceBaseView';
+import { IMeta } from './IMeta';
 import { isArray } from 'lodash';
+import { polonaisInverse } from './polonaisInverse';
 
 export class HttpServiceBddBaseView<T extends IBase>
   implements IHttpServiceBaseView<T> {
@@ -18,7 +19,14 @@ export class HttpServiceBddBaseView<T extends IBase>
     debug: boolean;
     _class?: string;
     entity: {
-      new (): Entity;
+      new(): Entity;
+      cast(obj: any);
+      check(target: any, isCompleteObj: boolean, path: string): string[];
+      castQueryParam(path: string, value: any): any;
+      getClassNameOfProp(path: string): string;
+    };
+    entityOut: {
+      new(): Entity;
       cast(obj: any);
       check(target: any, isCompleteObj: boolean, path: string): string[];
       castQueryParam(path: string, value: any): any;
@@ -34,6 +42,7 @@ export class HttpServiceBddBaseView<T extends IBase>
     this.debug = conf.debug;
     this._class = conf._class;
     this.entity = conf.entity;
+    this.entityOut = conf.entityOut;
     this.collections = conf.collections;
   }
 
@@ -41,7 +50,14 @@ export class HttpServiceBddBaseView<T extends IBase>
     getHttpService(colName: string): HttpServiceBddBase<IBase>;
   };
   protected entity: {
-    new (): Entity;
+    new(): Entity;
+    cast(obj: any);
+    check(target: any, isCompleteObj: boolean, path: string): string[];
+    castQueryParam(path: string, value: any): any;
+    getClassNameOfProp(path: string): string;
+  };
+  protected entityOut: {
+    new(): Entity;
     cast(obj: any);
     check(target: any, isCompleteObj: boolean, path: string): string[];
     castQueryParam(path: string, value: any): any;
@@ -110,7 +126,7 @@ export class HttpServiceBddBaseView<T extends IBase>
               // recupérer la class de l'objet
               // pop.push({propName:op.value});
               // eslint-disable-next-line no-case-declarations
-              const className: string = this.entity.getClassNameOfProp(op.value);
+              const className: string = this.entityOut.getClassNameOfProp(op.value);
               if (className) {
                 const httpServ: HttpServiceBddBase<IBase> = this.collections.getHttpService(
                   className
