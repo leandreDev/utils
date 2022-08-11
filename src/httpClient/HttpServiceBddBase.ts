@@ -360,14 +360,32 @@ export class HttpServiceBddBase<T extends IBase>
                     subkey
                   ].$each.map((val) => {
                     return this.entity.castQueryParam(
-                      subkey.replace(/\.\$(\[[a-zA-Z_0-9]*\])*./gi, ''),
+                      subkey.replace(/\.\$\./gi, '.').replace(/\.\$(\[[a-zA-Z_0-9]*\])*./gi, ''),
                       val
                     );
                   });
                 } else {
                   body.$addToSet[subkey] = this.entity.castQueryParam(
-                    subkey.replace(/\.\$(\[[a-zA-Z_0-9]*\])*./gi, ''),
+                    subkey.replace(/\.\$\./gi, '.').replace(/\.\$(\[[a-zA-Z_0-9]*\])*./gi, ''),
                     body.$addToSet[subkey]
+                  );
+                }
+              });
+            } else if (key === '$push') {
+              Object.keys(body.$push).forEach((subkey: string) => {
+                if (body.$push[subkey].$each) {
+                  body.$push[subkey].$each = body.$push[
+                    subkey
+                  ].$each.map((val) => {
+                    return this.entity.castQueryParam(
+                      subkey.replace(/\.\$\./gi, '.').replace(/\.\$(\[[a-zA-Z_0-9]*\])*./gi, ''),
+                      val
+                    );
+                  });
+                } else {
+                  body.$push[subkey] = this.entity.castQueryParam(
+                    subkey.replace(/\.\$\./gi, '.').replace(/\.\$(\[[a-zA-Z_0-9]*\])*./gi, ''),
+                    body.$push[subkey]
                   );
                 }
               });
