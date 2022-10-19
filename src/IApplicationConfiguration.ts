@@ -10,6 +10,5 @@ export interface IApplicationConfiguration {
   toErrRes?: { (err: any, code?: number): any };
   toJsonRes?: { (objs: any, meta?: any): any };
   secu?: UtilsSecu;
-
   conf?: any;
 }
