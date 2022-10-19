@@ -6,8 +6,10 @@ const test: CtxInterpretor = new CtxInterpretor({
   num: 32,
   u: [{ t: 'rere' }, 'tutu'],
 });
+
 test.startPatern = '$ctx.';
-const poi: any = {
+
+const poi = {
   aa: '$ENV.opt$$',
   zz: 'qqq$ENV.body.toto$$/uuuu',
   qq: 'qzsazqs$/ENV.body.titi$$/wxcvdfd',
@@ -23,7 +25,8 @@ const poi: any = {
   ooo3: 'dsqdsq$ENV.num$$dsqdsq',
   ooo4: 'dsqdsq$ENV.num',
 };
-const tester: any = {
+
+const tester = {
   from: {
     email: 'toto@toto.com',
   },
