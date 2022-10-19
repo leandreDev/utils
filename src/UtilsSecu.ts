@@ -5,6 +5,9 @@ import * as express from 'express';
 
 import { IApplicationConfiguration } from './IApplicationConfiguration';
 
+interface ICtxRequest<T> extends express.Request {
+  ctx: T;
+}
 export class UtilsSecu {
   constructor(private currentApp: IApplicationConfiguration) {
     /*
@@ -35,12 +38,18 @@ export class UtilsSecu {
       "date" n'est jamais utlisé après
       "date" devrais etre une string
       "keyDate" peurt etre une string ou string[]
+
+      if (req.headers.keyDate {
+        date = new Date(req.headers.keyDate).valueOf();
+      } else {
+        req.headers.keyDate = date.;
+      }
     */
 
-    if (req.headers.keyDate) {
+    if (req.headers.keyDate && typeof req.headers.keyDate == 'string') {
       date = new Date(req.headers.keyDate).valueOf();
     } else {
-      req.headers.keyDate = date;
+      req.headers.keyDate = date.toString();
     }
 
     req.url = URL.format(new URL.URL(req.url.trim()), { unicode: true });
@@ -66,7 +75,7 @@ export class UtilsSecu {
     for consistent method naming (eg: "addHeadersKey" above)
   */
 
-  public testkey(req: express.Request): void {
+  public testkey(req: ICtxRequest<any>): void {
     const date = Number(req.headers.keyDate);
     const key = req.headers.key;
     let requrl: string;
