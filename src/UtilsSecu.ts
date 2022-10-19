@@ -3,46 +3,48 @@ import * as URL from 'url';
 import * as assert from 'assert';
 import * as express from 'express';
 
+import { IApplicationConfiguration } from './IApplicationConfiguration';
+
 export class UtilsSecu {
-  constructor(private currentApp: any) {
-    assert(currentApp.conf.secretKey, 'secretKey is not spécified');
+  constructor(private currentApp: IApplicationConfiguration) {
+    assert(currentApp.conf.secretKey, 'secretKey is not specified');
   }
 
-  public addHeadersKeyProm(rq): Promise<any> {
+  public addHeadersKeyProm(req: any): Promise<void> {
     return Promise.resolve().then(() => {
-      this.addHeadersKey(rq);
+      this.addHeadersKey(req);
       return;
     });
   }
 
-  public addHeadersKey(rq: any) {
+  public addHeadersKey(req: any): void {
     let date: number = Date.now();
 
-    if (!rq.headers) {
-      rq.headers = {};
+    if (!req.headers) {
+      req.headers = {};
     }
 
-    if (rq.headers.keyDate) {
-      date = new Date(rq.headers.keyDate).valueOf();
+    if (req.headers.keyDate) {
+      date = new Date(req.headers.keyDate).valueOf();
     } else {
-      rq.headers.keyDate = date;
+      req.headers.keyDate = date;
     }
 
-    rq.url = URL.format(new URL.URL(rq.url.trim()), { unicode: true });
+    req.url = URL.format(new URL.URL(req.url.trim()), { unicode: true });
 
-    const url: string = rq.url.toLowerCase();
+    const url: string = req.url.toLowerCase();
 
-    rq.headers.key = crypto
+    req.headers.key = crypto
       .createHmac('sha256', this.currentApp.conf.secretKey)
-      .update(rq.headers.keyDate + url)
+      .update(req.headers.keyDate + url)
       .digest('hex');
 
     if (this.currentApp.conf.debug) {
-      console.info('create sig', url, rq.headers.keyDate, rq.headers.key);
+      console.info('create sig', url, req.headers.keyDate, req.headers.key);
     }
   }
 
-  public testkey(req: any) {
+  public testkey(req: any): void {
     const date = Number(req.headers.keyDate);
     const key = req.headers.key;
     let requrl: string;
