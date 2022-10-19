@@ -43,6 +43,7 @@
   },
   "devDependencies": {
     "@types/assert": "0.0.31",
+    "@types/express": "^4.17.14",
     "@types/fs-extra": "^3.0.3",
     "@types/lodash": "^4.14.66",
     "@types/node": "^13.5.0",
