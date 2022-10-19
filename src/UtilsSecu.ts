@@ -46,6 +46,13 @@ export class UtilsSecu {
       }
     */
 
+    // eslint-disable-next-line no-restricted-syntax
+    console.debug(req.headers);
+
+    /*
+      header key are ALWAYS lowercase keyDate => become keydate
+    */
+
     if (req.headers.keyDate && typeof req.headers.keyDate == 'string') {
       date = new Date(req.headers.keyDate).valueOf();
     } else {
