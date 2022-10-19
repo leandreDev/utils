@@ -7,22 +7,35 @@ import { IApplicationConfiguration } from './IApplicationConfiguration';
 
 export class UtilsSecu {
   constructor(private currentApp: IApplicationConfiguration) {
+    /*
+      Could make a better error handler
+    */
     assert(currentApp.conf.secretKey, 'secretKey is not specified');
   }
 
-  public addHeadersKeyProm(req: any): Promise<void> {
+  public addHeadersKeyProm(req: express.Request): Promise<void> {
     return Promise.resolve().then(() => {
       this.addHeadersKey(req);
       return;
     });
   }
 
-  public addHeadersKey(req: any): void {
+  public addHeadersKey(req: express.Request): void {
     let date: number = Date.now();
 
+    /*
+      req.headers is always define in http.IncomingMessage
+    */
     if (!req.headers) {
       req.headers = {};
     }
+
+    /*
+      NOTE: Ce block de condition au un probleme
+      "date" n'est jamais utlisé après
+      "date" devrais etre une string
+      "keyDate" peurt etre une string ou string[]
+    */
 
     if (req.headers.keyDate) {
       date = new Date(req.headers.keyDate).valueOf();
@@ -39,17 +52,28 @@ export class UtilsSecu {
       .update(req.headers.keyDate + url)
       .digest('hex');
 
+    /*
+      use a logger module instead => logger(msg)
+    */
+
     if (this.currentApp.conf.debug) {
       console.info('create sig', url, req.headers.keyDate, req.headers.key);
     }
   }
 
-  public testkey(req: any): void {
+  /*
+    Add new method checkHeadersKey(req: express.Request): void
+    for consistent method naming (eg: "addHeadersKey" above)
+  */
+
+  public testkey(req: express.Request): void {
     const date = Number(req.headers.keyDate);
     const key = req.headers.key;
     let requrl: string;
-    const currentDate: number = Date.now();
 
+    /*
+      ""this.currentApp.conf.urlBase == undefined" should throw and catch error
+    */
     if (req.originalUrl && req.originalUrl.length > 1) {
       requrl = this.currentApp.conf.urlBase + req.originalUrl.substr(1);
     } else {
@@ -61,10 +85,18 @@ export class UtilsSecu {
       unicode: true,
     }).toLowerCase();
 
+    /*
+      "this.currentApp.conf.secretKey == undefined" should throw and catch error
+    */
+
     const newKey: string = crypto
       .createHmac('sha256', this.currentApp.conf.secretKey)
       .update(date + url)
       .digest('hex');
+
+    /*
+     Extend express Request interface with ctx propertie
+    */
 
     if (newKey == key) {
       req.ctx.internalCallValid = true;
@@ -77,8 +109,13 @@ export class UtilsSecu {
     }
   }
 
+  /*
+    Middleware should be put in another class
+    => throw error() should be used a next(error) in middleware ?!
+  */
+
   public get chekInternalMidelWare(): express.RequestHandler | express.ErrorRequestHandler {
-    return (req, res, next) => {
+    return (req, _res, next) => {
       const date = Number(req.header('keyDate'));
       const key = req.header('key');
       let requrl: string;
@@ -127,7 +164,7 @@ export class UtilsSecu {
   }
 
   public get protectInternalMidelWare(): express.RequestHandler | express.ErrorRequestHandler {
-    return (req, res, next) => {
+    return (req, _res, next) => {
       const date = Number(req.header('keyDate'));
       const key = req.header('key');
       let requrl: string;
@@ -179,7 +216,7 @@ export class UtilsSecu {
   }
 
   public get protectUserConnected(): express.RequestHandler | express.ErrorRequestHandler {
-    return (req, res, next) => {
+    return (req, _res, next) => {
       if (req.ctx && req.ctx.user) {
         next();
       } else {
