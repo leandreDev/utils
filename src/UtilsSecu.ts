@@ -1,5 +1,5 @@
-import * as crypto from 'crypto';
-import * as URL from 'url';
+import * as crypto from 'node:crypto';
+import * as URL from 'node:url';
 import * as assert from 'assert';
 import * as express from 'express';
 
