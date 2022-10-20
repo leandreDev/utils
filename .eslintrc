@@ -12,7 +12,7 @@
     "@typescript-eslint/explicit-module-boundary-types": ["off"],
     "@typescript-eslint/no-empty-function": ["off"],
     "@typescript-eslint/no-any": ["off"],
-    "@typescript-eslint/no-explicit-any": ["off"],
+    "@typescript-eslint/no-explicit-any": ["on"],
     "no-console": ["off"],
     "no-restricted-syntax": [
       "error",
