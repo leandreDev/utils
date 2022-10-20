@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { UtilsSecu } from './UtilsSecu';
+import { UtilsSecu } from '../src/UtilsSecu';
 import * as request from 'request-promise-native';
 
 // BOf5u8FgRaUCe8h3oESxOiksanNEDi6T0AuL9qRRIZs='

@@ -1,4 +1,4 @@
-import { CtxInterpretor } from './CtxInterpretor';
+import { CtxInterpretor } from '../src/CtxInterpretor';
 
 const test: CtxInterpretor = new CtxInterpretor({
   emailTarget: { toto: 'bla', name: 'dsdsds' },
@@ -9,6 +9,7 @@ const test: CtxInterpretor = new CtxInterpretor({
 
 test.startPatern = '$ctx.';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const poi = {
   aa: '$ENV.opt$$',
   zz: 'qqq$ENV.body.toto$$/uuuu',

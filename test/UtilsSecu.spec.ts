@@ -1,7 +1,8 @@
 import { describe, expect, it } from '@jest/globals';
+import { createRequest } from 'node-mocks-http';
+
 import { IApplicationConfiguration } from '../src/IApplicationConfiguration';
 import { UtilsSecu } from '../src/UtilsSecu';
-import { createRequest } from 'node-mocks-http';
 
 const appConf: IApplicationConfiguration = {
   conf: { secretKey: 'poipoi', debug: true },
