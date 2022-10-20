@@ -1,5 +1,6 @@
 let pkg_lock;
 let pkg;
+
 try {
   pkg = require(__dirname + '/../../../../package.json');
   pkg_lock = require(__dirname + '/../../../../package-lock.json');
@@ -7,11 +8,12 @@ try {
   console.error(error);
 }
 
-import * as Util from 'util';
+import * as Util from 'node:util';
+import * as http from 'node:http';
+import * as process from 'node:process';
 import * as _ from 'lodash';
 import * as express from 'express';
 import * as fs from 'fs-extra';
-import * as http from 'http';
 import * as jose from 'node-jose';
 import * as request from 'request-promise-native';
 
@@ -21,13 +23,12 @@ import { RequestContext } from './RequestContext';
 import { UtilsSecu } from './UtilsSecu';
 
 export class ServerBase {
-  public currentApp: IApplicationConfiguration;
+  public currentApp: IApplicationConfiguration = {};
   public app: any;
   public secu: UtilsSecu;
   public server: http.Server;
 
   constructor() {
-    this.currentApp = {};
     this.init()
       .then(() => {
         this.app.use((err, req, res, next) => {
@@ -46,6 +47,7 @@ export class ServerBase {
   protected get parentProcessHandler() {
     return msg => {
       console.info('Parent Message ', msg);
+
       switch (msg) {
         case 'reloadConf':
           this.reloadConfPromise()
@@ -68,8 +70,10 @@ export class ServerBase {
     this.server = this.app.listen(this.currentApp.conf.port, this.currentApp.conf.bindIp, () => {
       console.info('Server listen on port ' + this.currentApp.conf.port);
     });
+
     this.currentApp.server = this.server;
   }
+
   protected init(): Promise<any> {
     const prom = this.loadConfPromise()
       .then(conf => {
@@ -77,13 +81,17 @@ export class ServerBase {
         if (this.currentApp.conf.debug) {
           console.info(this.currentApp);
         }
+
         this.app = express();
+
         console.info('start app');
+
         this.currentApp.express = this.app;
         this.currentApp.toErrRes = this.toErrRes;
         this.currentApp.toJsonRes = this.toJsonRes;
         this.secu = new UtilsSecu(this.currentApp);
         this.currentApp.secu = this.secu;
+
         this.app
           .use((req, res, next) => {
             this.headers.forEach(data => {
@@ -99,6 +107,7 @@ export class ServerBase {
             next();
           })
           .use(this.addCtx, this.secu.chekInternalMidelWare, this.checkJWT);
+
         return this.currentApp;
       })
       .then(() => {
@@ -150,6 +159,7 @@ export class ServerBase {
         url: this.currentApp.conf['licence_well-known'],
         json: true,
       };
+
       return Promise.resolve(request.get(opt))
         .then(data => {
           if (data.code == 500) {
@@ -162,6 +172,7 @@ export class ServerBase {
           const val = fs.readJSONSync(
             './confs/dep/' + this.currentApp.conf['licence_well-known'].replace(/\//gi, '_') + '.json',
           );
+
           return val;
         })
         .then(conf => {
@@ -170,10 +181,12 @@ export class ServerBase {
             './confs/dep/' + this.currentApp.conf['licence_well-known'].replace(/\//gi, '_') + '.json',
             conf,
           );
+
           const opt2 = {
             url: conf.jwks_uri,
             json: true,
           };
+
           return request
             .get(opt2)
             .then(data => {
@@ -191,6 +204,7 @@ export class ServerBase {
             .then(objKey => {
               fs.ensureDirSync('./confs/dep/');
               fs.writeJSONSync('./confs/dep/' + conf.jwks_uri.replace(/\//gi, '_') + '.json', objKey);
+
               return jose.JWK.asKeyStore(objKey).then(keyStore => {
                 this.currentApp.licence_keyStore = keyStore;
                 return this.currentApp;
@@ -210,6 +224,7 @@ export class ServerBase {
         return this.loadDepConfPromise();
       });
   }
+
   public get reloadConf() {
     return (req, res) => {
       this.reloadConfPromise()
@@ -228,6 +243,7 @@ export class ServerBase {
       if (Util.isString(err)) {
         err = { message: err };
       }
+
       const rep = {
         code: code,
         message: err.message,
@@ -238,7 +254,9 @@ export class ServerBase {
       if (this.currentApp.conf.debug) {
         rep.stack = err.stack;
       }
+
       console.error(JSON.stringify(err));
+
       return rep;
     };
   }
@@ -266,6 +284,7 @@ export class ServerBase {
       if (!req.ctx) {
         req.ctx = new RequestContext();
       }
+
       next();
     };
   }
@@ -280,6 +299,7 @@ export class ServerBase {
           .then(function (result) {
             const payload: any = JSON.parse(result.payload.toString());
             const myDate: number = Date.now() / 1000;
+
             if (payload.exp < myDate) {
               console.error('token is expired', req.ctx.user);
               // throw new Error('token is expired');
@@ -308,10 +328,12 @@ export class ServerBase {
     return (req, res, next) => {
       req.ctx.roles = [];
       let confSecu: any[];
+
       if (req.ctx.internalCallValid) {
         console.info('internalCallValid');
       } else if (req.ctx.user) {
         req.ctx.roles = req.ctx.user.role;
+
         if (
           this.currentApp.conf &&
           this.currentApp.conf.configurations &&
@@ -320,19 +342,23 @@ export class ServerBase {
           confSecu = this.currentApp.conf.configurations[req.ctx.user.appId].httAccess['_$' + req.method.toLowerCase()];
         }
       }
+
       req.ctx.roles.push('*');
       // console.info("confSecu" , confSecu , this.currentApp.conf ,  )
+
       if (!confSecu && this.currentApp.conf && this.currentApp.conf.publicAccess) {
         if (this.currentApp.conf.debug) {
           console.info('find public access ' + '_$' + req.method.toLowerCase());
         }
         confSecu = this.currentApp.conf.publicAccess['_$' + req.method.toLowerCase()];
       }
+
       // console.info("confSecu" , confSecu )
       if (req.ctx.internalCallValid || req.method.toLowerCase() == 'options') {
         next();
       } else {
         const path: string = req.originalUrl;
+
         if (confSecu) {
           const access = confSecu.find(val => {
             return path.indexOf(val.route) == 0;
