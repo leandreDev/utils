@@ -3,7 +3,9 @@ let pkg;
 try {
   pkg = require(__dirname + '/../../../../package.json');
   pkg_lock = require(__dirname + '/../../../../package-lock.json');
-} catch (error) { console.error(error) }
+} catch (error) {
+  console.error(error);
+}
 
 import * as Util from 'util';
 import * as _ from 'lodash';
@@ -34,7 +36,7 @@ export class ServerBase {
         });
         this.startHttpServer();
       })
-      .catch((err) => {
+      .catch(err => {
         console.error(err);
       });
 
@@ -42,15 +44,15 @@ export class ServerBase {
   }
 
   protected get parentProcessHandler() {
-    return (msg) => {
+    return msg => {
       console.info('Parent Message ', msg);
       switch (msg) {
         case 'reloadConf':
           this.reloadConfPromise()
-            .then((conf) => {
+            .then(conf => {
               this.currentApp.conf = conf;
             })
-            .catch((err) => {
+            .catch(err => {
               console.error(err);
             });
           break;
@@ -70,7 +72,7 @@ export class ServerBase {
   }
   protected init(): Promise<any> {
     const prom = this.loadConfPromise()
-      .then((conf) => {
+      .then(conf => {
         this.currentApp.conf = conf;
         if (this.currentApp.conf.debug) {
           console.info(this.currentApp);
@@ -84,7 +86,7 @@ export class ServerBase {
         this.currentApp.secu = this.secu;
         this.app
           .use((req, res, next) => {
-            this.headers.forEach((data) => {
+            this.headers.forEach(data => {
               res.header(data[0], data[1]);
             });
 
@@ -102,7 +104,7 @@ export class ServerBase {
       .then(() => {
         return this.loadDepConfPromise();
       })
-      .then((data) => {
+      .then(data => {
         this.app
           .use(this.hasRight)
           .get('/', (req, res) => {
@@ -143,37 +145,30 @@ export class ServerBase {
   }
 
   protected loadDepConfPromise(): Promise<any> {
-    if (
-      this.currentApp.conf['licence_well-known'] &&
-      this.currentApp.conf['licence_well-known'] != ''
-    ) {
+    if (this.currentApp.conf['licence_well-known'] && this.currentApp.conf['licence_well-known'] != '') {
       const opt = {
         url: this.currentApp.conf['licence_well-known'],
         json: true,
       };
       return Promise.resolve(request.get(opt))
-        .then((data) => {
+        .then(data => {
           if (data.code == 500) {
             throw new Error('licence_well-known ' + data.message);
           } else {
             return data;
           }
         })
-        .catch((err) => {
+        .catch(err => {
           const val = fs.readJSONSync(
-            './confs/dep/' +
-            this.currentApp.conf['licence_well-known'].replace(/\//gi, '_') +
-            '.json'
+            './confs/dep/' + this.currentApp.conf['licence_well-known'].replace(/\//gi, '_') + '.json',
           );
           return val;
         })
-        .then((conf) => {
+        .then(conf => {
           fs.ensureDirSync('./confs/dep/');
           fs.writeJSONSync(
-            './confs/dep/' +
-            this.currentApp.conf['licence_well-known'].replace(/\//gi, '_') +
-            '.json',
-            conf
+            './confs/dep/' + this.currentApp.conf['licence_well-known'].replace(/\//gi, '_') + '.json',
+            conf,
           );
           const opt2 = {
             url: conf.jwks_uri,
@@ -181,27 +176,22 @@ export class ServerBase {
           };
           return request
             .get(opt2)
-            .then((data) => {
+            .then(data => {
               if (data.code == 500) {
                 throw new Error('jwk ' + data.message);
               } else {
                 return data;
               }
             })
-            .catch((err) => {
-              const valJwk = fs.readJSONSync(
-                './confs/dep/' + conf.jwks_uri.replace(/\//gi, '_') + '.json'
-              );
+            .catch(err => {
+              const valJwk = fs.readJSONSync('./confs/dep/' + conf.jwks_uri.replace(/\//gi, '_') + '.json');
 
               return valJwk;
             })
-            .then((objKey) => {
+            .then(objKey => {
               fs.ensureDirSync('./confs/dep/');
-              fs.writeJSONSync(
-                './confs/dep/' + conf.jwks_uri.replace(/\//gi, '_') + '.json',
-                objKey
-              );
-              return jose.JWK.asKeyStore(objKey).then((keyStore) => {
+              fs.writeJSONSync('./confs/dep/' + conf.jwks_uri.replace(/\//gi, '_') + '.json', objKey);
+              return jose.JWK.asKeyStore(objKey).then(keyStore => {
                 this.currentApp.licence_keyStore = keyStore;
                 return this.currentApp;
               });
@@ -213,7 +203,7 @@ export class ServerBase {
   }
   protected reloadConfPromise(): Promise<any> {
     return ConfLoader.getConf()
-      .then((conf) => {
+      .then(conf => {
         this.currentApp.conf = conf;
       })
       .then(() => {
@@ -223,11 +213,11 @@ export class ServerBase {
   public get reloadConf() {
     return (req, res) => {
       this.reloadConfPromise()
-        .then((conf) => {
+        .then(conf => {
           // 	this.currentApp.conf = conf ;
           res.send({ code: 200 });
         })
-        .catch((err) => {
+        .catch(err => {
           res.send(this.toErrRes(err));
         });
     };
@@ -319,7 +309,7 @@ export class ServerBase {
       req.ctx.roles = [];
       let confSecu: any[];
       if (req.ctx.internalCallValid) {
-        console.info('internalCallValid')
+        console.info('internalCallValid');
       } else if (req.ctx.user) {
         req.ctx.roles = req.ctx.user.role;
         if (
@@ -327,23 +317,16 @@ export class ServerBase {
           this.currentApp.conf.configurations &&
           this.currentApp.conf.configurations[req.ctx.user.appId]
         ) {
-          confSecu = this.currentApp.conf.configurations[req.ctx.user.appId]
-            .httAccess['_$' + req.method.toLowerCase()];
+          confSecu = this.currentApp.conf.configurations[req.ctx.user.appId].httAccess['_$' + req.method.toLowerCase()];
         }
       }
       req.ctx.roles.push('*');
       // console.info("confSecu" , confSecu , this.currentApp.conf ,  )
-      if (
-        !confSecu &&
-        this.currentApp.conf &&
-        this.currentApp.conf.publicAccess
-      ) {
+      if (!confSecu && this.currentApp.conf && this.currentApp.conf.publicAccess) {
         if (this.currentApp.conf.debug) {
           console.info('find public access ' + '_$' + req.method.toLowerCase());
         }
-        confSecu = this.currentApp.conf.publicAccess[
-          '_$' + req.method.toLowerCase()
-        ];
+        confSecu = this.currentApp.conf.publicAccess['_$' + req.method.toLowerCase()];
       }
       // console.info("confSecu" , confSecu )
       if (req.ctx.internalCallValid || req.method.toLowerCase() == 'options') {
@@ -351,7 +334,7 @@ export class ServerBase {
       } else {
         const path: string = req.originalUrl;
         if (confSecu) {
-          const access = confSecu.find((val) => {
+          const access = confSecu.find(val => {
             return path.indexOf(val.route) == 0;
           });
 
@@ -359,25 +342,14 @@ export class ServerBase {
             next();
           } else {
             if (this.currentApp.conf.debug) {
-              console.info(
-                'unautorized ',
-                confSecu,
-                access,
-                path,
-                req.ctx.roles
-              );
+              console.info('unautorized ', confSecu, access, path, req.ctx.roles);
             }
             // throw new Error('unautorized');
             next(new Error('unautorized'));
           }
         } else {
           if (this.currentApp.conf.debug) {
-            console.info(
-              'unautorized, no conf match',
-              confSecu,
-              path,
-              req.ctx.roles
-            );
+            console.info('unautorized, no conf match', confSecu, path, req.ctx.roles);
           }
           // throw new Error('unautorized');
           next(new Error('unautorized'));
