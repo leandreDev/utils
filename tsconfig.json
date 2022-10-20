@@ -13,5 +13,5 @@
   "compileOnSave": false,
   "buildOnSave": false,
   "atom": { "rewriteTsconfig": false },
-  "files": ["./src/index.ts", "./src/test.ts", "./src/testKeys.ts"]
+  "files": ["./src/index.ts"]
 }

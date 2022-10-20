@@ -9,11 +9,9 @@
     "npm": "^8.17.0"
   },
   "scripts": {
-    "test": "jest",
+    "test": "npm run build && jest",
     "start": "tsc",
     "build": "tsc",
-    "debug": "node --inspect dist/test.js ",
-    "testing": "node dist/test.js",
     "lint": "eslint . --ext .ts",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}"
@@ -31,9 +29,7 @@
     "url": "https://github.com/leandreDev/utils/issues"
   },
   "homepage": "https://github.com/leandreDev/utils#readme",
-  "dependencies": {
-    "prettier": "^2.2.1"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "assert": "^1.4.1",
     "express": "^4.16.1",
@@ -70,6 +66,7 @@
     "node-jose": "^2.0.0",
     "node-mocks-http": "^1.11.0",
     "onchange": "^7.1.0",
+    "prettier": "^2.2.1",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.5",
     "ts-jest": "^29.0.3",
