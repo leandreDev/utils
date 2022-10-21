@@ -53,6 +53,15 @@ new CtxInterpretor(context: any)
 - updateEnv(obj: any, clone: boolean = false, removeUnknownVar: boolean = false): any
 ```
 
+Class ConfLoader
+
+```
+new ConfLoader()
+
+- getConf(): Promise<any>
+- loadConf(): Promise<any>
+```
+
 Class: ServerBase
 
 ```
