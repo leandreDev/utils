@@ -146,7 +146,14 @@ export class CtxInterpretor {
   }
 
   public updateEnv(obj: any, clone: boolean = false, removeUnknownVar: boolean = false): any {
+    /*
+      "obj" should be typed as an "Object" not as "any"
+    */
+
     if (clone) {
+      /*
+        doenst deep clone
+      */
       obj = Object.assign({}, obj);
     }
 
