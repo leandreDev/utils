@@ -5,16 +5,16 @@ import * as moment from 'moment';
 
 export class CtxInterpretor {
   public context: any;
-  public startPatern = '$ENV.';
-  public endPatern = '$$';
-  public splitPatern = '.';
+  public startPatern: string = '$ENV.';
+  public endPatern: string = '$$';
+  public splitPatern: string = '.';
 
   constructor(context: any) {
-    assert(context, 'context is not spécified');
+    assert(context, 'context is not specified');
     this.context = context;
   }
 
-  private setEnv(varKey, removeUnknownVar = false) {
+  private setEnv(varKey: string, removeUnknownVar: boolean = false): any {
     if (varKey.indexOf('.') == -1) {
       if (this.context.hasOwnProperty(varKey)) {
         return this.context[varKey];
@@ -24,6 +24,7 @@ export class CtxInterpretor {
     } else {
       const argVar: string[] = varKey.split(this.splitPatern);
       let targetContext = this.context;
+
       argVar.forEach((val) => {
         if (targetContext) {
           if (_.isArray(targetContext) && !isNaN(parseInt(val))) {
@@ -35,6 +36,7 @@ export class CtxInterpretor {
           }
         }
       });
+
       if (targetContext != null) {
         return targetContext;
       } else {
@@ -47,23 +49,29 @@ export class CtxInterpretor {
     }
   }
 
-  private setGlobalEnv(stringKey, removeUnknownVar = false) {
+  private setGlobalEnv(stringKey: string, removeUnknownVar: boolean = false): string {
     let arr, result;
+
     if (stringKey.indexOf(this.startPatern) == -1) {
       return stringKey;
     } else {
       let envStart: number = stringKey.indexOf(this.startPatern);
       let envEnd: number;
+
       const startPaternLength: number = this.startPatern.length;
       const endPaternLength: number = this.endPatern.length;
+
       while (envStart > -1) {
         let preEnv = '';
         let postEnv = '';
         let envVar = '';
+
         if (envStart > 0) {
           preEnv = stringKey.substr(0, envStart);
         }
+
         envEnd = stringKey.indexOf(this.endPatern, envStart);
+
         if (envEnd == -1) {
           envEnd = stringKey.length;
         } else if (envEnd + endPaternLength < stringKey.length) {
@@ -81,6 +89,7 @@ export class CtxInterpretor {
           envStart = stringKey.indexOf(this.startPatern, envStart + 1);
         }
       }
+
       return stringKey;
       // arr = stringKey.split("$ENV.");
       // result = "";
@@ -96,11 +105,8 @@ export class CtxInterpretor {
       // return result;
     }
   }
-  public updateArrEnv(
-    obj: any[],
-    clone = false,
-    removeUnknownVar = false
-  ): any {
+
+  public updateArrEnv(obj: any[], clone: boolean = false, removeUnknownVar: boolean = false): any {
     const newArr: any[] = [];
 
     obj.forEach((data) => {
@@ -114,22 +120,20 @@ export class CtxInterpretor {
         newArr.push(data);
       }
     });
-    if (
-      newArr.length > 1 &&
-      <string>newArr[0].toString().slice(0, 3) == '$__'
-    ) {
+
+    if (newArr.length > 1 && <string>newArr[0].toString().slice(0, 3) == '$__') {
       // c'est une fonction
       const key: string = newArr[0].toString();
+
       try {
         switch (key) {
+          /*
+            Return value of those case are NOT any[] like newArr but Date !!!
+          */
           case '$__moment_add':
-            return moment(newArr[1])
-              .add(parseFloat(newArr[2].toString()), newArr[3])
-              .toDate();
+            return moment(newArr[1]).add(parseFloat(newArr[2].toString()), newArr[3]).toDate();
           case '$__moment_substract':
-            return moment(newArr[1])
-              .subtract(parseFloat(newArr[2].toString()), newArr[3])
-              .toDate();
+            return moment(newArr[1]).subtract(parseFloat(newArr[2].toString()), newArr[3]).toDate();
           default:
             break;
         }
@@ -140,7 +144,8 @@ export class CtxInterpretor {
       return newArr;
     }
   }
-  public updateEnv(obj: any, clone = false, removeUnknownVar = false): any {
+
+  public updateEnv(obj: any, clone: boolean = false, removeUnknownVar: boolean = false): any {
     if (clone) {
       obj = Object.assign({}, obj);
     }
@@ -155,6 +160,7 @@ export class CtxInterpretor {
         obj[key] = this.updateEnv(val, clone, removeUnknownVar);
       }
     });
+
     return obj;
   }
 }
