@@ -40,6 +40,19 @@ new RequestContext()
 - DateNow(): Date
 ```
 
+Class: CtxInterpretor
+
+```
+new CtxInterpretor(context: any)
+
+- context: any
+- startPatern: string
+- endPatern: string
+- splitPatern: string
+- updateArrEnv(obj: any[], clone: boolean = false, removeUnknownVar: boolean = false): any
+- updateEnv(obj: any, clone: boolean = false, removeUnknownVar: boolean = false): any
+```
+
 Class: ServerBase
 
 ```
