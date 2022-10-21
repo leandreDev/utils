@@ -1,7 +1,8 @@
 import * as express from 'express';
-import { UtilsSecu } from './UtilsSecu';
-import * as http from 'http';
+import * as http from 'node:http';
 import * as Jose from 'node-jose';
+
+import { UtilsSecu } from './UtilsSecu';
 
 export interface IApplicationConfiguration {
   licence_keyStore?: Jose.JWK.KeyStore;
