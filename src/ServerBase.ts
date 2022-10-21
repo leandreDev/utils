@@ -1,6 +1,15 @@
 let pkg_lock;
 let pkg;
 
+/*
+  pkg is never used
+  pkg_lock is only used once
+
+  for memory usage dont keep data in storage, read an send file at once
+
+  Is there realy a point for that code ?
+*/
+
 try {
   pkg = require(__dirname + '/../../../../package.json');
   pkg_lock = require(__dirname + '/../../../../package-lock.json');
@@ -22,8 +31,16 @@ import { IApplicationConfiguration } from './IApplicationConfiguration';
 import { RequestContext } from './RequestContext';
 import { UtilsSecu } from './UtilsSecu';
 
+/*
+  Must use a Logger to replace all console
+*/
 export class ServerBase {
   public currentApp: IApplicationConfiguration = {};
+
+  /*
+    define an interface or class for app
+  */
+
   public app: any;
   public secu: UtilsSecu;
   public server: http.Server;
@@ -35,26 +52,27 @@ export class ServerBase {
           const obj = this.toErrRes(err);
           res.send(obj);
         });
+
         this.startHttpServer();
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
       });
 
     process.on('message', this.parentProcessHandler);
   }
 
-  protected get parentProcessHandler() {
-    return msg => {
+  protected get parentProcessHandler(): { (msg: string): void } {
+    return (msg) => {
       console.info('Parent Message ', msg);
 
       switch (msg) {
         case 'reloadConf':
           this.reloadConfPromise()
-            .then(conf => {
+            .then((conf) => {
               this.currentApp.conf = conf;
             })
-            .catch(err => {
+            .catch((err) => {
               console.error(err);
             });
           break;
@@ -62,11 +80,11 @@ export class ServerBase {
     };
   }
 
-  protected sendToParentProcess(msg) {
+  protected sendToParentProcess(msg: any): void {
     process.send(msg);
   }
 
-  protected startHttpServer() {
+  protected startHttpServer(): void {
     this.server = this.app.listen(this.currentApp.conf.port, this.currentApp.conf.bindIp, () => {
       console.info('Server listen on port ' + this.currentApp.conf.port);
     });
@@ -74,9 +92,9 @@ export class ServerBase {
     this.currentApp.server = this.server;
   }
 
-  protected init(): Promise<any> {
+  protected init(): Promise<void> {
     const prom = this.loadConfPromise()
-      .then(conf => {
+      .then((conf) => {
         this.currentApp.conf = conf;
         if (this.currentApp.conf.debug) {
           console.info(this.currentApp);
@@ -94,7 +112,7 @@ export class ServerBase {
 
         this.app
           .use((req, res, next) => {
-            this.headers.forEach(data => {
+            this.headers.forEach((data) => {
               res.header(data[0], data[1]);
             });
 
@@ -113,7 +131,7 @@ export class ServerBase {
       .then(() => {
         return this.loadDepConfPromise();
       })
-      .then(data => {
+      .then((data) => {
         this.app
           .use(this.hasRight)
           .get('/', (req, res) => {
@@ -161,21 +179,21 @@ export class ServerBase {
       };
 
       return Promise.resolve(request.get(opt))
-        .then(data => {
+        .then((data) => {
           if (data.code == 500) {
             throw new Error('licence_well-known ' + data.message);
           } else {
             return data;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           const val = fs.readJSONSync(
             './confs/dep/' + this.currentApp.conf['licence_well-known'].replace(/\//gi, '_') + '.json',
           );
 
           return val;
         })
-        .then(conf => {
+        .then((conf) => {
           fs.ensureDirSync('./confs/dep/');
           fs.writeJSONSync(
             './confs/dep/' + this.currentApp.conf['licence_well-known'].replace(/\//gi, '_') + '.json',
@@ -189,23 +207,23 @@ export class ServerBase {
 
           return request
             .get(opt2)
-            .then(data => {
+            .then((data) => {
               if (data.code == 500) {
                 throw new Error('jwk ' + data.message);
               } else {
                 return data;
               }
             })
-            .catch(err => {
+            .catch((err) => {
               const valJwk = fs.readJSONSync('./confs/dep/' + conf.jwks_uri.replace(/\//gi, '_') + '.json');
 
               return valJwk;
             })
-            .then(objKey => {
+            .then((objKey) => {
               fs.ensureDirSync('./confs/dep/');
               fs.writeJSONSync('./confs/dep/' + conf.jwks_uri.replace(/\//gi, '_') + '.json', objKey);
 
-              return jose.JWK.asKeyStore(objKey).then(keyStore => {
+              return jose.JWK.asKeyStore(objKey).then((keyStore) => {
                 this.currentApp.licence_keyStore = keyStore;
                 return this.currentApp;
               });
@@ -215,9 +233,10 @@ export class ServerBase {
       return Promise.resolve(this.currentApp);
     }
   }
+
   protected reloadConfPromise(): Promise<any> {
     return ConfLoader.getConf()
-      .then(conf => {
+      .then((conf) => {
         this.currentApp.conf = conf;
       })
       .then(() => {
@@ -225,14 +244,14 @@ export class ServerBase {
       });
   }
 
-  public get reloadConf() {
+  public get reloadConf(): express.RequestHandler {
     return (req, res) => {
       this.reloadConfPromise()
-        .then(conf => {
+        .then((conf) => {
           // 	this.currentApp.conf = conf ;
           res.send({ code: 200 });
         })
-        .catch(err => {
+        .catch((err) => {
           res.send(this.toErrRes(err));
         });
     };
@@ -360,7 +379,7 @@ export class ServerBase {
         const path: string = req.originalUrl;
 
         if (confSecu) {
-          const access = confSecu.find(val => {
+          const access = confSecu.find((val) => {
             return path.indexOf(val.route) == 0;
           });
 
