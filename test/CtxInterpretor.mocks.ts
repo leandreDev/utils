@@ -39,6 +39,9 @@ let obj: any = {
   ],
   template_id: '4cb2755a-ac05-4034-890a-f5c784dd1e98',
   unknownVar: '$ctx.x.removeUnknownVar',
+  moment: ['moment', '1995-12-25', '10', 'days'],
+  add: ['$__moment_add', '1995-12-25', '10', 'days'],
+  sub: ['$__moment_substract', '1995-12-25', '10', 'days'],
 };
 
 let obj_raw = {

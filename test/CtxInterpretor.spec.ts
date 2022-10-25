@@ -1,7 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 import { AssertionError } from 'assert';
-import { before } from 'lodash';
-import { execPath } from 'process';
+import * as Moment from 'moment';
 
 import { CtxInterpretor } from '../src/CtxInterpretor';
 import { mocks } from './CtxInterpretor.mocks';
@@ -152,6 +151,28 @@ describe('CtxInterpretor', () => {
 
       expect(result.unknownVar).toBe('');
       expect(result !== obj);
+    });
+  });
+
+  describe('moment function', () => {
+    it('Add time', () => {
+      let ctxInt = new CtxInterpretor(mocks.context);
+      ctxInt.startPatern = mocks.startPattern;
+      let obj = mocks.obj;
+      let result = ctxInt.updateEnv(obj);
+
+      let addTime = Moment(obj.moment[1]).add(obj.moment[2], obj.moment[3]).toDate();
+      expect(result.add).toEqual(addTime);
+    });
+
+    it('Substract time', () => {
+      let ctxInt = new CtxInterpretor(mocks.context);
+      ctxInt.startPatern = mocks.startPattern;
+      let obj = mocks.obj;
+      let result = ctxInt.updateEnv(obj);
+
+      let subTime = Moment(obj.moment[1]).subtract(obj.moment[2], obj.moment[3]).toDate();
+      expect(result.sub).toEqual(subTime);
     });
   });
 });
