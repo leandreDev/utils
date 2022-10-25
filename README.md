@@ -4,9 +4,13 @@ v1.2.6
 
 # Library
 
-Interface: IApplicationConfiguration
+---
+
+## Interface: IApplicationConfiguration
 
 ```
+IApplicationConfiguration
+
 - licence_keyStore?: Jose.JWK.KeyStore;
 - server?: http.Server;
 - express?: express.Application;
@@ -16,7 +20,9 @@ Interface: IApplicationConfiguration
 - conf?: any;
 ```
 
-Class: UtilsSecu
+> Used has base iterface to pass instance (depencie) throught the application
+
+## Class: UtilsSecu
 
 ```
 new UtilsSecu(app: IApplicationConfiguration)
@@ -29,7 +35,9 @@ new UtilsSecu(app: IApplicationConfiguration)
 - protectUserConnected(): express.RequestHandler | express.ErrorRequestHandler
 ```
 
-Class: RequestContext
+---
+
+## Class: RequestContext
 
 ```
 new RequestContext()
@@ -40,7 +48,11 @@ new RequestContext()
 - DateNow(): Date
 ```
 
-Class: CtxInterpretor
+> Use to had a Request context to use thougth express middleware
+
+---
+
+## Class: CtxInterpretor
 
 ```
 new CtxInterpretor(context: any)
@@ -53,7 +65,63 @@ new CtxInterpretor(context: any)
 - updateEnv(obj: any, clone: boolean = false, removeUnknownVar: boolean = false): any
 ```
 
-Class ConfLoader
+> Context Interpretor build a object based on a object template and object context.
+
+A pattern is use in the template string values to target specific context value:
+
+Date can be parsed and modify (add and substract) with "$\__moment_\<fct>"
+
+```javascript
+let template = {
+  str: '$ctx.someproperty$$",
+  arr: '$ctx.arr,
+  prop: {
+    a: '$ctx.obj.a',
+    b: '$ctx.obj.b'
+  }
+  date:  ['$__moment_add', '1995-12-25', '10', 'days'],
+};
+
+let context = {
+  someproperty: "a_str_value",
+  arr: [1,2,4],
+  obj: {
+    a: "hello",
+    b: "world"
+  }
+}
+
+let result = new CtxInterpretor(template).setEnv(context)
+/*
+  result = {
+    str: 'a_str_value",
+    arr: [1,2,4],
+    prop: {
+      a: "hello",
+      b: "world"
+    },
+    date: "1996-01-03T23:00:00.000Z"
+  };
+*/
+
+```
+
+Pattern is specified by these variables as
+
+> \<startPatern>propName1\<splitPatern>propName2\<endPatern>
+
+> $ENV.obj.b$$
+
+- startPatern: string by default "$ENV"
+- splitPatern: string by default "."
+- endPatern: string by default "$$"
+
+Note: The method "updateEnv" can mutate the obj passed "clone = false" and remove unused template string (no context varaible') with "
+removeUnknownVar = true"
+
+---
+
+## Class ConfLoader
 
 ```
 new ConfLoader()
@@ -62,7 +130,9 @@ new ConfLoader()
 - loadConf(): Promise<any>
 ```
 
-Class: ServerBase
+---
+
+## Class: ServerBase
 
 ```
 new ServerBase()
