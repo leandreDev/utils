@@ -15,6 +15,13 @@ export class CtxInterpretor {
   }
 
   private setEnv(varKey: string, removeUnknownVar: boolean = false): any {
+    /*
+      BUG:
+        In config obj field like $ctx.removeUnknownVar should be replace with ""
+        which doesnt have a value in context obj.
+        But only $ctx.someprop.removeUnknownVar are replace with ""
+    */
+
     if (varKey.indexOf('.') == -1) {
       if (this.context.hasOwnProperty(varKey)) {
         return this.context[varKey];
@@ -85,7 +92,6 @@ export class CtxInterpretor {
           envStart = -1;
         } else {
           stringKey = preEnv + this.setEnv(envVar, removeUnknownVar) + postEnv;
-
           envStart = stringKey.indexOf(this.startPatern, envStart + 1);
         }
       }
