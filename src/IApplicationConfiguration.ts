@@ -3,7 +3,11 @@ import * as http from 'node:http';
 import * as Jose from 'node-jose';
 
 import { UtilsSecu } from './UtilsSecu';
-
+/*
+  IMP:
+    could add template to IApplicationConfiguration<T>
+    to type configuration conf?: T
+*/
 export interface IApplicationConfiguration {
   licence_keyStore?: Jose.JWK.KeyStore;
   server?: http.Server;
