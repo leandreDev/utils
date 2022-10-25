@@ -10,12 +10,14 @@ let startPattern = '$ctx.';
 let obj: any = {
   from: {
     email: 'toto@toto.com',
+    unknownVar: '$ctx.x.removeUnknownVar',
   },
   reply_to: {
     email: 'toto@toto.com',
   },
   personalizations: [
     {
+      unknownVar: '$ctx.x.removeUnknownVar',
       to: [
         {
           email: 'hfdevpro@gmail.com',
@@ -36,6 +38,7 @@ let obj: any = {
     },
   ],
   template_id: '4cb2755a-ac05-4034-890a-f5c784dd1e98',
+  unknownVar: '$ctx.x.removeUnknownVar',
 };
 
 let obj_raw = {

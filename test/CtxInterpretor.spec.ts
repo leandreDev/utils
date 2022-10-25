@@ -6,8 +6,6 @@ import { mocks } from './CtxInterpretor.mocks';
 
 describe('CtxInterpretor', () => {
   describe('new CtxInterpretor', () => {
-    // new CtxInterpretor(context: any)
-
     it('constructor should throw error for null context', () => {
       expect(() => {
         new CtxInterpretor(null);
@@ -37,16 +35,6 @@ describe('CtxInterpretor', () => {
   });
 
   describe('ctxInterpretor.updateEnv', () => {
-    /*
-      return value should be obj
-      obj ==  updateEnv(obj)
-
-      these are equal:
-      updateEnv(obj)
-      updateEnv(obj, false)
-      updateEnv(obj, false, false)
-    */
-
     it('update passed object: updateEnv(obj)', () => {
       let ctxInt = new CtxInterpretor(mocks.context);
       ctxInt.startPatern = mocks.startPattern;
@@ -87,14 +75,6 @@ describe('CtxInterpretor', () => {
       expect(result2).toStrictEqual(result3);
     });
 
-    /*
-      return obj should be modified
-      obj != updateEnv(obj, true)
-
-      this is equal to
-      updateEnv(obj, true, false)
-    */
-
     it('clone passed object: updateEnv(obj, true)', () => {
       let ctxInt = new CtxInterpretor(mocks.context);
       ctxInt.startPatern = mocks.startPattern;
@@ -124,16 +104,25 @@ describe('CtxInterpretor', () => {
 
       expect(result1).toEqual(result2);
     });
+
+    it('modify passed object and remove unknown variable: updateEnv(obj, false, true)', () => {
+      let ctxInt = new CtxInterpretor(mocks.context);
+      ctxInt.startPatern = mocks.startPattern;
+      let obj = mocks.obj;
+      let result = ctxInt.updateEnv(obj, false, true);
+
+      expect(result.unknownVar).toBe('');
+      expect(result === obj);
+    });
+
+    it('clone passed object and remove unknown variable: updateEnv(obj, false, true)', () => {
+      let ctxInt = new CtxInterpretor(mocks.context);
+      ctxInt.startPatern = mocks.startPattern;
+      let obj = mocks.obj;
+      let result = ctxInt.updateEnv(obj, false, true);
+
+      expect(result.unknownVar).toBe('');
+      expect(result !== obj);
+    });
   });
-
-  /*
-  updateEnv(obj: any, clone: boolean = false, removeUnknownVar: boolean = false): any
-
-
-
-    What is is doing here
-      updateEnv(obj, false, true) =>  obj ==  updateEnv(obj, false, true)
-      updateEnv(obj, true, true)
-
-  */
 });
