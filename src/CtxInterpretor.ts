@@ -57,8 +57,6 @@ export class CtxInterpretor {
   }
 
   private setGlobalEnv(stringKey: string, removeUnknownVar: boolean = false): string {
-    let arr, result;
-
     if (stringKey.indexOf(this.startPatern) == -1) {
       return stringKey;
     } else {
@@ -164,7 +162,6 @@ export class CtxInterpretor {
     }
 
     _.each(obj, (val, key) => {
-      let arr;
       if (_.isString(val)) {
         obj[key] = this.setGlobalEnv(val, removeUnknownVar);
       } else if (_.isArray(val)) {
