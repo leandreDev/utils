@@ -1,5 +1,7 @@
 import { describe, expect, it } from '@jest/globals';
 import { AssertionError } from 'assert';
+import { before } from 'lodash';
+import { execPath } from 'process';
 
 import { CtxInterpretor } from '../src/CtxInterpretor';
 import { mocks } from './CtxInterpretor.mocks';
@@ -31,6 +33,33 @@ describe('CtxInterpretor', () => {
       let ctxInt = new CtxInterpretor(ctx);
 
       expect(ctxInt.context).toEqual(ctx);
+    });
+  });
+
+  describe('public properties', () => {
+    const ctxInt = new CtxInterpretor({});
+
+    it('should have a valid context', () => {
+      expect(ctxInt.context).toBeDefined();
+      expect(typeof ctxInt.context).toBe('object');
+    });
+
+    it('should have a valid startPatern', () => {
+      expect(ctxInt.startPatern).toBeDefined();
+      expect(typeof ctxInt.startPatern).toBe('string');
+      expect(ctxInt.startPatern.length).toBeGreaterThan(0);
+    });
+
+    it('should have a valid endPatern', () => {
+      expect(ctxInt.endPatern).toBeDefined();
+      expect(typeof ctxInt.endPatern).toBe('string');
+      expect(ctxInt.endPatern.length).toBeGreaterThan(0);
+    });
+
+    it('should have a valid splitPatern', () => {
+      expect(ctxInt.splitPatern).toBeDefined();
+      expect(typeof ctxInt.splitPatern).toBe('string');
+      expect(ctxInt.splitPatern.length).toBeGreaterThan(0);
     });
   });
 
