@@ -20,7 +20,7 @@ IApplicationConfiguration
 - conf?: any;
 ```
 
-> Used has base iterface to pass instance (depencie) throught the application
+> Used has base interface to pass instance (depencies) throught the application
 
 ## Class: UtilsSecu
 
@@ -35,7 +35,21 @@ new UtilsSecu(app: IApplicationConfiguration)
 - protectUserConnected(): express.RequestHandler | express.ErrorRequestHandler
 ```
 
----
+**new UtilsSecu(app: IApplicationConfiguration)**
+
+app MUST have a conf.secretKey property
+
+**addHeadersKeyProm(req: express.Request): Promise\<void>**
+
+Promification of addHeadersKey method
+
+**addHeadersKey(req: express.Request): void**
+
+Add an encrypted header key (keydate)
+
+**protectUserConnected(): express.RequestHandler | express.ErrorRequestHandler**
+
+Middleware that allow only request having "ctx.user' value on the request object
 
 ## Class: RequestContext
 
@@ -110,7 +124,7 @@ Pattern is specified by these variables as
 
 > \<startPatern>propName1\<splitPatern>propName2\<endPatern>
 
-> $ENV.obj.b$$
+> \$ENV.obj.b\$$
 
 - startPatern: string by default "$ENV"
 - splitPatern: string by default "."
