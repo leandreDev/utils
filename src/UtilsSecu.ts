@@ -9,8 +9,12 @@ export interface ICtxRequest<T> extends Request {
   ctx: T;
 }
 
-interface IValidContext {
+export interface IValidContext {
   internalCallValid?: boolean;
+}
+
+export interface IUserContext {
+  user?: any;
 }
 export class UtilsSecu {
   constructor(private currentApp: IApplicationConfiguration) {
@@ -66,13 +70,15 @@ export class UtilsSecu {
       change it for URL.URL(myURL).format, ...)
     */
 
-    req.url = URL.format(new URL.URL(req.url.trim()), { unicode: true });
+    // MODIFICATION ! : Changed req.url.trim() to this.currentApp.conf.urlBase + req.url.trim()
+    req.url = URL.format(new URL.URL(this.currentApp.conf.urlBase + req.url.trim().substr(1)), { unicode: true });
 
     const url: string = req.url.toLowerCase();
 
+    // MODIFICATION ! : change keyDate to keydate
     req.headers.key = crypto
       .createHmac('sha256', this.currentApp.conf.secretKey)
-      .update(req.headers.keyDate + url)
+      .update(req.headers.keydate + url)
       .digest('hex');
 
     /*
@@ -143,7 +149,7 @@ export class UtilsSecu {
   */
 
   public get chekInternalMidelWare(): (req: ICtxRequest<IValidContext>, _res: Response, next: NextFunction) => void {
-    return (req: ICtxRequest<IValidContext>, _res, next) => {
+    return (req: ICtxRequest<IValidContext>, _res: Response, next: NextFunction) => {
       const date: number = Number(req.header('keyDate'));
       const key: string = req.header('key');
       let reqUrl: string;
@@ -190,13 +196,16 @@ export class UtilsSecu {
           }
         }
       } else {
+        /*
+          should  req.ctx.internalCallValid to be set to false;
+        */
         next();
       }
     };
   }
 
   public get protectInternalMidelWare(): (req: Request, _res: Response, next: NextFunction) => void {
-    return (req: ICtxRequest<IValidContext>, _res, next) => {
+    return (req: ICtxRequest<IValidContext>, _res: Response, next: NextFunction) => {
       const date = Number(req.header('keyDate'));
       const key = req.header('key');
       let requrl: string;
@@ -213,8 +222,6 @@ export class UtilsSecu {
           throw new Error('keyDate is obsolete');
           // next('keyDate is obsolete');
         } else {
-          console.log('>>> ', req.originalUrl);
-
           if (req.originalUrl && req.originalUrl.length > 1) {
             requrl = this.currentApp.conf.urlBase + req.originalUrl.substr(1);
           } else {
@@ -229,8 +236,6 @@ export class UtilsSecu {
             .createHmac('sha256', this.currentApp.conf.secretKey)
             .update(date + url)
             .digest('hex');
-          
-          console.log('>> ', newKey);
 
           if (newKey == key) {
             if (!req.ctx) {
@@ -243,7 +248,7 @@ export class UtilsSecu {
             if (this.currentApp.conf.debug) {
               console.error('key dont match uri : ' + url, date, key, newKey);
             }
-            throw new Error('key dont match uri : ' + requrl);
+            throw new Error('key dont match uri');
             // next('key dont match uri : ' + requrl);
           }
         }
@@ -254,11 +259,11 @@ export class UtilsSecu {
     };
   }
 
-  public get protectUserConnected(): RequestHandler | ErrorRequestHandler {
+  public get protectUserConnected(): (req: ICtxRequest<IUserContext>, _res: Response, next: NextFunction) => void {
     /*
       Bad interface "ctx" doesnt exit in RequestHandler
     */
-    return (req, _res, next) => {
+    return (req: ICtxRequest<IUserContext>, _res: Response, next: NextFunction) => {
       if (req.ctx && req.ctx.user) {
         next();
       } else {
