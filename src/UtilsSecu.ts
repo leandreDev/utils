@@ -1,12 +1,16 @@
 import * as crypto from 'node:crypto';
 import * as URL from 'node:url';
 import * as assert from 'assert';
-import * as express from 'express';
+import { Request, Response, NextFunction, RequestHandler, ErrorRequestHandler } from 'express';
 
 import { IApplicationConfiguration } from './IApplicationConfiguration';
 
-interface ICtxRequest<T> extends express.Request {
+export interface ICtxRequest<T> extends Request {
   ctx: T;
+}
+
+interface IValidContext {
+  internalCallValid?: boolean;
 }
 export class UtilsSecu {
   constructor(private currentApp: IApplicationConfiguration) {
@@ -16,18 +20,18 @@ export class UtilsSecu {
     assert(currentApp.conf.secretKey, 'secretKey is not specified');
   }
 
-  public addHeadersKeyProm(req: express.Request): Promise<void> {
+  public addHeadersKeyProm(req: Request): Promise<void> {
     return Promise.resolve().then(() => {
       this.addHeadersKey(req);
       return;
     });
   }
 
-  public addHeadersKey(req: express.Request): void {
+  public addHeadersKey(req: Request): void {
     let date: number = Date.now();
 
     /*
-      req.headers is always define in http.IncomingMessage
+      req.headers is always define in http.IncomingMessage (which extends expres.Request)
     */
     if (!req.headers) {
       req.headers = {};
@@ -46,11 +50,9 @@ export class UtilsSecu {
       }
     */
 
-    // eslint-disable-next-line no-restricted-syntax
-    console.debug(req.headers);
-
     /*
       header key are ALWAYS lowercase keyDate => become keydate
+      req.headers.keyDate never exit !
     */
 
     if (req.headers.keyDate && typeof req.headers.keyDate == 'string') {
@@ -58,6 +60,11 @@ export class UtilsSecu {
     } else {
       req.headers.keyDate = date.toString();
     }
+
+    /*
+     "this.currentApp.conf.urlBase + req.url" is the full URL
+      change it for URL.URL(myURL).format, ...)
+    */
 
     req.url = URL.format(new URL.URL(req.url.trim()), { unicode: true });
 
@@ -69,7 +76,7 @@ export class UtilsSecu {
       .digest('hex');
 
     /*
-      use a logger module instead => logger(msg)
+      use a logger module instead of console.log=> logger(msg)
     */
 
     if (this.currentApp.conf.debug) {
@@ -82,7 +89,11 @@ export class UtilsSecu {
     for consistent method naming (eg: "addHeadersKey" above)
   */
 
-  public testkey(req: ICtxRequest<any>): void {
+  public testkey(req: ICtxRequest<IValidContext>): void {
+    /*
+      req.headers.keyDate can't be in headers : uppercase are transform to lowercase in HTTP request
+      https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
+    */
     const date = Number(req.headers.keyDate);
     const key = req.headers.key;
     let requrl: string;
@@ -90,6 +101,7 @@ export class UtilsSecu {
     /*
       ""this.currentApp.conf.urlBase == undefined" should throw and catch error
     */
+
     if (req.originalUrl && req.originalUrl.length > 1) {
       requrl = this.currentApp.conf.urlBase + req.originalUrl.substr(1);
     } else {
@@ -130,11 +142,11 @@ export class UtilsSecu {
     => throw error() should be used a next(error) in middleware ?!
   */
 
-  public get chekInternalMidelWare(): express.RequestHandler | express.ErrorRequestHandler {
-    return (req, _res, next) => {
-      const date = Number(req.header('keyDate'));
-      const key = req.header('key');
-      let requrl: string;
+  public get chekInternalMidelWare(): (req: ICtxRequest<IValidContext>, _res: Response, next: NextFunction) => void {
+    return (req: ICtxRequest<IValidContext>, _res, next) => {
+      const date: number = Number(req.header('keyDate'));
+      const key: string = req.header('key');
+      let reqUrl: string;
       const currentDate: number = Date.now();
 
       if (key) {
@@ -147,12 +159,16 @@ export class UtilsSecu {
           next();
         } else {
           if (req.originalUrl && req.originalUrl.length > 1) {
-            requrl = this.currentApp.conf.urlBase + req.originalUrl.substr(1);
+            reqUrl = this.currentApp.conf.urlBase + req.originalUrl.substr(1);
           } else {
-            requrl = this.currentApp.conf.urlBase;
+            reqUrl = this.currentApp.conf.urlBase;
           }
 
-          const url: string = URL.format(new URL.URL(requrl.trim()), {
+          /*
+            use new URL.URL(...).format(...).toLowerCase()
+          */
+
+          const url: string = URL.format(new URL.URL(reqUrl.trim()), {
             unicode: true,
           }).toLowerCase();
 
@@ -179,14 +195,17 @@ export class UtilsSecu {
     };
   }
 
-  public get protectInternalMidelWare(): express.RequestHandler | express.ErrorRequestHandler {
-    return (req, _res, next) => {
+  public get protectInternalMidelWare(): (req: Request, _res: Response, next: NextFunction) => void {
+    return (req: ICtxRequest<IValidContext>, _res, next) => {
       const date = Number(req.header('keyDate'));
       const key = req.header('key');
       let requrl: string;
       const currentDate: number = Date.now();
 
       if (key) {
+        /*
+          should test if keyDate is defined in headers
+        */
         if (currentDate > date + 30000) {
           if (this.currentApp.conf.debug) {
             console.error('keyDate is obsolete : ' + currentDate + '>' + date + '+ 30000');
@@ -194,6 +213,8 @@ export class UtilsSecu {
           throw new Error('keyDate is obsolete');
           // next('keyDate is obsolete');
         } else {
+          console.log('>>> ', req.originalUrl);
+
           if (req.originalUrl && req.originalUrl.length > 1) {
             requrl = this.currentApp.conf.urlBase + req.originalUrl.substr(1);
           } else {
@@ -208,6 +229,8 @@ export class UtilsSecu {
             .createHmac('sha256', this.currentApp.conf.secretKey)
             .update(date + url)
             .digest('hex');
+          
+          console.log('>> ', newKey);
 
           if (newKey == key) {
             if (!req.ctx) {
@@ -231,7 +254,10 @@ export class UtilsSecu {
     };
   }
 
-  public get protectUserConnected(): express.RequestHandler | express.ErrorRequestHandler {
+  public get protectUserConnected(): RequestHandler | ErrorRequestHandler {
+    /*
+      Bad interface "ctx" doesnt exit in RequestHandler
+    */
     return (req, _res, next) => {
       if (req.ctx && req.ctx.user) {
         next();
