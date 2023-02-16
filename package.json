@@ -37,7 +37,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.22.2",
     "mongodb": "^3.5.6",
-    "node-jose": "^2.0.0",
+    "node-jose": "^2.2.0",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.5"
   },
@@ -60,7 +60,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.22.2",
     "mongodb": "^3.5.6",
-    "node-jose": "^2.0.0",
+    "node-jose": "^2.2.0",
     "onchange": "^7.1.0",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.5",
