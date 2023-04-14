@@ -96,7 +96,7 @@ export class ServerBase {
             }
             next();
           })
-          .use(this.addCtx, this.secu.chekInternalMidelWare, this.checkJWT);
+          .use(this.addCtx, this.secu.chekInternalMidelWare, this.internalApi , this.checkJWT);
         return this.currentApp;
       })
       .then(() => {
@@ -131,7 +131,7 @@ export class ServerBase {
     ['Access-Control-Allow-Origin', '*'],
     [
       'Access-Control-Allow-Headers',
-      'Origin, X-Requested-With, Content-Type, Accept, idtoken, JWT, jwt, keydate, keyDate , key, ngsw-bypass',
+      'Origin, X-Requested-With, Content-Type, Accept, idtoken, JWT, jwt, keydate, keyDate , key, ngsw-bypass , user , apikey',
     ],
     ['Cache-Control', 'no-cache, no-store, must-revalidate'],
     ['Pragma', 'no-cache'],
@@ -280,6 +280,21 @@ export class ServerBase {
     };
   }
 
+  public get internalApi(): express.RequestHandler | express.ErrorRequestHandler {
+    return (req, res, next) => {
+      const user = req.header('user');
+      const apiKey = req.header('apikey');
+      if(user && apiKey === this.currentApp.conf.secretKey){
+        try {
+          req.ctx.user = JSON.parse(user) ;
+          next();
+        } catch (error) {
+          next(error) ;
+        }
+      }
+    }
+  }
+
   public get checkJWT(): express.RequestHandler | express.ErrorRequestHandler {
     return (req, res, next) => {
       const token = req.header('JWT');
@@ -305,8 +320,7 @@ export class ServerBase {
             }
           })
           .catch(function (err) {
-            throw err;
-            // next(err);
+             next(new Error('unautorized'));
           });
       } else {
         next();
