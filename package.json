@@ -1,6 +1,6 @@
 {
   "name": "@leandredev/utils",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "utilitaire",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
