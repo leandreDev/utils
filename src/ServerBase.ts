@@ -284,7 +284,10 @@ export class ServerBase {
     return (req, res, next) => {
       const user = req.header('user');
       const apiKey = req.header('apikey');
-      if(user && apiKey === this.currentApp.conf.secretKey){
+      if(user && apiKey ){
+        if(apiKey !== this.currentApp.conf.secretKey){
+          next(new Error('unautorized'))
+        }
         try {
           req.ctx.user = JSON.parse(user) ;
           next();
