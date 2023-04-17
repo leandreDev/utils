@@ -294,7 +294,9 @@ export class ServerBase {
         } catch (error) {
           next(error) ;
         }
-      }
+      }else{
+        next();
+    }
     }
   }
 
