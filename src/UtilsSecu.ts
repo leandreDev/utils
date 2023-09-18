@@ -114,6 +114,8 @@ export class UtilsSecu {
     };
   }
 
+
+
   public get protectInternalMidelWare():
     | express.RequestHandler
     | express.ErrorRequestHandler {
@@ -122,7 +124,21 @@ export class UtilsSecu {
       const key = req.header('key');
       let requrl: string;
       const currentDate: number = Date.now();
-      if (key) {
+      const key2 = req.header('internalkey');
+      if(key2){
+        if(key !== this.currentApp.conf.secretKey){
+          next('unautorized');
+        }else{
+          if (!req.ctx) {
+            req.ctx = {};
+          }
+          req.ctx.internalCallValid = true;
+          if (!req.ctx.user) {
+            req.ctx.user = {};
+          }
+          next();
+        }
+      }else if (key) {
         if (currentDate > date + 30000) {
           if (this.currentApp.conf.debug) {
             console.error(
